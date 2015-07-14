@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -49,7 +49,7 @@ public class StateRuleConfig
 			(StateId)4,
 			(StateId)5
 		}, new List<StateId> (){ (StateId)502 }));
-		dict.Add (StateId.Spell, new ConfigData (StateId.Spell, new List<StateId> () {
+		dict.Add (StateId.Ult, new ConfigData (StateId.Ult, new List<StateId> () {
 			(StateId)1,
 			(StateId)2,
 			(StateId)4,

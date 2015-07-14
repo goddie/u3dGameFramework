@@ -7,30 +7,38 @@ public abstract class BaseState
 {
 
 
-	public BattleAgent BaseController {
-		get;
-		set;
-	}
-
+ 
+	private StateId stateId;
 
 	public StateId StateId {
-		get;
-		set;
+		get {
+			return stateId;
+		}
+		set {
+			stateId = value;
+		}
 	}
+ 
 
 	/// <summary>
 	/// 状态类型
 	/// </summary>
 	/// <value>The type of the state.</value>
+	private StateType stateType;
+
 	public StateType StateType {
-		get;
-		set;
+		get {
+			return stateType;
+		}
+		set {
+			stateType = value;
+		}
 	}
 
 
 	protected BaseState ()
 	{
-		this.StateId = StateId.NullStateId;
+		this.stateId = StateId.NullStateId;
 	}
 
 

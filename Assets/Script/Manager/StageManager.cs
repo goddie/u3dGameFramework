@@ -19,6 +19,7 @@ public class StageManager : MonoBehaviour
 
 	private static string NPC_LAYER = "NPC";
 	private static string HERO_LAYER = "Hero";
+	private static string EFFECT_LAYER = "Effect";
 
 
 	/// <summary>
@@ -53,11 +54,24 @@ public class StageManager : MonoBehaviour
 		}
 	}
 
+
+	/// <summary>
+	/// 特效层
+	/// </summary>
+	private GameObject effectLayer;
+
+	public GameObject EffectLayer {
+		get {
+			return effectLayer;
+		}
+	}
+
 	void Awake ()
 	{
 //		Debug.Log ("Stage Awake");
 		npcLayer = getLayer (NPC_LAYER);
 		heroLayer = getLayer (HERO_LAYER);
+		effectLayer = getLayer(EFFECT_LAYER);
 	}
 
 	void Start ()

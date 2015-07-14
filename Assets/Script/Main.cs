@@ -6,6 +6,7 @@ public class Main : MonoBehaviour
 {
 	private GameObject btn1;
 	private GameObject btn2;
+	private GameObject btn3;
 	private GameObject btnStart;
 
 	void Start ()
@@ -16,10 +17,12 @@ public class Main : MonoBehaviour
 
 		btn1 = GameObject.Find ("btnHF");
 		btn2 = GameObject.Find ("btnOD");
+		btn3 = GameObject.Find ("btnODSpell");
 		btnStart = GameObject.Find ("btnStart");
 
 		UUIEventListener.Get (btn1).onClick = btn1ClickHandler;
 		UUIEventListener.Get (btn2).onClick = btn2ClickHandler;
+		UUIEventListener.Get (btn3).onClick = btn3ClickHandler;
 		UUIEventListener.Get (btnStart).onClick = btnStartClickHandler;
 		//MessageCenter.GetInstance.addEventListener (BaseEvent.CLICK, btn1ClickHandler);
 		//MainComponentManager main = MainComponentManager.SharedInstance;
@@ -27,6 +30,10 @@ public class Main : MonoBehaviour
 //		StartCoroutine (DelayToInvokeDo (2.0f));
 	}
 
+	void Update ()
+	{
+
+	}
 
 	public IEnumerator DelayToInvokeDo (float delaySeconds)
 	{
@@ -39,7 +46,7 @@ public class Main : MonoBehaviour
 	{
 
 
-		Debug.Log ("btn1ClickHandler");
+//		Debug.Log ("btn1ClickHandler");
 
 //		AttackMessage message = new AttackMessage ();
 		
@@ -48,20 +55,22 @@ public class Main : MonoBehaviour
 
 	void btn2ClickHandler (GameObject go)
 	{
-		Debug.Log ("btn2ClickHandler");
+		//Debug.Log ("btn2ClickHandler");
 
 		EventCenter.GetInstance.dispatchEvent (BattleEvent.ATTACK, 2);
+	}
+
+	void btn3ClickHandler (GameObject go)
+	{
+		EventCenter.GetInstance.dispatchEvent (BattleEvent.ATTACK, 3);
 	}
 
 
 	void btnStartClickHandler (GameObject go)
 	{
-		EventCenter.GetInstance.dispatchEvent (BattleEvent.START);
+		//Debug.Log("btnStartClickHandler");
+		BattleManager.GetInstance.BattleStart();
 	}
 
-	void Update ()
-	{
 
-
-	}
 }

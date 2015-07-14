@@ -58,4 +58,7 @@ public static class NGUITool
 		}
 		return go;
 	}
+
+
+
 }

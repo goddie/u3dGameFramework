@@ -6,7 +6,7 @@ public class IdleState : MajorBaseState
 	public IdleState ()
 	{
 		this.StateId = StateId.Idle;
-		Debug.Log ("IdleState()");
+		//Debug.Log ("IdleState()");
 
 	}
 
@@ -19,7 +19,7 @@ public class IdleState : MajorBaseState
 
 	public override void OnExit ()
 	{
-		Debug.Log ("IdleState OnExit");
+		//Debug.Log ("IdleState OnExit");
 	}
 
 	public override void OnExecute (object param)
@@ -29,7 +29,7 @@ public class IdleState : MajorBaseState
 
 	public override void HandleMessage (object param)
 	{
-		Debug.Log ("IdleState HandleMessage");
+		//Debug.Log ("IdleState HandleMessage");
 	}
 }
 

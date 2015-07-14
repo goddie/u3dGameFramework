@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 /// <summary>
 /// 战斗管理
+/// 战斗过程相关都放这里
 /// </summary>
 public class BattleManager
 {
 	private static BattleManager instance;
-
 
 	public static BattleManager GetInstance {
 		get {
@@ -20,6 +20,10 @@ public class BattleManager
 		}
 	}
 
+	private List<Character> testDB= new List<Character>(){
+		new Character(1,"黑风",100,3,"Prefabs/hf"),new Character(2,"奥丁",120,5,"Prefabs/od"),new Character(3,"绿萼",110,4,"Prefabs/le")
+	};
+
 
 	/// <summary>
 	/// 英雄
@@ -30,13 +34,12 @@ public class BattleManager
 	/// 敌人
 	/// </summary>
 	private List<BattleAgent> enemyList = new List<BattleAgent> ();
-		
-
 	
 	private BattleManager ()
 	{
+		//Debug.Log ("BattleManager");
+
 		//战斗开始事件
-		EventCenter.GetInstance.addEventListener (BattleEvent.START, battleStartHandler);
 		EventCenter.GetInstance.addEventListener (BattleEvent.ATTACK, battleAttackHandler);
 	}
 
@@ -44,11 +47,14 @@ public class BattleManager
 	/// <summary>
 	/// 战斗开始
 	/// </summary>
-	private void BattleStart ()
+	public void BattleStart ()
 	{
 		//Debug.Log ("Battle BattleStart");
 		AddEnemy ();
 		AddHero ();
+
+		enemyList[0].AddTarget(soldierList[0]);
+		soldierList[0].AddTarget(enemyList[0]);
 	}
 
 	/// <summary>
@@ -56,7 +62,8 @@ public class BattleManager
 	/// </summary>
 	private void BattleEnd ()
 	{
-		EventCenter.GetInstance.removeEventListener (BattleEvent.START, battleStartHandler);
+
+ 
 		EventCenter.GetInstance.removeEventListener (BattleEvent.ATTACK, battleAttackHandler);
 	}
 
@@ -65,13 +72,20 @@ public class BattleManager
 	/// </summary>
 	void AddEnemy ()
 	{
-		GameObject hfPrefab = ResourceManager.GetInstance.LoadPrefab ("Prefabs/hf");
+
 		GameObject parent = StageManager.SharedInstance.NpcLayer;
-		//		Debug.Log ("Battle AddEnemy");
+		GameObject hfPrefab = ResourceManager.GetInstance.LoadPrefab (testDB[0].Prefab);
 		GameObject hf = StageManager.SharedInstance.AddToStage (parent, hfPrefab);
-		BattleAgent soldier = hf.AddComponent<HFAgent> ();
-		//sprite.SetStagePosition (213, -55);
-		enemyList.Add (soldier);
+
+		BaseSoldier hfSoldier = hf.AddComponent<HFSoldier>(); 
+		BattleAgent agent = new BattleAgent(hfSoldier,testDB[0]);
+
+		agent.BaseSprite.SetStagePosition (-350, 0);
+
+
+		enemyList.Add (agent);
+
+ 
 	}
 	
 	/// <summary>
@@ -79,30 +93,41 @@ public class BattleManager
 	/// </summary>
 	void AddHero ()
 	{
-		GameObject odPrefab = ResourceManager.GetInstance.LoadPrefab ("Prefabs/od");
 		GameObject parent = StageManager.SharedInstance.HeroLayer;
+		GameObject odPrefab = ResourceManager.GetInstance.LoadPrefab (testDB[1].Prefab);
 		GameObject od = StageManager.SharedInstance.AddToStage (parent, odPrefab);
-		BattleAgent soldier = od.AddComponent<ODAgent> ();
-		soldier.Sprite.SetStagePosition (213, -55);
-		
-		soldierList.Add (soldier);
+
+		BaseSoldier odSoldier = od.AddComponent<ODSoldier> ();
+		BattleAgent agent = new BattleAgent(odSoldier,testDB[1]);
+
+		agent.BaseSprite.SetStagePosition (350, 0);
+		soldierList.Add (agent);
 	}
-
-
 
 	void battleAttackHandler (CEvent e)
 	{
 		int index = Convert.ToInt32 (e.data);
 		
-		
-		if (index == 2) {
-			soldierList [0].StateMachine.ToggleMajorState (StateId.Attack, null);
-			soldierList [0].Sprite.dispatchEvent (SoldierEvent.ATTACK, soldierList [0].StateMachine.CurrentState.StateId);
+		//奥丁大招 2000x 的技能ID
+		if (index == 3) {
+			soldierList [0].BaseSoldier.StateMachine.ToggleMajorState (StateId.Ult, null);
+			AttackMessage message = new AttackMessage (soldierList [0], enemyList, 20001);
+			soldierList [0].dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
 		}
 		
+
+		if (index == 2) {
+			soldierList [0].BaseSoldier.StateMachine.ToggleMajorState (StateId.Attack, null);
+			AttackMessage message = new AttackMessage (soldierList [0], enemyList, 1);
+			soldierList [0].dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
+		}
+
+		//黑风攻击
 		if (index == 1) {
-			enemyList [0].StateMachine.ToggleMajorState (StateId.Attack, null);
-			enemyList [0].Sprite.dispatchEvent (SoldierEvent.ATTACK, enemyList [0].StateMachine.CurrentState.StateId);
+			enemyList [0].BaseSoldier.StateMachine.ToggleMajorState (StateId.Attack, null);
+
+			AttackMessage message = new AttackMessage (enemyList [0], soldierList, 1);
+			enemyList [0].dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
 		}
 
 	}
@@ -110,7 +135,7 @@ public class BattleManager
 	void battleStartHandler (CEvent e)
 	{
 		BattleStart ();
-		Debug.Log ("battleStartHandler");
+		//Debug.Log ("battleStartHandler");
 
 	}
 

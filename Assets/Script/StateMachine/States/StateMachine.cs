@@ -16,28 +16,49 @@ public class StateMachine
 	/// 兵种
 	/// </summary>
 	/// <value>The soldier.</value>
-	public BattleAgent Soldier {
-		get;
-		set;
+	private BaseSoldier baseSoldier;
+
+	public BaseSoldier BaseSoldier {
+		get {
+			return baseSoldier;
+		}
+		set {
+			baseSoldier = value;
+		}
 	}
+ 
 
 	/// <summary>
 	/// 当前状态
 	/// </summary>
 	/// <value>The state of the current.</value>
 
+	private BaseState currentState;
+
 	public BaseState CurrentState {
-		get;
-		set;
+		get {
+			return currentState;
+		}
+		set {
+			currentState = value;
+		}
 	}
+
+
 
 	/// <summary>
 	/// 状态切换规则
 	/// </summary>
 	/// <value>The state rule.</value>
+	private StateRule stateRule;
+
 	public StateRule StateRule {
-		get;
-		set;
+		get {
+			return stateRule;
+		}
+		set {
+			stateRule = value;
+		}
 	}
 
 	/// <summary>
@@ -47,7 +68,7 @@ public class StateMachine
 	{
 		CurrentState = CreateState (StateId.Idle);
 		StateRule = StateRule.GetInstance;
-		Debug.Log ("初始化默认状态为 " + CurrentState.ToString ());
+		//Debug.Log ("初始化默认状态为 " + CurrentState.ToString ());
 	}
 
 
@@ -59,11 +80,11 @@ public class StateMachine
 	{
 		BaseState newState = StateCreator.GetInstance.CreateState (newStateId);
 
-		if (newState != null) {
-
-			newState.BaseController = this.Soldier;
-
-		}
+//		if (newState != null) {
+//
+//			newState = this.Soldier;
+//
+//		}
 
 		return newState;
 	}

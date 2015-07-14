@@ -39,7 +39,7 @@ public enum StateId
 	/// <summary>
 	/// 大招
 	/// </summary>
-	Spell,
+	Ult,
 
 	/// <summary>
 	/// 受击

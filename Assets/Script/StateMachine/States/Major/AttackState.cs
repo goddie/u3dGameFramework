@@ -10,14 +10,16 @@ public class AttackState : MajorBaseState
 	{
 		this.StateId = StateId.Attack;
 	}
+
+
 	public override void OnEnter (object param)
 	{
-		base.OnEnter (param);
+
 	}
 
 	public override void OnExit ()
 	{
-		base.OnExit ();
+
 	}
 
 	public override void OnExecute (object param)
@@ -27,6 +29,6 @@ public class AttackState : MajorBaseState
 
 	public override void HandleMessage (object param)
 	{
-		base.HandleMessage (param);
+ 
 	}
 }

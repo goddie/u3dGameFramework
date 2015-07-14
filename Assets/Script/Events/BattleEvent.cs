@@ -9,5 +9,6 @@ public static class BattleEvent
 
 	public const string ATTACK = "battle_acttack";
 
+
 }
  
