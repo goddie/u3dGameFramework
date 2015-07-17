@@ -6,12 +6,16 @@ using UnityEngine;
 /// </summary>
 using System.Collections;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
-
-public class BaseSprite : MonoBehaviour
+public class BaseSprite : BasePlayer
 {
 
-	private Animator animator;
+	private List<Character> testDB= new List<Character>(){
+		new Character(200,"落位黄光",100,3,"Prefabs/down"),
+		new Character(201,"受击火花",100,3,"Prefabs/flash")
+	};
+
 	private AnimatorStateInfo currentBaseStage;
 	private StateId stateId;
 	private BattleAgent battleAgent;
@@ -26,6 +30,8 @@ public class BaseSprite : MonoBehaviour
 			currentBaseStage = animator.GetCurrentAnimatorStateInfo (0);
 		}
 	}
+
+ 
  	
 //	public AgentSprite ()
 //	{
@@ -41,31 +47,12 @@ public class BaseSprite : MonoBehaviour
 	/// <param name="state">State.</param>
 	public void ToggleState (StateId stateId)
 	{
+ 
 		//animator.Play("hf_action_attack",0,1.0f);
 		//SetBool (stateId, true);
-		StartCoroutine( PlayOneShot(stateId) );
-	
+		StartCoroutine (PlayOneShot (stateId));
 	}
 
-	/// <summary>
-	/// 播放一次动画
-	/// </summary>
-	/// <returns>The one shot.</returns>
-	/// <param name="stateId">State identifier.</param>
-	private IEnumerator PlayOneShot (StateId stateId)
-	{
-		SetBool(stateId,true);
-		yield return null;
-		SetBool(stateId,false);
-	}
-
-	void SetBool (StateId stateId, Boolean value)
-	{
-		string enumName = Enum.GetName (typeof(StateId), stateId);
-		string stateName = enumName.Replace ("State", "").ToLower ();
-		//Debug.Log ("SetBool:" + stateName);
-		animator.SetBool (stateName, value);
-	}
 
 
 	/// <summary>
@@ -76,7 +63,8 @@ public class BaseSprite : MonoBehaviour
 	public void SetStagePosition (float x, float y)
 	{
 		//Debug.Log ("Sprite SetStagePosition");
-		battleAgent.GameObject.transform.Translate (x, y, 0);
+		//battleAgent.GameObject.transform.Translate (x, y, 0);
+		battleAgent.GameObject.transform.localPosition = new Vector3 (x, y, 0);
 	}
 
 
@@ -96,19 +84,24 @@ public class BaseSprite : MonoBehaviour
 	/// <param name="battleAgent">攻击方</param>
 	public void HitEffect (BattleAgent attacker)
 	{
-		float direct = Mathf.Sign( gameObject.transform.position.x - attacker.GameObject.transform.position.x);
+		Debug.Log("HitEffect");
 
-
-		StartCoroutine(BackToIdle());
+		float direct = Mathf.Sign (gameObject.transform.localPosition.x - attacker.GameObject.transform.localPosition.x);
+		
+		StartCoroutine (BackToIdle ());
 
 		GameObject go = battleAgent.GameObject;
 		Vector3 pos = go.transform.position;
-		go.transform.Translate (3*direct, 0, 0);
-		Hashtable args = new Hashtable();
-		args.Add("easeType", iTween.EaseType.easeOutQuart);
-		args.Add("x",pos.x);
-		args.Add("time",0.1f);
-		iTween.MoveTo(go,args);
+		Vector3 local = go.transform.localPosition;
+		go.transform.localPosition = new Vector3(local.x-3,local.y,local.z);
+		//go.transform.position = new Vector3(go.transform.position.x - 3 ,go.transform.position.y,go.transform.position.z);
+		Hashtable args = new Hashtable ();
+		args.Add ("easeType", iTween.EaseType.easeOutQuart);
+		args.Add ("x", pos.x);
+		args.Add ("time", 0.1f);
+		iTween.MoveTo (go, args);
+
+		AddFlashEffect();
 
 	}
  
@@ -119,15 +112,50 @@ public class BaseSprite : MonoBehaviour
 	private IEnumerator BackToIdle ()
 	{
 		GameObject go = battleAgent.GameObject;
-		Image img = go.GetComponent<Image>();
+		Image img = go.GetComponent<Image> ();
 		Color c = img.color;
-		Color r = new Color(1,120.0f/255.0f,120.0f/255.0f,1f);
+		Color r = new Color (1, 120.0f / 255.0f, 120.0f / 255.0f, 1f);
 		img.color = r;
 
-		yield return new WaitForSeconds(0.1f);
+		yield return new WaitForSeconds (0.1f);
 		
 		img.color = Color.white;
 	}
 
 
+	/// <summary>
+	/// 添加落位动画
+	/// </summary>
+	public void AddDownEffect()
+	{
+		GameObject downPrefab = ResourceManager.GetInstance.LoadPrefab (testDB[0].Prefab);
+		GameObject parent = StageManager.SharedInstance.EffectLayer; 
+		GameObject down = StageManager.SharedInstance.AddToStage (parent, downPrefab);
+
+		BaseEffect baseEffect = down.AddComponent<BaseEffect>(); 
+		baseEffect.transform.position  = gameObject.transform.position;
+
+		AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
+		
+		baseEffect.PlayOnAgent(message);
+	}
+
+	/// <summary>
+	/// 火花特效
+	/// </summary>
+	public void AddFlashEffect()
+	{
+		GameObject prefab = ResourceManager.GetInstance.LoadPrefab (testDB[1].Prefab);
+		GameObject parent = StageManager.SharedInstance.EffectLayer; 
+		GameObject go = StageManager.SharedInstance.AddToStage (parent, prefab);
+		
+		BaseEffect baseEffect = go.AddComponent<BaseEffect>(); 
+		baseEffect.transform.position  = gameObject.transform.position;
+		
+		AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
+		
+		baseEffect.PlayOnAgent(message);
+	}
+	
+ 
 }

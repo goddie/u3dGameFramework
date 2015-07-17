@@ -6,8 +6,12 @@ using System.Collections.Generic;
 /// 代理控制器
 /// 可以接收分发事件
 /// </summary>
+using System.Collections;
+
+
 public class BattleAgent : EventDispatcherBase
 {
+
 
 	public BattleAgent (BaseSoldier baseSoldier, Character character)
 	{
@@ -15,6 +19,7 @@ public class BattleAgent : EventDispatcherBase
 		this.gameObject = baseSoldier.gameObject;
 		this.BaseSprite = baseSoldier.gameObject.AddComponent<BaseSprite>();
 		this.Character = character;
+ 
 
 		AddEventListeners ();
 
@@ -25,6 +30,9 @@ public class BattleAgent : EventDispatcherBase
 		addEventListener (SoldierEvent.BATTLE_MESSAGE, HandleMessage);
 		addEventListener (SoldierEvent.HIT, HitHandler);
 	}
+
+
+
 
 	/// <summary>
 	/// 战斗信息处理
@@ -48,6 +56,7 @@ public class BattleAgent : EventDispatcherBase
 
 		baseSprite.HitEffect(attackMessage.Sender);
 	}
+
 
 	private GameObject gameObject;
 
@@ -133,4 +142,6 @@ public class BattleAgent : EventDispatcherBase
 		}
 		this.targets.Add (target);
 	}
+
+
 }

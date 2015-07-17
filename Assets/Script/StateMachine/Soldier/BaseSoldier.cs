@@ -1,14 +1,20 @@
 using System;
 using UnityEngine;
+using System.Collections.Generic;
 
-public class BaseSoldier : MonoBehaviour ,IStateEvent
+public class BaseSoldier : BasePlayer
 {
-
-
+	/// <summary>
+	/// 声音配置
+	/// </summary>
+	protected Dictionary<StateId,String> soundDict = new Dictionary<StateId, string>();
 
 	void Awake ()
 	{
+		InitSound();
+
 		this.stateMachine = new StateMachine ();
+
 	}
 
 
@@ -42,18 +48,26 @@ public class BaseSoldier : MonoBehaviour ,IStateEvent
 
 	public void HandleMessage (CEvent e)
 	{
-		AttackMessage attackMessage = (AttackMessage)e.data;
+		this.attackMessage = (AttackMessage)e.data;
 
-		//大招Id大于20000
+		//大招 Id大于20000
 		if (attackMessage.SpellId > 20000) {
+//			stateMachine.ToggleState (StateId.UltWait, e);
+//			battleAgent.BaseSprite.ToggleState (StateId.UltWait);
 
 			stateMachine.ToggleState (StateId.Ult, e);
 			battleAgent.BaseSprite.ToggleState (StateId.Ult);
 
+			PlaySound(StateId.Ult);
+
 		} else {
 			stateMachine.ToggleState (StateId.Attack, e);
 			battleAgent.BaseSprite.ToggleState (StateId.Attack);
+			PlaySound(StateId.Attack);
 		}
+
+
+
 
 		//Debug.Log ("battleMessageHandler");
 
@@ -65,7 +79,7 @@ public class BaseSoldier : MonoBehaviour ,IStateEvent
 	/// BattleAgent监听
 	/// </summary>
 	/// <param name="keyId">Key identifier.</param>
-	public void TriggerKeyEvent (KeyEventId keyId)
+	public virtual void TriggerKeyEvent (KeyEventId keyId)
 	{
 		if (keyId == KeyEventId.AttackOn) {
 
@@ -77,6 +91,35 @@ public class BaseSoldier : MonoBehaviour ,IStateEvent
 				t.dispatchEvent (SoldierEvent.HIT, message);
 			}
 		}
+	}
+
+
+	/// <summary>
+	/// 播放状态声音
+	/// </summary>
+	/// <param name="stateId">State identifier.</param>
+	private void PlaySound(StateId stateId)
+	{
+		Debug.Log("PlaySound:"+stateId);
+		if (!soundDict.ContainsKey(stateId)) {
+			Debug.Log("No Sound:"+stateId);
+			return;	
+		}
+		
+		String soundName = soundDict[stateId];
+		AudioManager.SharedInstance.FMODEvent(soundName,1.0f );
+	}
+
+
+
+	/// <summary>
+	/// 初始化默认声音
+	/// </summary>
+	protected virtual void InitSound()
+	{
+		soundDict.Add(StateId.Attack,"attack_od");
+		soundDict.Add(StateId.Ult,"ult_od");
+		soundDict.Add(StateId.Dead,"dead_od");
 	}
 
 }

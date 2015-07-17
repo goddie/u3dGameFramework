@@ -23,10 +23,15 @@ public enum KeyEventId
 	/// <summary>
 	/// 发射出子弹
 	/// </summary>
-	ShootOn,
+	ShootOn = 101,
 
 	/// <summary>
 	/// 发射大招
 	/// </summary>
-	UltShootOn
+	UltShootOn = 102,
+
+	/// <summary>
+	/// 大招准备
+	/// </summary>
+	UltPrepare = 103
 }

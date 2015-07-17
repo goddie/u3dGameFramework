@@ -32,6 +32,9 @@ public class MainComponentManager
 			// ...
 
 			//Component stage = StageManager.SharedInstance;
+
+			Component ultraSpell = UltraSpellManager.SharedInstance;
+			Component audio = AudioManager.SharedInstance;
 		}
 	}
 

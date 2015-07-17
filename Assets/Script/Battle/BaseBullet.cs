@@ -7,17 +7,8 @@ using UnityEngine;
 using System.Collections;
 
 
-public class BaseBullet : MonoBehaviour ,IStateEvent
+public class BaseBullet : BasePlayer
 {
-
-	private Animator animator;
-
-	/// <summary>
-	/// 攻击信息
-	/// </summary>
-	private AttackMessage attackMessage;
-
-
 	/// <summary>
 	/// 子弹速度
 	/// </summary>
@@ -27,34 +18,6 @@ public class BaseBullet : MonoBehaviour ,IStateEvent
 		set;
 	}
 
-	/// <summary>
-	/// 子弹的主人
-	/// </summary>
-	private BattleAgent battleAgent;
-
-	public BattleAgent BattleAgent {
-		get {
-			return battleAgent;
-		}
-		set {
-			battleAgent = value;
-		}
-	}
-
-	void Start()
-	{
-
-		//Debug.Log("BaseBullet Start()");
-	}
-
-
-	void Awake ()
-	{
-
-		animator = gameObject.GetComponent<Animator> ();
-
-	}
-	
 
 	/// <summary>
 	/// 动画事件触发
@@ -67,62 +30,45 @@ public class BaseBullet : MonoBehaviour ,IStateEvent
 		if (keyId == KeyEventId.StateEnd) {
 
 			//battleAgent.dispatchEvent();
+			RemoveAnimator ();
 		}
-
+		 
 
 		if (keyId == KeyEventId.AttackOn) {
-
-			Debug.Log("AttackOn:"+ this.attackMessage.Targets[0].ToString());
-
+			//Debug.Log("AttackOn:"+ this.attackMessage.Targets[0].ToString());
+			
 			Transform t1 = gameObject.transform;
-			Transform t2 = attackMessage.Targets[0].GameObject.transform;
-			
-			float dis = Vector2.Distance (new Vector2 (t1.position.x, t1.position.y), 
-			                              new Vector2 (t2.position.x, t2.position.y));
+
+			Transform t2 = this.attackMessage.Targets [0].GameObject.transform;
+
+			float dis = Vector2.Distance (new Vector2 (t1.localPosition.x, t1.localPosition.y), 
+			                              new Vector2 (t2.localPosition.x, t2.localPosition.y));
 			//Debug.Log("OnComplete"+dis);
-			
-			
-			if (dis <= 0) {
-				attackMessage.Targets[0].dispatchEvent (SoldierEvent.HIT, attackMessage);
-			}
+//			if (dis <= 1) {
+//				attackMessage.Targets[0].dispatchEvent (SoldierEvent.HIT, attackMessage);
+//			}
 
-			animator.enabled = false;
+			attackMessage.Targets [0].dispatchEvent (SoldierEvent.HIT, attackMessage);
 
-			//gameObject.SetActive(false);
-
-			Destroy(gameObject);
-
+			RemoveAnimator ();
 		}
 	}
 
-	public Boolean IsState (StateId stateId)
-	{
-		AnimatorStateInfo aif = animator.GetCurrentAnimatorStateInfo (0);
-		//Debug.Log (aif.ToString ());
-		return false;
-	}
 
 
 	/// <summary>
-	/// 播放一次动画
+	/// 在目标点出现
 	/// </summary>
-	/// <returns>The one shot.</returns>
-	/// <param name="stateId">State identifier.</param>
-	private IEnumerator PlayOneShot (StateId stateId)
+	/// <param name="attackMessage">Attack message.</param>
+	public void BornToTarget (AttackMessage attackMessage)
 	{
-		SetBool(stateId,true);
-		yield return null;
-		SetBool(stateId,false);
+		this.attackMessage = attackMessage;
+		Transform t2 = attackMessage.Targets [0].GameObject.transform;
+		gameObject.transform.position = t2.position;
+	
 	}
 
 
-	void SetBool (StateId stateId, Boolean value)
-	{
-		string enumName = Enum.GetName (typeof(StateId), stateId);
-		string stateName = enumName.Replace ("State", "").ToLower ();
-		//Debug.Log ("SetBool:" + stateName);
-		animator.SetBool (stateName, value);
-	}
 
 	/// <summary>
 	/// 飞向目标
@@ -132,7 +78,7 @@ public class BaseBullet : MonoBehaviour ,IStateEvent
 		this.attackMessage = attackMessage;
 
 		Transform t1 = attackMessage.Sender.GameObject.transform;
-		Transform t2 = this.attackMessage.Targets[0].GameObject.transform;
+		Transform t2 = attackMessage.Targets [0].GameObject.transform;
 
 		float dis = Mathf.Abs (t1.position.x - t2.position.x);
 		float time = dis / Speed;
@@ -153,15 +99,14 @@ public class BaseBullet : MonoBehaviour ,IStateEvent
 	/// 沿着方向飞出屏幕
 	/// </summary>
 	/// <param name="attackMessage">Attack message.</param>
-	public void FlyOutOfStage(AttackMessage attackMessage)
+	public void FlyOutOfStage (AttackMessage attackMessage)
 	{
-		
-		float direct = Mathf.Sign( gameObject.transform.position.x - attackMessage.Sender.GameObject.transform.position.x);
-
 		this.attackMessage = attackMessage;
+
+		float direct = Mathf.Sign (gameObject.transform.position.x - attackMessage.Sender.GameObject.transform.position.x);
 		
 		Transform t1 = attackMessage.Sender.GameObject.transform;
-		Transform t2 = this.attackMessage.Targets[0].GameObject.transform;
+		Transform t2 = attackMessage.Targets [0].GameObject.transform;
 		
 		float dis = Mathf.Abs (t1.position.x - t2.position.x);
 		float time = dis / Speed;
@@ -185,7 +130,8 @@ public class BaseBullet : MonoBehaviour ,IStateEvent
 	/// <param name="attackMessage">Attack message.</param>
 	private void OnComplete ()
 	{
-		StartCoroutine(PlayOneShot(StateId.Hit));
+		//Debug.Log("StateId.Hit");
+		StartCoroutine (PlayOneShot (StateId.Hit));
 	}
 
 

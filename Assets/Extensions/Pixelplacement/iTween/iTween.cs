@@ -30,6 +30,7 @@ Redistributions in binary form must reproduce the above copyright notice, this l
 Neither the name of the author nor the names of contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+using UnityEngine.UI;
 
 #region Namespaces
 using System;
@@ -3342,7 +3343,13 @@ public class iTween : MonoBehaviour{
 		}else if(GetComponent<Light>()){
 			colors = new Color[1,3];
 			colors[0,0] = colors[0,1] = GetComponent<Light>().color;	
-		}else{
+		}
+		else if(GetComponent<Image>())
+		{
+			colors = new Color[1,3];
+			colors[0,0] = colors[0,1] = GetComponent<Image>().color;
+		}
+		else{
 			colors = new Color[1,3]; //empty placeholder incase the GO is perhaps an empty holder or something similar
 		}
 		
@@ -4116,6 +4123,9 @@ public class iTween : MonoBehaviour{
 		}else if(GetComponent<Light>()){
 			//light.color=colors[2];	
 			GetComponent<Light>().color=colors[0,2];
+		}else if(GetComponent<Image>())
+		{
+			GetComponent<Image>().color=colors[0,2];
 		}
 		
 		//dial in:

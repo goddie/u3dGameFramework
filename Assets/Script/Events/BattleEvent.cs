@@ -1,4 +1,8 @@
 ﻿ 
+
+/// <summary>
+/// 与战斗流程有关的事件
+/// </summary>
 public static class BattleEvent
 {
 
@@ -7,7 +11,15 @@ public static class BattleEvent
 	/// </summary>
 	public const string START = "battle_start";
 
+	/// <summary>
+	/// 攻击信息
+	/// </summary>
 	public const string ATTACK = "battle_acttack";
+
+	/// <summary>
+	/// 大招
+	/// </summary>
+	public const string ULT = "battle_ult";
 
 
 }

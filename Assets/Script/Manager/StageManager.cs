@@ -17,9 +17,30 @@ public class StageManager : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// 敌人
+	/// </summary>
 	private static string NPC_LAYER = "NPC";
+
+	/// <summary>
+	/// 英雄
+	/// </summary>
 	private static string HERO_LAYER = "Hero";
+
+	/// <summary>
+	/// 特效
+	/// </summary>
 	private static string EFFECT_LAYER = "Effect";
+
+	/// <summary>
+	/// 背景
+	/// </summary>
+	private static string BG_LAYER = "BgLayer";
+
+	/// <summary>
+	/// 大招遮罩
+	/// </summary>
+	private static string MASK_LAYER = "MaskLayer";
 
 
 	/// <summary>
@@ -30,6 +51,25 @@ public class StageManager : MonoBehaviour
 	private GameObject getLayer (string layerName)
 	{
 		return GameObject.Find (layerName);
+	}
+
+	private GameObject maskLayer;
+
+	public GameObject MaskLayer {
+		get {
+			return maskLayer;
+		}
+	}
+
+	/// <summary>
+	/// 背景
+	/// </summary>
+	private GameObject bgLayer;
+
+	public GameObject BgLayer {
+		get {
+			return bgLayer;
+		}
 	}
 
 	/// <summary>
@@ -72,6 +112,8 @@ public class StageManager : MonoBehaviour
 		npcLayer = getLayer (NPC_LAYER);
 		heroLayer = getLayer (HERO_LAYER);
 		effectLayer = getLayer(EFFECT_LAYER);
+		bgLayer = getLayer(BG_LAYER);
+		maskLayer = getLayer(MASK_LAYER);
 	}
 
 	void Start ()

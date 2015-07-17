@@ -49,7 +49,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites: []
-  spritePackingTag: hf_action_hit
+  spritePackingTag: hf_atlas
   userData: 
   assetBundleName: 
   assetBundleVariant: 

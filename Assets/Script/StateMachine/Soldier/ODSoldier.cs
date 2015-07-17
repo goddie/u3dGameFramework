@@ -17,14 +17,21 @@ public class ODSoldier : HeroSoldier
 	private List<Character> testDB= new List<Character>(){
 		new Character(200,"红球",100,3,"Prefabs/drop"),
 		new Character(201,"黄柱子",100,3,"Prefabs/effect"),
+		new Character(203,"大招特效",100,3,"Prefabs/worldUlt")
 	};
 
-	public void TriggerKeyEvent (KeyEventId keyId)
+	public override void TriggerKeyEvent (KeyEventId keyId)
 	{
 
 		if (keyId == KeyEventId.AttackOn) {
 
 			//Debug.Log("OD AttackOn");
+			//			for (int i = 0; i < battleAgent.Targets.Count; i++) {
+			//
+			//				BattleAgent t = battleAgent.Targets [i];
+			//				
+			//				t.dispatchEvent (SoldierEvent.HIT, message);
+			//			}
 		}
 
 		if (keyId == KeyEventId.ShootOn) {
@@ -42,12 +49,12 @@ public class ODSoldier : HeroSoldier
 			baseBullet.FlyToTarget(message);
 
 
-			for (int i = 0; i < battleAgent.Targets.Count; i++) {
-
-				BattleAgent t = battleAgent.Targets [i];
-				
-				t.dispatchEvent (SoldierEvent.HIT, message);
-			}
+//			for (int i = 0; i < battleAgent.Targets.Count; i++) {
+//
+//				BattleAgent t = battleAgent.Targets [i];
+//				
+//				t.dispatchEvent (SoldierEvent.HIT, message);
+//			}
 			
 		}
 
@@ -66,15 +73,28 @@ public class ODSoldier : HeroSoldier
 			AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
 			
 			baseBullet.FlyToTarget(message);
+
+ 
 			
-			
-			for (int i = 0; i < battleAgent.Targets.Count; i++) {
-				
-				BattleAgent t = battleAgent.Targets [i];
-				
-				t.dispatchEvent (SoldierEvent.HIT, message);
-			}
+//			for (int i = 0; i < battleAgent.Targets.Count; i++) {
+//				
+//				BattleAgent t = battleAgent.Targets [i];
+//				
+//				t.dispatchEvent (SoldierEvent.HIT, message);
+//			}
 		}
 	}
 
+
+
+
+	/// <summary>
+	/// 初始化默认声音
+	/// </summary>
+	override protected   void InitSound()
+	{
+		soundDict.Add(StateId.Attack,"attack_od");
+		soundDict.Add(StateId.Ult,"ult_od");
+		soundDict.Add(StateId.Dead,"dead_od");
+	}
 }

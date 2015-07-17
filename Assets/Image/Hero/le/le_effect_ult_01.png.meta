@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 7b65936664fb1451f9693cf9b68744e0
-timeCreated: 1435574670
+guid: 2cfa398ef42976f4aacad2fb8dcbf869
+timeCreated: 1437031602
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName: {}
@@ -49,7 +49,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites: []
-  spritePackingTag: le_effect
+  spritePackingTag: le_atlas
   userData: 
   assetBundleName: 
   assetBundleVariant: 

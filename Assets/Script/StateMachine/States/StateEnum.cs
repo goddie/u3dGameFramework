@@ -42,9 +42,15 @@ public enum StateId
 	Ult,
 
 	/// <summary>
+	/// 大招之前的蓄气
+	/// </summary>
+	UltWait,
+
+	/// <summary>
 	/// 受击
 	/// </summary>
 	Hit,
+
 
 	/// <summary>
 	/// 冰冻
