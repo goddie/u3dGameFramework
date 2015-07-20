@@ -4,6 +4,11 @@ using System.Collections.Generic;
 
 public class BaseSoldier : BasePlayer
 {
+
+	protected CooldownTimer attackTimer;
+	protected CooldownTimer ultTimer;
+
+
 	/// <summary>
 	/// 声音配置
 	/// </summary>
@@ -12,6 +17,7 @@ public class BaseSoldier : BasePlayer
 	void Awake ()
 	{
 		InitSound();
+		InitTimer();
 
 		this.stateMachine = new StateMachine ();
 
@@ -66,9 +72,6 @@ public class BaseSoldier : BasePlayer
 			PlaySound(StateId.Attack);
 		}
 
-
-
-
 		//Debug.Log ("battleMessageHandler");
 
 	}
@@ -100,14 +103,14 @@ public class BaseSoldier : BasePlayer
 	/// <param name="stateId">State identifier.</param>
 	private void PlaySound(StateId stateId)
 	{
-		Debug.Log("PlaySound:"+stateId);
+		//Debug.Log("PlaySound:"+stateId);
 		if (!soundDict.ContainsKey(stateId)) {
 			Debug.Log("No Sound:"+stateId);
 			return;	
 		}
 		
 		String soundName = soundDict[stateId];
-		AudioManager.SharedInstance.FMODEvent(soundName,1.0f );
+		AudioManager.SharedInstance.FMODEvent(soundName,0.5f );
 	}
 
 
@@ -121,5 +124,41 @@ public class BaseSoldier : BasePlayer
 		soundDict.Add(StateId.Ult,"ult_od");
 		soundDict.Add(StateId.Dead,"dead_od");
 	}
+
+	/// <summary>
+	/// 计时器初始化
+	/// </summary>
+	protected virtual void InitTimer()
+	{
+
+	}
+
+
+	/// <summary>
+	/// 攻击CD时调用
+	/// </summary>
+	protected virtual void AttackHandler ()
+	{
+		if (battleAgent.Targets==null||battleAgent.Targets.Count==0) {
+			return;
+		}
+
+		
+
+		AttackMessage message = new AttackMessage (battleAgent, BattleManager.SharedInstance.GetEnemyList (), 1);
+		battleAgent.dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
+		
+		//Debug.Log ("attackHandler");
+	}
+
+
+	/// <summary>
+	/// 大招CD时调用
+	/// </summary>
+	protected virtual void UltHandler ()
+	{
+		Debug.Log ("ultHandler");
+	}
+
 
 }

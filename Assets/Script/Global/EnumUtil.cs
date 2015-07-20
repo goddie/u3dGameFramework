@@ -35,3 +35,34 @@ public enum KeyEventId
 	/// </summary>
 	UltPrepare = 103
 }
+
+/// <summary>
+/// 冷却计时器种类
+/// </summary>
+public enum CooldownType
+{
+	/// <summary>
+	/// 普通攻击
+	/// </summary>
+	Attack,
+
+	/// <summary>
+	/// 技能1
+	/// </summary>
+	Spell1,
+
+	/// <summary>
+	/// 技能2
+	/// </summary>
+	Spell2,
+
+	/// <summary>
+	/// 技能3
+	/// </summary>
+	Spell3,
+
+	/// <summary>
+	/// 大招
+	/// </summary>
+	Ult
+}

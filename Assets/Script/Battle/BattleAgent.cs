@@ -19,10 +19,8 @@ public class BattleAgent : EventDispatcherBase
 		this.gameObject = baseSoldier.gameObject;
 		this.BaseSprite = baseSoldier.gameObject.AddComponent<BaseSprite>();
 		this.Character = character;
- 
 
 		AddEventListeners ();
-
 	}
 
 	private void AddEventListeners ()
@@ -123,6 +121,8 @@ public class BattleAgent : EventDispatcherBase
 		set {
 			character = value;
 			character.BattleAgent = this;
+			this.baseSprite.HitPoint = character.HitPoint;
+			this.baseSprite.AttackPoint = character.AttackPoint;
 		}
 	}
 	

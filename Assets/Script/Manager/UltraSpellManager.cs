@@ -111,6 +111,12 @@ public class UltraSpellManager : MonoBehaviour
 		GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
 		baseEffect = bullet.AddComponent<BaseEffect> ();
 		baseEffect.transform.position = message.Sender.GameObject.transform.position;
+
+		BattleAgent battleAgent = message.Sender;
+		Vector3 pos = MapUtil.RelativeMovePosition(battleAgent.BaseSprite.HitPoint,battleAgent.GameObject.transform);
+		baseEffect.transform.position = new Vector3(pos.x,pos.y,battleAgent.GameObject.transform.position.z);
+
+
 		baseEffect.PlayOnAgent (message);
 
 		MaskFade ();

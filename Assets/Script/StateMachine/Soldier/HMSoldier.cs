@@ -38,8 +38,11 @@ public class HMSoldier : HeroSoldier
 			GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
 			baseBullet = bullet.AddComponent<BaseBullet>(); 
 			baseBullet.BattleAgent = this.battleAgent;
-			baseBullet.transform.position  = battleAgent.GameObject.transform.position;
+			//baseBullet.transform.position  = battleAgent.GameObject.transform.position;
 			baseBullet.Speed = 1136.0f / 1000.0f;
+
+			Vector3 pos = MapUtil.RelativeMovePosition(battleAgent.BaseSprite.HitPoint,battleAgent.GameObject.transform);
+			baseBullet.transform.position = new Vector3(pos.x,pos.y,battleAgent.GameObject.transform.position.z);
 			
 			AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
 			
@@ -91,4 +94,14 @@ public class HMSoldier : HeroSoldier
 		soundDict.Add(StateId.Ult,"ult_hm");
 		soundDict.Add(StateId.Dead,"dead_hm");
 	}
+
+	override protected void InitTimer ()
+	{
+		attackTimer = TimerManager.SharedInstance.CreateTimer (1.4f, new TimerEventHandler (AttackHandler));
+		ultTimer = TimerManager.SharedInstance.CreateTimer (6.0f, new TimerEventHandler (UltHandler));
+		
+		attackTimer.Start ();
+		ultTimer.Start ();
+	}
+
 }

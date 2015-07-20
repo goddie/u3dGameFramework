@@ -74,7 +74,7 @@ public class BattleManager : MonoBehaviour
 	public void BattleStart ()
 	{
 
-		FMOD_StudioSystem.instance.PlayOneShot("event:/battleBgStage1",Vector3.zero,0.3f);
+		FMOD_StudioSystem.instance.PlayOneShot("event:/battleBgStage1",Vector3.zero,0.4f);
 
 		//Debug.Log ("Battle BattleStart");
 		AddEnemy ();
@@ -124,7 +124,7 @@ public class BattleManager : MonoBehaviour
 		BaseSoldier odSoldier = od.AddComponent<ODSoldier> ();
 		BattleAgent agent = new BattleAgent (odSoldier, testDB [1]);
 		
-		agent.BaseSprite.SetStagePosition (340, -180);
+		agent.BaseSprite.SetStagePosition (260, -245);
 		agent.BaseSprite.AddDownEffect();		
 		
 		soldierList.Add (agent);
@@ -154,7 +154,7 @@ public class BattleManager : MonoBehaviour
 		BaseSoldier mxSoldier = mx.AddComponent<MXSoldier> ();
 		BattleAgent agent3 = new BattleAgent (mxSoldier, testDB [3]);
 		
-		agent3.BaseSprite.SetStagePosition (240, 5);
+		agent3.BaseSprite.SetStagePosition (-208, -34);
 		agent3.BaseSprite.AddDownEffect();
 		soldierList.Add (agent3);
 
@@ -168,7 +168,7 @@ public class BattleManager : MonoBehaviour
 		BaseSoldier hmSoldier = hm.AddComponent<HMSoldier> ();
 		BattleAgent agent4 = new BattleAgent (hmSoldier, testDB [4]);
 		
-		agent4.BaseSprite.SetStagePosition (450, -50);
+		agent4.BaseSprite.SetStagePosition (-99, -77);
 		agent4.BaseSprite.AddDownEffect();
 		soldierList.Add (agent4);
 
@@ -268,6 +268,12 @@ public class BattleManager : MonoBehaviour
 	}
 
 
-
-
+	/// <summary>
+	/// 获取敌人
+	/// </summary>
+	/// <returns>The enemy list.</returns>
+	public List<BattleAgent> GetEnemyList()
+	{
+		return enemyList;
+	}
 }

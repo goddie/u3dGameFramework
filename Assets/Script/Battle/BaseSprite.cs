@@ -20,6 +20,32 @@ public class BaseSprite : BasePlayer
 	private StateId stateId;
 	private BattleAgent battleAgent;
 
+
+	private bool isSpellCooldown;
+	private bool isAttackCooldown;
+
+	/// <summary>
+	/// 受击点
+	/// 箭就击中里飞
+	/// </summary>
+
+	public Vector3 HitPoint {
+		get;
+		set;
+	}
+
+	/// <summary>
+	/// 攻击点
+	/// 箭就从这里飞出
+	/// </summary>
+	public Vector3 AttackPoint
+	{
+		get;
+		set;
+	}
+
+
+
 	public BattleAgent BattleAgent {
 		get {
 			return battleAgent;
@@ -150,8 +176,12 @@ public class BaseSprite : BasePlayer
 		GameObject go = StageManager.SharedInstance.AddToStage (parent, prefab);
 		
 		BaseEffect baseEffect = go.AddComponent<BaseEffect>(); 
-		baseEffect.transform.position  = gameObject.transform.position;
-		
+		//baseEffect.transform.position  = gameObject.transform.position;
+
+		Vector3 pos = MapUtil.RelativeMovePosition(battleAgent.BaseSprite.HitPoint,battleAgent.GameObject.transform);
+		baseEffect.transform.position = new Vector3(pos.x,pos.y,battleAgent.GameObject.transform.position.z);
+
+
 		AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
 		
 		baseEffect.PlayOnAgent(message);

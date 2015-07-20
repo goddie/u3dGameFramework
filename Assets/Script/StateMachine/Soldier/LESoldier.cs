@@ -39,7 +39,12 @@ public class LESoldier : HeroSoldier
 			GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
 			baseBullet = bullet.AddComponent<BaseBullet>(); 
 			baseBullet.BattleAgent = this.battleAgent;
-			baseBullet.transform.position  = battleAgent.GameObject.transform.position;
+			//baseBullet.transform.position  = battleAgent.GameObject.transform.position;
+
+			Vector3 pos = MapUtil.RelativeMovePosition(battleAgent.BaseSprite.HitPoint,battleAgent.GameObject.transform);
+			baseBullet.transform.position = new Vector3(pos.x,pos.y,battleAgent.GameObject.transform.position.z);
+
+
 			baseBullet.Speed = 1136.0f / 1000.0f;
 			
 			AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
@@ -65,9 +70,11 @@ public class LESoldier : HeroSoldier
 			GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
 			baseBullet = bullet.AddComponent<BaseBullet>(); 
 			baseBullet.BattleAgent = this.battleAgent;
-			baseBullet.transform.position  = battleAgent.GameObject.transform.position;
+			//baseBullet.transform.position  = battleAgent.GameObject.transform.position;
 			baseBullet.Speed = 1136.0f / 1000.0f;
-			
+			Vector3 pos = MapUtil.RelativeMovePosition(battleAgent.BaseSprite.HitPoint,battleAgent.GameObject.transform);
+			baseBullet.transform.position = new Vector3(pos.x,pos.y,battleAgent.GameObject.transform.position.z);
+
 			AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
 			
 			baseBullet.FlyToTarget(message);
@@ -91,5 +98,15 @@ public class LESoldier : HeroSoldier
 		soundDict.Add(StateId.Attack,"attack_le");
 		soundDict.Add(StateId.Ult,"ult_le");
 		soundDict.Add(StateId.Dead,"dead_le");
+	}
+
+
+	override protected void InitTimer ()
+	{
+		attackTimer = TimerManager.SharedInstance.CreateTimer (1.2f, new TimerEventHandler (AttackHandler));
+		ultTimer = TimerManager.SharedInstance.CreateTimer (6.0f, new TimerEventHandler (UltHandler));
+		
+		attackTimer.Start ();
+		ultTimer.Start ();
 	}
 }

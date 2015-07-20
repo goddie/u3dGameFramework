@@ -4,102 +4,99 @@ using System;
 /// 角色信息
 /// </summary>
 using System.Collections.Generic;
+using UnityEngine;
 
 
 public class Character
 {
 	public Character ()
 	{
+
 	}
 
 	public Character (int id, string name, int health, int attack, string prefab)
 	{
-		this.id = id;
-		this.name = name;
-		this.health = health;
-		this.attack = attack;
-		this.prefab = prefab;
+		this.Id = id;
+		this.Name = name;
+		this.Health = health;
+		this.Attack = attack;
+		this.Prefab = prefab;
+		this.AttackPoint = new Vector3(0,60,0);
+		this.HitPoint = new Vector3(0,60,0);
 	}
 
-	private BattleAgent battleAgent;
 
 	public BattleAgent BattleAgent {
-		get {
-			return battleAgent;
-		}
-		set {
-			battleAgent = value;
-		}
+		get;
+		set;
 	}
 
 	/// <summary>
 	/// 编号
 	/// </summary>
-	private int id;
 
 	public int Id {
-		get {
-			return id;
-		}
-		set {
-			id = value;
-		}
+		get;
+		set;
 	}
 
 	/// <summary>
 	/// 名称
 	/// </summary>
-	private string name;
 
 	public string Name {
-		get {
-			return name;
-		}
-		set {
-			name = value;
-		}
+		get;
+		set;
 	}
 
 	/// <summary>
 	/// 生命
 	/// </summary>
-	private int health;
 
 	public int Health {
-		get {
-			return health;
-		}
-		set {
-			health = value;
-		}
+		get;
+		set;
 	}
 
 	/// <summary>
 	/// 攻击力
 	/// </summary>
-	private int attack;
 
 	public int Attack {
-		get {
-			return attack;
-		}
-		set {
-			attack = value;
-		}
+		get;
+		set;
 	}
 
 	/// <summary>
 	/// 动画
 	/// </summary>
-	private string prefab;
 
 	public string Prefab {
-		get {
-			return prefab;
-		}
-		set {
-			prefab = value;
-		}
+		get;
+		set;
+	}
+
+	/// <summary>
+	/// 攻击点
+	/// 相对于物体原点的位移
+	/// </summary>
+	/// <value>The attack point.</value>
+	public Vector2 AttackPoint
+	{
+		get;
+		set;
+	}
+
+
+	/// <summary>
+	/// 受击点
+	/// 相对于物体原点的位移
+	/// </summary>
+	/// <value>The hit point.</value>
+	public Vector2 HitPoint
+	{
+		get;
+		set;
 	}
 
 }
