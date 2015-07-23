@@ -60,9 +60,9 @@ public class BattleAgent : EventDispatcherBase
 		
 		if (skill.Range < Vector2.Distance (this.attackMessage.Sender.mapPos, 
 		                                    this.attackMessage.Targets [0].mapPos)) {
-
 			PathToTarget ();
 
+			return;
 		} 
 
 		//大招 Id大于20000
@@ -92,23 +92,14 @@ public class BattleAgent : EventDispatcherBase
 
 		Vector2 targetPos = targets [0].mapPos;
 
-		RoutePoint[] result = null;
-		// result_pt是一个简单类，它只有两个成员变量：int x和int y。
-		// 参数说明：map是一个二维数组，具体见程序注释
-
-
+		List<Vector2> result = null;
 		AStarRoute asr = new AStarRoute (MapUtil.GetInstance.GetMapMatrix (), 
 		                                 (int)mapPos.x, (int)mapPos.y, 
 		                                 (int)targetPos.x, (int)targetPos.y);
-		
 		try {
-
 			result = asr.getResult ();
-
 		} catch (Exception ex) {
-
 			Debug.Log (ex.StackTrace);
-			
 		}
 		result = asr.getResult ();
 
@@ -117,21 +108,15 @@ public class BattleAgent : EventDispatcherBase
 			return;
 		}
 
+
 		baseSoldier.OnWalk ();
 
-		//Debug.Log (result);
-		List<RoutePoint> path = new List<RoutePoint> ();
-		 
-		for (int i = 0; i < result.Length; i++) {
-			path.Add (result [i]);
-		}
-
-		path.Reverse ();
 
 		List<Vector3> paths = new List<Vector3> ();
-		for (int i = 0; i < path.Count; i++) {
 
-			Vector3 v = MapUtil.GetInstance.MapToWorld (path [i].x, path [i].y);
+		for (int i = 0; i < result.Count; i++) {
+
+			Vector3 v = MapUtil.GetInstance.MapToWorld (result [i].x, result [i].y);
 
 			paths.Add (v);
 		}
@@ -146,13 +131,13 @@ public class BattleAgent : EventDispatcherBase
 		//设置类型为线性，线性效果会好一些。  
 		args.Add ("easeType", iTween.EaseType.linear);  
 		//设置寻路的速度  
-		args.Add ("speed", 1f);  
+		args.Add ("speed", 10f);  
 		//移动的整体时间。如果与speed共存那么优先speed  
-		//args.Add ("time", 1f);  
+		//args.Add ("time", 5f);  
 		//是否先从原始位置走到路径中第一个点的位置  
 		args.Add ("movetopath", true);  
 		//延迟执行时间  
-		args.Add ("delay", 0.1f);  
+		//args.Add ("delay", 0.1f);  
 		//移动的过程中面朝一个点  
 		//args.Add ("looktarget", Vector3.zero);  
 		//三个循环类型 none loop pingPong (一般 循环 来回)   
@@ -287,9 +272,9 @@ public class BattleAgent : EventDispatcherBase
 	protected void AttackHandler ()
 	{
 
-		if (!baseSoldier.IsIdle ()) {
-			return;
-		}
+//		if (!baseSoldier.IsIdle ()) {
+//			return;
+//		}
 
 		AttackMessage message = new AttackMessage (this, this.targets, skillDict [CooldownType.Attack].Id);
 		this.dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
@@ -309,11 +294,24 @@ public class BattleAgent : EventDispatcherBase
 //		this.dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
 	}
 
+
+	/// <summary>
+	/// 0.1秒执行一次计算路径和更新坐标
+	/// </summary>
+	protected void PositonHandler ()
+	{
+		mapPos = MapUtil.GetInstance.WorldToMap (gameObject.transform.position);
+		baseSprite.FaceToTarget ();
+
+		//Debug.Log (mapPos);
+	}
+
 	
 	public void AddTimerDemo (float[] timeList)
 	{
 		AddTimer (CooldownType.Attack, timeList [0], new TimerEventHandler (AttackHandler));
 		AddTimer (CooldownType.Ult, timeList [1], new TimerEventHandler (UltHandler));
+		AddTimer (CooldownType.Position, 0.1f, new TimerEventHandler (PositonHandler));
 	}
 
 

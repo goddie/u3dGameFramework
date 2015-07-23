@@ -65,6 +65,16 @@ public class BaseSprite : BaseAnim
 	private bool isAttackCooldown;
 
 	/// <summary>
+	/// 脸朝向0向左，1向右  
+	/// 素材默认朝向
+	/// </summary>
+	/// <value>The face to.</value>
+	public int FaceTo {
+		get;
+		set;
+	}
+
+	/// <summary>
 	/// 受击点
 	/// 箭就击中里飞
 	/// </summary>
@@ -105,7 +115,37 @@ public class BaseSprite : BaseAnim
 //	}
 
 
+	/// <summary>
+	/// Faces to target.
+	/// </summary>
+	public void FaceToTarget ()
+	{
+		if (this.battleAgent.Targets == null) {
+			return;
+		}
 
+		int sign = (int)Mathf.Sign (this.battleAgent.Targets [0].GameObject.transform.position.x - this.gameObject.transform.position.x);
+
+		Vector3 rotation = gameObject.transform.rotation.eulerAngles;
+		rotation.x = rotation.z = 0;
+
+		if ((sign > 0 && this.FaceTo == 0) || (sign > 0 && this.FaceTo == 0) || (sign > 0 && this.FaceTo == 0) || (sign > 0 && this.FaceTo == 0)) {
+
+			rotation.y *= -1;
+			gameObject.transform.eulerAngles = - rotation;
+			FaceTo = 1;
+		}
+
+		if (sign < 0 && this.FaceTo == 1) {
+			
+			rotation.y *= -1;
+			gameObject.transform.eulerAngles = - rotation;
+			FaceTo = 1;
+		}
+
+	}
+	
+	
 	/// <summary>
 	/// 动画状态切换
 	/// </summary>
@@ -252,6 +292,7 @@ public class BaseSprite : BaseAnim
 		String soundName = soundDict [stateId];
 		AudioManager.SharedInstance.FMODEvent (soundName, 0.5f);
 	}
-	
+
+
  
 }

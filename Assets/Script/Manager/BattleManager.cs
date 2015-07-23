@@ -114,6 +114,7 @@ public class BattleManager : MonoBehaviour
 			
 			BaseSoldier hfSoldier = hf.AddComponent<HFSoldier> (); 
 			BattleAgent agent = new BattleAgent (hfSoldier, testDB [0]);
+			agent.BaseSprite.FaceTo = 1;
 			
 			//agent.BaseSprite.SetLocalPosition (pos [i].x, pos [i].y);
 			agent.BaseSprite.SetMapPosition (3, 3);

@@ -35,20 +35,13 @@ public class BaseBullet : BaseAnim
 		 
 
 		if (keyId == KeyEventId.AttackOn) {
-			//Debug.Log("AttackOn:"+ this.attackMessage.Targets[0].ToString());
-			
 			Transform t1 = gameObject.transform;
-
 			Transform t2 = this.attackMessage.Targets [0].GameObject.transform;
-
 			float dis = Vector2.Distance (new Vector2 (t1.localPosition.x, t1.localPosition.y), 
 			                              new Vector2 (t2.localPosition.x, t2.localPosition.y));
-			//Debug.Log("OnComplete"+dis);
-//			if (dis <= 1) {
-//				attackMessage.Targets[0].dispatchEvent (SoldierEvent.HIT, attackMessage);
-//			}
-
 			attackMessage.Targets [0].dispatchEvent (SoldierEvent.HIT, attackMessage);
+
+			attackMessage.Sender.BaseSoldier.OnAttackEnd ();
 
 			RemoveAnimator ();
 		}
@@ -98,6 +91,8 @@ public class BaseBullet : BaseAnim
 		args.Add ("y", targetScreen.y);
  
 		args.Add ("time", 0.15f);
+
+		//args.Add ("time", 15f);
 		args.Add ("oncomplete", "OnComplete");
 		args.Add ("oncompletetarget", gameObject);
 		//args.Add ("oncompleteparams", this.attackMessage);

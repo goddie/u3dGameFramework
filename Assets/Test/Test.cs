@@ -121,18 +121,7 @@ public class Test : MonoBehaviour
 
 	void GetRout ()
 	{
-		RoutePoint[] result = null;
-		// result_pt是一个简单类，它只有两个成员变量：int x和int y。
-		// 参数说明：map是一个二维数组，具体见程序注释
-		AStarRoute asr = new AStarRoute (new int[100, 100], 0, 0, 5, 5);
-
-		try {
-			result = asr.getResult ();
-		} catch (Exception ex) {
-
-		}
-
-		Debug.Log (result);
+	 
 	}
 
 

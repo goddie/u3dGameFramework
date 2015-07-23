@@ -63,7 +63,6 @@ public class BaseSoldier : MonoBehaviour
 			this.OnShootOn ();
 		}
 
-
 		if (keyId == KeyEventId.UltShootOn) {
 			this.OnUltShootOn ();
 		}
@@ -86,7 +85,9 @@ public class BaseSoldier : MonoBehaviour
 		this.OnAttackEnd ();
 	}
 
-
+	/// <summary>
+	/// Raises the ult shoot on event.
+	/// </summary>
 	protected virtual void OnUltShootOn ()
 	{
 

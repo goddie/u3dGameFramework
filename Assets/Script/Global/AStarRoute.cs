@@ -233,9 +233,10 @@ public class AStarRoute
 	}
 	
 	// 获得寻路结果
-	public RoutePoint[] getResult ()
+	public List<Vector2> getResult ()
 	{
-		RoutePoint[] result;
+		List<Vector2> result;
+
 		List<RoutePoint> route;
 		searchPath ();
 		if (! isFound) {
@@ -279,10 +280,15 @@ public class AStarRoute
 			}
 		}
 		int size = route.Count;
-		result = new RoutePoint[size];
+
+		result = new List<Vector2> ();
+
 		for (int i = 0; i < size; i++) {
-			result [i] = new RoutePoint ((RoutePoint)route [i]);
+
+			result.Add (new Vector2 (route [i].x, route [i].y));
+
 		}
+		result.Reverse ();
 		return result;
 	}
 }

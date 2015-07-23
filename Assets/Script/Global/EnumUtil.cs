@@ -64,5 +64,10 @@ public enum CooldownType
 	/// <summary>
 	/// 技能3
 	/// </summary>
-	Spell3
+	Spell3,
+
+	/// <summary>
+	/// 计算位置和路径
+	/// </summary>
+	Position
 }

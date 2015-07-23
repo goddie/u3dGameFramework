@@ -230,4 +230,34 @@ public class MapUtil
 
 		return pos;
 	}
+
+
+
+	/// <summary>
+	/// Worlds to map.
+	/// </summary>
+	/// <returns>The to map.</returns>
+	/// <param name="pos">Position.</param>
+	public Vector2 WorldToMap (Vector3 pos)
+	{
+
+
+		Vector3 screenPos = Camera.main.WorldToScreenPoint (pos); 
+		Vector2 screenPos2 = new Vector2 (screenPos.x, screenPos.y);
+
+		Vector2 map = ScreenToMap (screenPos2);
+
+
+		return map;
+	}
+
 }
+
+
+
+
+
+
+
+
+

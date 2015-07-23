@@ -23,6 +23,7 @@ public class Character
 		this.Prefab = prefab;
 		this.AttackPoint = new Vector3 (0, 60, 0);
 		this.HitPoint = new Vector3 (0, 60, 0);
+		this.FaceTo = 0;
 	}
 
 
@@ -103,6 +104,16 @@ public class Character
 	/// </summary>
 	/// <value>The attack range.</value>
 	public int GuardRange {
+		get;
+		set;
+	}
+
+	/// <summary>
+	/// 脸朝向0向左，1向右
+	/// 素材默认朝向
+	/// </summary>
+	/// <value>The face to.</value>
+	public int FaceTo {
 		get;
 		set;
 	}
