@@ -21,6 +21,8 @@ public class Main : MonoBehaviour
 
 	void Start ()
 	{
+		MapUtil.GetInstance.DrawGrid ();
+
 		Application.targetFrameRate = 30;
 
 		GlobalConfig.GetInstance.InitGlobalSetting ();
