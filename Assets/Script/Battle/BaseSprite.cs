@@ -8,13 +8,53 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class BaseSprite : BasePlayer
+public class BaseSprite : BaseAnim
 {
 
-	private List<Character> testDB= new List<Character>(){
+	private List<Character> testDB = new List<Character> (){
 		new Character(200,"落位黄光",100,3,"Prefabs/down"),
 		new Character(201,"受击火花",100,3,"Prefabs/flash")
 	};
+
+
+	/// <summary>
+	/// 声音配置
+	/// </summary>
+	private Dictionary<StateId,String> soundDict = new Dictionary<StateId, string> ();
+	
+	public Dictionary<StateId, String> SoundDict {
+		get {
+			return soundDict;
+		}
+	}
+
+	/// <summary>
+	/// 初始化默认声音
+	/// 从配置文件中读取
+	/// </summary>
+	public virtual void InitSound ()
+	{
+		soundDict.Add (StateId.Attack, "attack_od");
+		soundDict.Add (StateId.Ult, "ult_od");
+		soundDict.Add (StateId.Dead, "dead_od");
+	}
+
+	/// <summary>
+	/// 让BaseSolider 可以加入声音，测试用。
+	/// </summary>
+	/// <param name="stateId">State identifier.</param>
+	/// <param name="soundName">Sound name.</param>
+	public void AddSound (StateId stateId, String soundName)
+	{
+//		if (soundDict.ContainsKey (stateId)) {
+//			soundDict.Remove (stateId);
+//		}
+
+		soundDict.Add (stateId, soundName);
+	}
+
+
+
 
 	private AnimatorStateInfo currentBaseStage;
 	private StateId stateId;
@@ -38,8 +78,7 @@ public class BaseSprite : BasePlayer
 	/// 攻击点
 	/// 箭就从这里飞出
 	/// </summary>
-	public Vector3 AttackPoint
-	{
+	public Vector3 AttackPoint {
 		get;
 		set;
 	}
@@ -86,7 +125,7 @@ public class BaseSprite : BasePlayer
 	/// </summary>
 	/// <param name="x">The x coordinate.</param>
 	/// <param name="y">The y coordinate.</param>
-	public void SetStagePosition (float x, float y)
+	public void SetLocalPosition (float x, float y)
 	{
 		//Debug.Log ("Sprite SetStagePosition");
 		//battleAgent.GameObject.transform.Translate (x, y, 0);
@@ -110,7 +149,7 @@ public class BaseSprite : BasePlayer
 	/// <param name="battleAgent">攻击方</param>
 	public void HitEffect (BattleAgent attacker)
 	{
-		Debug.Log("HitEffect");
+		Debug.Log ("HitEffect");
 
 		float direct = Mathf.Sign (gameObject.transform.localPosition.x - attacker.GameObject.transform.localPosition.x);
 		
@@ -119,7 +158,7 @@ public class BaseSprite : BasePlayer
 		GameObject go = battleAgent.GameObject;
 		Vector3 pos = go.transform.position;
 		Vector3 local = go.transform.localPosition;
-		go.transform.localPosition = new Vector3(local.x-3,local.y,local.z);
+		go.transform.localPosition = new Vector3 (local.x - 3, local.y, local.z);
 		//go.transform.position = new Vector3(go.transform.position.x - 3 ,go.transform.position.y,go.transform.position.z);
 		Hashtable args = new Hashtable ();
 		args.Add ("easeType", iTween.EaseType.easeOutQuart);
@@ -127,7 +166,7 @@ public class BaseSprite : BasePlayer
 		args.Add ("time", 0.1f);
 		iTween.MoveTo (go, args);
 
-		AddFlashEffect();
+		AddFlashEffect ();
 
 	}
  
@@ -152,39 +191,56 @@ public class BaseSprite : BasePlayer
 	/// <summary>
 	/// 添加落位动画
 	/// </summary>
-	public void AddDownEffect()
+	public void AddDownEffect ()
 	{
-		GameObject downPrefab = ResourceManager.GetInstance.LoadPrefab (testDB[0].Prefab);
+		GameObject downPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [0].Prefab);
 		GameObject parent = StageManager.SharedInstance.EffectLayer; 
 		GameObject down = StageManager.SharedInstance.AddToStage (parent, downPrefab);
 
-		BaseEffect baseEffect = down.AddComponent<BaseEffect>(); 
-		baseEffect.transform.position  = gameObject.transform.position;
+		BaseEffect baseEffect = down.AddComponent<BaseEffect> (); 
+		baseEffect.transform.position = gameObject.transform.position;
 
 		AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
 		
-		baseEffect.PlayOnAgent(message);
+		baseEffect.PlayOnAgent (message);
 	}
 
 	/// <summary>
 	/// 火花特效
 	/// </summary>
-	public void AddFlashEffect()
+	public void AddFlashEffect ()
 	{
-		GameObject prefab = ResourceManager.GetInstance.LoadPrefab (testDB[1].Prefab);
+		GameObject prefab = ResourceManager.GetInstance.LoadPrefab (testDB [1].Prefab);
 		GameObject parent = StageManager.SharedInstance.EffectLayer; 
 		GameObject go = StageManager.SharedInstance.AddToStage (parent, prefab);
 		
-		BaseEffect baseEffect = go.AddComponent<BaseEffect>(); 
+		BaseEffect baseEffect = go.AddComponent<BaseEffect> (); 
 		//baseEffect.transform.position  = gameObject.transform.position;
 
-		Vector3 pos = MapUtil.RelativeMovePosition(battleAgent.BaseSprite.HitPoint,battleAgent.GameObject.transform);
-		baseEffect.transform.position = new Vector3(pos.x,pos.y,battleAgent.GameObject.transform.position.z);
+		Vector3 pos = MapUtil.RelativeMovePosition (battleAgent.BaseSprite.HitPoint, battleAgent.GameObject.transform);
+		baseEffect.transform.position = new Vector3 (pos.x, pos.y, battleAgent.GameObject.transform.position.z);
 
 
 		AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
 		
-		baseEffect.PlayOnAgent(message);
+		baseEffect.PlayOnAgent (message);
+	}
+
+
+	/// <summary>
+	/// 播放状态声音
+	/// </summary>
+	/// <param name="stateId">State identifier.</param>
+	public void PlaySound (StateId stateId)
+	{
+		//Debug.Log("PlaySound:"+stateId);
+		if (!soundDict.ContainsKey (stateId)) {
+			Debug.Log ("No Sound:" + stateId);
+			return;	
+		}
+		
+		String soundName = soundDict [stateId];
+		AudioManager.SharedInstance.FMODEvent (soundName, 0.5f);
 	}
 	
  

@@ -14,32 +14,32 @@ public enum StateId
 	/// <summary>
 	/// 空闲
 	/// </summary>
-	Idle,
+	Idle = 1,
 
 	/// <summary>
 	/// 行走
 	/// </summary>
-	Walk,
+	Walk = 2,
 
 	/// <summary>
 	/// 跑步
 	/// </summary>
-	Run,
+	Run = 3,
 
 	/// <summary>
 	/// 攻击
 	/// </summary>
-	Attack,
+	Attack = 4,
 
 	/// <summary>
 	/// 引导施法
 	/// </summary>
-	Cast,
+	Cast = 5,
 
 	/// <summary>
 	/// 大招
 	/// </summary>
-	Ult,
+	Ult = 6,
 
 	/// <summary>
 	/// 大招之前的蓄气
@@ -103,7 +103,6 @@ public enum StateId
 	/// </summary>
 	Float
 }
-
  
 public enum StateType
 {

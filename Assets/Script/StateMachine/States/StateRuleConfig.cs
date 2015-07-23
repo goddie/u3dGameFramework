@@ -38,23 +38,33 @@ public class StateRuleConfig
 	private void initConfig ()
 	{
 		dict.Add (StateId.Idle, new ConfigData (StateId.Idle, new List<StateId> () {
-			(StateId)2,
-			(StateId)3,
-			(StateId)4,
-			(StateId)5
+			StateId.Attack,
+			StateId.Ult,
+			StateId.Dead
 		}, new List<StateId> (){ }));
-		dict.Add (StateId.Attack, new ConfigData (StateId.Attack, new List<StateId> () {
-			(StateId)1,
-			(StateId)3,
-			(StateId)4,
-			(StateId)5
-		}, new List<StateId> (){ (StateId)502 }));
+
 		dict.Add (StateId.Ult, new ConfigData (StateId.Ult, new List<StateId> () {
-			(StateId)1,
-			(StateId)2,
-			(StateId)4,
-			(StateId)5
-		}, new List<StateId> (){ (StateId)503 }));
+			StateId.Idle,
+			StateId.Dead
+		}, new List<StateId> (){ }));
+
+		dict.Add (StateId.Attack, new ConfigData (StateId.Attack, new List<StateId> () {
+			StateId.Idle,
+			StateId.Ult
+		}, new List<StateId> (){ }));
+
+//		dict.Add (StateId.Attack, new ConfigData (StateId.Attack, new List<StateId> () {
+//			(StateId)1,
+//			(StateId)3,
+//			(StateId)4,
+//			(StateId)5
+//		}, new List<StateId> (){ (StateId)502 }));
+//		dict.Add (StateId.Ult, new ConfigData (StateId.Ult, new List<StateId> () {
+//			(StateId)1,
+//			(StateId)2,
+//			(StateId)4,
+//			(StateId)5
+//		}, new List<StateId> (){ (StateId)503 }));
 
 	}
 

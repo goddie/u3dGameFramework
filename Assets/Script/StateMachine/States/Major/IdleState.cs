@@ -12,9 +12,7 @@ public class IdleState : MajorBaseState
 
 	public override void OnEnter (object param)
 	{
-		GameObject go = (GameObject)param;
-		Animator animator = go.GetComponent<Animator> ();
-		animator.SetBool ("Idle", true);
+
 	}
 
 	public override void OnExit ()

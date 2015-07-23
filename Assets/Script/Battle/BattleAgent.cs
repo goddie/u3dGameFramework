@@ -11,14 +11,20 @@ using System.Collections;
 
 public class BattleAgent : EventDispatcherBase
 {
+	private AttackMessage attackMessage;
 
+	private Dictionary<CooldownType,CooldownTimer> timerDict = new Dictionary<CooldownType, CooldownTimer> ();
 
 	public BattleAgent (BaseSoldier baseSoldier, Character character)
 	{
 		this.BaseSoldier = baseSoldier;
+
 		this.gameObject = baseSoldier.gameObject;
-		this.BaseSprite = baseSoldier.gameObject.AddComponent<BaseSprite>();
+		this.BaseSprite = baseSoldier.gameObject.AddComponent<BaseSprite> ();
 		this.Character = character;
+
+		this.baseSoldier.AddSoundDemo ();
+		//AddTimer ();
 
 		AddEventListeners ();
 	}
@@ -30,17 +36,17 @@ public class BattleAgent : EventDispatcherBase
 	}
 
 
-
-
-	/// <summary>
-	/// 战斗信息处理
-	/// </summary>
-	/// <param name="e">E.</param>
-	private void HandleMessage (CEvent e)
+	public void HandleMessage (CEvent e)
 	{
-		baseSoldier.HandleMessage (e);
+		this.attackMessage = (AttackMessage)e.data;
+		//大招 Id大于20000
+		if (attackMessage.SpellId > 20000) {
+			baseSoldier.OnUlt ();
+		} else {
+			baseSoldier.OnAttack ();
+		}
+		//Debug.Log ("battleMessageHandler");
 	}
-
 
 	/// <summary>
 	/// 被击中
@@ -49,10 +55,8 @@ public class BattleAgent : EventDispatcherBase
 	private void HitHandler (CEvent e)
 	{
 		//Debug.Log ("HitHandler");
-
 		AttackMessage attackMessage = (AttackMessage)e.data;
-
-		baseSprite.HitEffect(attackMessage.Sender);
+		baseSprite.HitEffect (attackMessage.Sender);
 	}
 
 
@@ -143,5 +147,52 @@ public class BattleAgent : EventDispatcherBase
 		this.targets.Add (target);
 	}
 
+	/// <summary>
+	/// 计时器初始化
+	/// </summary>
+	private void AddTimer ()
+	{
+		AddTimer (CooldownType.Attack, 2.0f, new TimerEventHandler (AttackHandler));
+		AddTimer (CooldownType.Ult, 6.0f, new TimerEventHandler (UltHandler));
+	}
+
+	private void AddTimer (CooldownType type, float second, TimerEventHandler action)
+	{
+		CooldownTimer t = TimerManager.SharedInstance.CreateTimer (second, action);
+		timerDict.Add (type, t);
+		t.Start ();
+	}
+
+
+	/// <summary>
+	/// 攻击CD时调用
+	/// </summary>
+	protected void AttackHandler ()
+	{
+		if (this.Targets == null || this.Targets.Count == 0) {
+			return;
+		}
+		
+		AttackMessage message = new AttackMessage (this, BattleManager.SharedInstance.GetEnemyList (), 1);
+		this.dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
+		
+		//Debug.Log ("attackHandler");
+	}
+	
+	
+	/// <summary>
+	/// 大招CD时调用
+	/// </summary>
+	protected void UltHandler ()
+	{
+		Debug.Log ("ultHandler");
+	}
+
+	
+	public void AddTimerDemo (float[] timeList)
+	{
+		AddTimer (CooldownType.Attack, timeList [0], new TimerEventHandler (AttackHandler));
+		AddTimer (CooldownType.Ult, timeList [1], new TimerEventHandler (UltHandler));
+	}
 
 }

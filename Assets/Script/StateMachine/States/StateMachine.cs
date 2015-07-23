@@ -113,7 +113,6 @@ public class StateMachine
 	{
 
 		if (!this.StateRule.IsCanToggle (CurrentState.StateId, newStateId, this.subStateList)) {
-			//toggleStateFail
 			return;
 		}
 

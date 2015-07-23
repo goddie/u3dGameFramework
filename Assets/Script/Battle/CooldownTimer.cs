@@ -65,7 +65,7 @@ public class CooldownTimer
 			//Debug.Log("time:"+time+" nextActive:"+nextActive);
 
 			if (time > nextActive) {
-				nextActive =  time + Duration;
+				nextActive = time + Duration;
 				//IsActive must set false before tick() , cause if u want to restart in the tick() , IsActive would be reset to fasle .
 				//IsActive = false;
 				Tick.Invoke ();

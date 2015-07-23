@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using System.Collections;
 
-public class BaseEffect : BasePlayer
+public class BaseEffect : BaseAnim
 {
 
 	

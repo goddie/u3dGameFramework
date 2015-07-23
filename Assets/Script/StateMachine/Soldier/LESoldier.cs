@@ -9,7 +9,7 @@ public class LESoldier : HeroSoldier
 	
 	private BaseBullet baseBullet;
 	
-	private List<Character> testDB= new List<Character>(){
+	private List<Character> testDB = new List<Character> (){
 		new Character(300,"箭矢",100,3,"Prefabs/arrow"),
 		new Character(301,"冰箭",100,3,"Prefabs/arrowUlt")
 	};
@@ -34,22 +34,22 @@ public class LESoldier : HeroSoldier
 			
 			
 			
-			GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (testDB[0].Prefab);
+			GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [0].Prefab);
 			GameObject parent = StageManager.SharedInstance.EffectLayer; 
 			GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
-			baseBullet = bullet.AddComponent<BaseBullet>(); 
-			baseBullet.BattleAgent = this.battleAgent;
+			baseBullet = bullet.AddComponent<BaseBullet> (); 
+			baseBullet.BattleAgent = this.BattleAgent;
 			//baseBullet.transform.position  = battleAgent.GameObject.transform.position;
 
-			Vector3 pos = MapUtil.RelativeMovePosition(battleAgent.BaseSprite.HitPoint,battleAgent.GameObject.transform);
-			baseBullet.transform.position = new Vector3(pos.x,pos.y,battleAgent.GameObject.transform.position.z);
+			Vector3 pos = MapUtil.RelativeMovePosition (BattleAgent.BaseSprite.HitPoint, BattleAgent.GameObject.transform);
+			baseBullet.transform.position = new Vector3 (pos.x, pos.y, BattleAgent.GameObject.transform.position.z);
 
 
 			baseBullet.Speed = 1136.0f / 1000.0f;
 			
-			AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
+			AttackMessage message = new AttackMessage (BattleAgent, BattleAgent.Targets, 1);
 			
-			baseBullet.FlyToTarget(message);
+			baseBullet.FlyToTarget (message);
 			
 			
 			//			for (int i = 0; i < battleAgent.Targets.Count; i++) {
@@ -62,22 +62,21 @@ public class LESoldier : HeroSoldier
 		}
 		
 		
-		if (keyId == KeyEventId.UltShootOn)
-		{
+		if (keyId == KeyEventId.UltShootOn) {
 			
-			GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (testDB[1].Prefab);
+			GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [1].Prefab);
 			GameObject parent = StageManager.SharedInstance.EffectLayer; 
 			GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
-			baseBullet = bullet.AddComponent<BaseBullet>(); 
-			baseBullet.BattleAgent = this.battleAgent;
+			baseBullet = bullet.AddComponent<BaseBullet> (); 
+			baseBullet.BattleAgent = this.BattleAgent;
 			//baseBullet.transform.position  = battleAgent.GameObject.transform.position;
 			baseBullet.Speed = 1136.0f / 1000.0f;
-			Vector3 pos = MapUtil.RelativeMovePosition(battleAgent.BaseSprite.HitPoint,battleAgent.GameObject.transform);
-			baseBullet.transform.position = new Vector3(pos.x,pos.y,battleAgent.GameObject.transform.position.z);
+			Vector3 pos = MapUtil.RelativeMovePosition (BattleAgent.BaseSprite.HitPoint, BattleAgent.GameObject.transform);
+			baseBullet.transform.position = new Vector3 (pos.x, pos.y, BattleAgent.GameObject.transform.position.z);
 
-			AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
+			AttackMessage message = new AttackMessage (BattleAgent, BattleAgent.Targets, 1);
 			
-			baseBullet.FlyToTarget(message);
+			baseBullet.FlyToTarget (message);
 
  
 			
@@ -93,20 +92,13 @@ public class LESoldier : HeroSoldier
 	/// <summary>
 	/// 初始化默认声音
 	/// </summary>
-	override protected   void InitSound()
+	override public void AddSoundDemo ()
 	{
-		soundDict.Add(StateId.Attack,"attack_le");
-		soundDict.Add(StateId.Ult,"ult_le");
-		soundDict.Add(StateId.Dead,"dead_le");
-	}
+		BattleAgent.BaseSprite.AddSound (StateId.Attack, "attack_le");
+		BattleAgent.BaseSprite.AddSound (StateId.Ult, "ult_le");
+		BattleAgent.BaseSprite.AddSound (StateId.Dead, "dead_le");
 
-
-	override protected void InitTimer ()
-	{
-		attackTimer = TimerManager.SharedInstance.CreateTimer (1.2f, new TimerEventHandler (AttackHandler));
-		ultTimer = TimerManager.SharedInstance.CreateTimer (6.0f, new TimerEventHandler (UltHandler));
-		
-		attackTimer.Start ();
-		ultTimer.Start ();
+		BattleAgent.AddTimerDemo (new float[]{1.2f, 6.0f});
 	}
+	
 }

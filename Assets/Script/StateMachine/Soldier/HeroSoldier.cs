@@ -16,5 +16,4 @@ public class HeroSoldier : BaseSoldier
 		this.AgentType = SoldierType.Hero;
 	}
 
-
 }

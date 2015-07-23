@@ -6,12 +6,16 @@
 public class HFSoldier : EnemySoldier
 {
 
+
+
 	/// <summary>
 	/// 初始化默认声音
 	/// </summary>
-	override protected void InitSound()
+	override public void AddSoundDemo ()
 	{
-		soundDict.Add(StateId.Attack,"attack_hf");
-		soundDict.Add(StateId.Dead,"dead_hf");
+		this.BattleAgent.BaseSprite.AddSound (StateId.Attack, "attack_hf");
+		this.BattleAgent.BaseSprite.AddSound (StateId.Dead, "dead_hf");
+
+		this.BattleAgent.AddTimerDemo (new float[]{1.0f, 6.0f});
 	}
 }

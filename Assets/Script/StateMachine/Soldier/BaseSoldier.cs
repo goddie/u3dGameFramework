@@ -2,32 +2,22 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 
-public class BaseSoldier : BasePlayer
+public class BaseSoldier : MonoBehaviour
 {
 
-	protected CooldownTimer attackTimer;
-	protected CooldownTimer ultTimer;
 
 
 	/// <summary>
-	/// 声音配置
+	/// 战斗消息
 	/// </summary>
-	protected Dictionary<StateId,String> soundDict = new Dictionary<StateId, string>();
-
-	void Awake ()
-	{
-		InitSound();
-		InitTimer();
-
-		this.stateMachine = new StateMachine ();
-
-	}
-
-
+	protected AttackMessage attackMessage;
+	
+	
 	/// <summary>
 	/// 战斗代理
 	/// </summary>
-	protected BattleAgent battleAgent;
+	
+	private BattleAgent battleAgent;
 
 	public BattleAgent BattleAgent {
 		get {
@@ -36,8 +26,13 @@ public class BaseSoldier : BasePlayer
 		set {
 			battleAgent = value;
 		}
-	}
+	}	 
 
+	void Awake ()
+	{
+		this.StateMachine = new StateMachine ();
+	}
+	
 	/// <summary>
 	/// 状态机
 	/// </summary>
@@ -50,31 +45,7 @@ public class BaseSoldier : BasePlayer
 		set {
 			stateMachine = value;
 		}
-	}
-
-	public void HandleMessage (CEvent e)
-	{
-		this.attackMessage = (AttackMessage)e.data;
-
-		//大招 Id大于20000
-		if (attackMessage.SpellId > 20000) {
-//			stateMachine.ToggleState (StateId.UltWait, e);
-//			battleAgent.BaseSprite.ToggleState (StateId.UltWait);
-
-			stateMachine.ToggleState (StateId.Ult, e);
-			battleAgent.BaseSprite.ToggleState (StateId.Ult);
-
-			PlaySound(StateId.Ult);
-
-		} else {
-			stateMachine.ToggleState (StateId.Attack, e);
-			battleAgent.BaseSprite.ToggleState (StateId.Attack);
-			PlaySound(StateId.Attack);
-		}
-
-		//Debug.Log ("battleMessageHandler");
-
-	}
+	} 
 
 
 	/// <summary>
@@ -96,69 +67,140 @@ public class BaseSoldier : BasePlayer
 		}
 	}
 
+	
+
+
+
 
 	/// <summary>
-	/// 播放状态声音
+	/// 待机
+	/// </summary>
+	public void OnIdle ()
+	{
+		ToggleState (StateId.Idle);
+	}
+
+
+	/// <summary>
+	/// 行走
+	/// </summary>
+	public void OnWalk ()
+	{
+		ToggleState (StateId.Walk);
+	}
+
+	/// <summary>
+	/// 行走结束
+	/// </summary>
+	public void OnWalkEnd ()
+	{
+		ToggleState (StateId.Idle);
+	}
+
+	/// <summary>
+	/// 是否正在行走
+	/// </summary>
+	/// <returns><c>true</c> if this instance is walk; otherwise, <c>false</c>.</returns>
+	public bool IsWalk ()
+	{
+		return IsState (StateId.Walk);
+	}
+
+	/// <summary>
+	/// 攻击
+	/// </summary>
+	public void OnAttack ()
+	{
+		ToggleState (StateId.Attack);
+		battleAgent.BaseSprite.ToggleState (StateId.Attack);
+		battleAgent.BaseSprite.PlaySound (StateId.Attack);
+	}
+
+	/// <summary>
+	/// 攻击结束
+	/// </summary>
+	public void OnAttackEnd ()
+	{
+		ToggleState (StateId.Idle);
+	}
+
+	/// <summary>
+	/// 是否正在攻击
+	/// </summary>
+	/// <returns><c>true</c> if this instance is attack; otherwise, <c>false</c>.</returns>
+	public bool IsAttack ()
+	{
+		return IsState (StateId.Attack);
+	}
+
+	/// <summary>
+	/// 放大招
+	/// </summary>
+	public void OnUlt ()
+	{
+		ToggleState (StateId.Ult);
+		battleAgent.BaseSprite.ToggleState (StateId.Ult);
+		battleAgent.BaseSprite.PlaySound (StateId.Ult);
+	}
+	
+	/// <summary>
+	/// 大招结束
+	/// </summary>
+	public void OnUltEnd ()
+	{
+		ToggleState (StateId.Idle);
+	}
+	
+	/// <summary>
+	/// 是否在大招
+	/// </summary>
+	/// <returns><c>true</c> if this instance is attack; otherwise, <c>false</c>.</returns>
+	public bool IsUlt ()
+	{
+		return IsState (StateId.Ult);
+	}
+
+
+
+
+	/// <summary>
+	/// Determines whether this instance is sate the specified stateId.
+	/// </summary>
+	/// <returns><c>true</c> if this instance is sate the specified stateId; otherwise, <c>false</c>.</returns>
+	/// <param name="stateId">State identifier.</param>
+	public bool IsState (StateId stateId)
+	{
+		return stateMachine.IsState (stateId);
+	}
+
+	/// <summary>
+	/// 切换状态
 	/// </summary>
 	/// <param name="stateId">State identifier.</param>
-	private void PlaySound(StateId stateId)
+	public void ToggleState (StateId stateId)
 	{
-		//Debug.Log("PlaySound:"+stateId);
-		if (!soundDict.ContainsKey(stateId)) {
-			Debug.Log("No Sound:"+stateId);
-			return;	
-		}
-		
-		String soundName = soundDict[stateId];
-		AudioManager.SharedInstance.FMODEvent(soundName,0.5f );
+		stateMachine.ToggleState (stateId, this.attackMessage);
 	}
 
 
-
-	/// <summary>
-	/// 初始化默认声音
-	/// </summary>
-	protected virtual void InitSound()
+	public virtual void AddSoundDemo ()
 	{
-		soundDict.Add(StateId.Attack,"attack_od");
-		soundDict.Add(StateId.Ult,"ult_od");
-		soundDict.Add(StateId.Dead,"dead_od");
-	}
-
-	/// <summary>
-	/// 计时器初始化
-	/// </summary>
-	protected virtual void InitTimer()
-	{
+		battleAgent.BaseSprite.AddSound (StateId.Attack, "attack_od");
+		battleAgent.BaseSprite.AddSound (StateId.Ult, "ult_od");
+		battleAgent.BaseSprite.AddSound (StateId.Dead, "dead_od");
 
 	}
-
-
-	/// <summary>
-	/// 攻击CD时调用
-	/// </summary>
-	protected virtual void AttackHandler ()
-	{
-		if (battleAgent.Targets==null||battleAgent.Targets.Count==0) {
-			return;
-		}
-
-		
-
-		AttackMessage message = new AttackMessage (battleAgent, BattleManager.SharedInstance.GetEnemyList (), 1);
-		battleAgent.dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
-		
-		//Debug.Log ("attackHandler");
-	}
-
-
-	/// <summary>
-	/// 大招CD时调用
-	/// </summary>
-	protected virtual void UltHandler ()
-	{
-		Debug.Log ("ultHandler");
-	}
-
+	
+//	/// <summary>
+//	/// 计时器初始化
+//	/// </summary>
+//	public virtual void AddTimerDemo ()
+//	{
+//		attackTimer = TimerManager.SharedInstance.CreateTimer (2.0f, new TimerEventHandler (AttackHandler));
+//		ultTimer = TimerManager.SharedInstance.CreateTimer (6.0f, new TimerEventHandler (UltHandler));
+//		
+//		attackTimer.Start ();
+//		ultTimer.Start ();
+//	}
 
 }

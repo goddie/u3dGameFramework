@@ -7,7 +7,7 @@ using UnityEngine;
 using System.Collections;
 
 
-public class BaseBullet : BasePlayer
+public class BaseBullet : BaseAnim
 {
 	/// <summary>
 	/// 子弹速度
@@ -66,8 +66,8 @@ public class BaseBullet : BasePlayer
 		Transform t2 = attackMessage.Targets [0].GameObject.transform;
 		//gameObject.transform.position = t2.position;
 
-		Vector3 pos = MapUtil.RelativeMovePosition(battleAgent.BaseSprite.HitPoint,t2);
-		gameObject.transform.position = new Vector3(pos.x,pos.y,t2.position.z);
+		Vector3 pos = MapUtil.RelativeMovePosition (this.BattleAgent.BaseSprite.HitPoint, t2);
+		gameObject.transform.position = new Vector3 (pos.x, pos.y, t2.position.z);
 		
 	}
 

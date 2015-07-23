@@ -44,7 +44,12 @@ public enum CooldownType
 	/// <summary>
 	/// 普通攻击
 	/// </summary>
-	Attack,
+	Attack=1,
+
+	/// <summary>
+	/// 大招
+	/// </summary>
+	Ult,
 
 	/// <summary>
 	/// 技能1
@@ -59,10 +64,5 @@ public enum CooldownType
 	/// <summary>
 	/// 技能3
 	/// </summary>
-	Spell3,
-
-	/// <summary>
-	/// 大招
-	/// </summary>
-	Ult
+	Spell3
 }

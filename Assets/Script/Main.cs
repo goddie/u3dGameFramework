@@ -29,23 +29,23 @@ public class Main : MonoBehaviour
 
 		btnStart = GameObject.Find ("btnStart");
 
-		btnMXAttack= GameObject.Find ("btnMXAttack");
-		btnMXUlt= GameObject.Find ("btnMXUlt");
-		btnLEAttack= GameObject.Find ("btnLEAttack");
-		btnLEUlt= GameObject.Find ("btnLEUlt");
-		btnHMAttack= GameObject.Find ("btnHMAttack");
-		btnHMUlt= GameObject.Find ("btnHMUlt");
+		btnMXAttack = GameObject.Find ("btnMXAttack");
+		btnMXUlt = GameObject.Find ("btnMXUlt");
+		btnLEAttack = GameObject.Find ("btnLEAttack");
+		btnLEUlt = GameObject.Find ("btnLEUlt");
+		btnHMAttack = GameObject.Find ("btnHMAttack");
+		btnHMUlt = GameObject.Find ("btnHMUlt");
 		btnODAttack = GameObject.Find ("btnODAttack");
 		btnODUlt = GameObject.Find ("btnODUlt");
 
 
-		UUIEventListener.Get (btnHFAttack).onClick = btn1ClickHandler;
-
-		
-		UUIEventListener.Get (btnODAttack).onClick = btnAttackHandler;
-		UUIEventListener.Get (btnMXAttack).onClick = btnAttackHandler;
-		UUIEventListener.Get (btnLEAttack).onClick = btnAttackHandler;
-		UUIEventListener.Get (btnHMAttack).onClick = btnAttackHandler;
+//		UUIEventListener.Get (btnHFAttack).onClick = btn1ClickHandler;
+//
+//		
+//		UUIEventListener.Get (btnODAttack).onClick = btnAttackHandler;
+//		UUIEventListener.Get (btnMXAttack).onClick = btnAttackHandler;
+//		UUIEventListener.Get (btnLEAttack).onClick = btnAttackHandler;
+//		UUIEventListener.Get (btnHMAttack).onClick = btnAttackHandler;
 
 		
 		UUIEventListener.Get (btnODUlt).onClick = btnUtlHandler;
@@ -75,25 +75,25 @@ public class Main : MonoBehaviour
 	///  攻击按钮
 	/// </summary>
 	/// <param name="go">Go.</param>
-	void btnAttackHandler(GameObject go)
+	void btnAttackHandler (GameObject go)
 	{
-		Text txt = go.GetComponentInChildren<Text>();
+		Text txt = go.GetComponentInChildren<Text> ();
 		//Text txt =btn.GetComponentInChildren<Text>();
 		//Debug.Log(txt.text);
 
-		if (txt.text.IndexOf("奥丁")>=0) {
+		if (txt.text.IndexOf ("奥丁") >= 0) {
 			EventCenter.GetInstance.dispatchEvent (BattleEvent.ATTACK, 1);
 		}
 
-		if (txt.text.IndexOf("绿萼")>=0) {
+		if (txt.text.IndexOf ("绿萼") >= 0) {
 			EventCenter.GetInstance.dispatchEvent (BattleEvent.ATTACK, 2);
 		}
 
-		if (txt.text.IndexOf("慕雪")>=0) {
+		if (txt.text.IndexOf ("慕雪") >= 0) {
 			EventCenter.GetInstance.dispatchEvent (BattleEvent.ATTACK, 3);
 		}
 
-		if (txt.text.IndexOf("寒梦")>=0) {
+		if (txt.text.IndexOf ("寒梦") >= 0) {
 			EventCenter.GetInstance.dispatchEvent (BattleEvent.ATTACK, 4);
 		}
 		
@@ -104,26 +104,26 @@ public class Main : MonoBehaviour
 	/// 大招按钮
 	/// </summary>
 	/// <param name="go">Go.</param>
-	void btnUtlHandler(GameObject go)
+	void btnUtlHandler (GameObject go)
 	{
 	
-		Text txt = go.GetComponentInChildren<Text>();
+		Text txt = go.GetComponentInChildren<Text> ();
 		//Text txt =btn.GetComponentInChildren<Text>();
 		//Debug.Log(txt.text);
 		
-		if (txt.text.IndexOf("奥丁")>=0) {
+		if (txt.text.IndexOf ("奥丁") >= 0) {
 			EventCenter.GetInstance.dispatchEvent (BattleEvent.ULT, 11);
 		}
 
-		if (txt.text.IndexOf("绿萼")>=0) {
+		if (txt.text.IndexOf ("绿萼") >= 0) {
 			EventCenter.GetInstance.dispatchEvent (BattleEvent.ULT, 21);
 		}
 
-		if (txt.text.IndexOf("慕雪")>=0) {
+		if (txt.text.IndexOf ("慕雪") >= 0) {
 			EventCenter.GetInstance.dispatchEvent (BattleEvent.ULT, 31);
 		}
 
-		if (txt.text.IndexOf("寒梦")>=0) {
+		if (txt.text.IndexOf ("寒梦") >= 0) {
 			EventCenter.GetInstance.dispatchEvent (BattleEvent.ULT, 41);
 		}
 	}
@@ -141,7 +141,7 @@ public class Main : MonoBehaviour
 	void btnStartClickHandler (GameObject go)
 	{
 		//Debug.Log("btnStartClickHandler");
-		BattleManager.SharedInstance.BattleStart();
+		BattleManager.SharedInstance.BattleStart ();
 	}
 
 

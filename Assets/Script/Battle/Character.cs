@@ -21,8 +21,8 @@ public class Character
 		this.Health = health;
 		this.Attack = attack;
 		this.Prefab = prefab;
-		this.AttackPoint = new Vector3(0,60,0);
-		this.HitPoint = new Vector3(0,60,0);
+		this.AttackPoint = new Vector3 (0, 60, 0);
+		this.HitPoint = new Vector3 (0, 60, 0);
 	}
 
 
@@ -81,8 +81,7 @@ public class Character
 	/// 相对于物体原点的位移
 	/// </summary>
 	/// <value>The attack point.</value>
-	public Vector2 AttackPoint
-	{
+	public Vector2 AttackPoint {
 		get;
 		set;
 	}
@@ -93,12 +92,18 @@ public class Character
 	/// 相对于物体原点的位移
 	/// </summary>
 	/// <value>The hit point.</value>
-	public Vector2 HitPoint
-	{
+	public Vector2 HitPoint {
 		get;
 		set;
 	}
-
+	
+	/// <summary>
+	/// 警戒距离
+	/// 这个距离以内发现目标，开始追击.
+	/// </summary>
+	/// <value>The attack range.</value>
+	public int GuardRange {
+		get;
+		set;
+	}
 }
-
-

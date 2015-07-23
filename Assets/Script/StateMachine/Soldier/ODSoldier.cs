@@ -17,6 +17,7 @@ public class ODSoldier : HeroSoldier
 		new Character(201,"黄柱子",100,3,"Prefabs/effect"),
 		new Character(203,"大招特效",100,3,"Prefabs/worldUlt")
 	};
+	
 
 	public override void TriggerKeyEvent (KeyEventId keyId)
 	{
@@ -38,15 +39,15 @@ public class ODSoldier : HeroSoldier
 			GameObject parent = StageManager.SharedInstance.EffectLayer; 
 			GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
 			baseBullet = bullet.AddComponent<BaseBullet> (); 
-			baseBullet.BattleAgent = this.battleAgent;
+			baseBullet.BattleAgent = this.BattleAgent;
 			//baseBullet.transform.position  = battleAgent.GameObject.transform.position;
 			baseBullet.Speed = 1136.0f / 1000.0f;
 
 
-			Vector3 pos = MapUtil.RelativeMovePosition (battleAgent.BaseSprite.HitPoint, battleAgent.GameObject.transform);
-			baseBullet.transform.position = new Vector3 (pos.x, pos.y, battleAgent.GameObject.transform.position.z);
+			Vector3 pos = MapUtil.RelativeMovePosition (BattleAgent.BaseSprite.HitPoint, BattleAgent.GameObject.transform);
+			baseBullet.transform.position = new Vector3 (pos.x, pos.y, BattleAgent.GameObject.transform.position.z);
 
-			AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
+			AttackMessage message = new AttackMessage (BattleAgent, BattleAgent.Targets, 1);
 
 			baseBullet.FlyToTarget (message);
 
@@ -67,11 +68,11 @@ public class ODSoldier : HeroSoldier
 			GameObject parent = StageManager.SharedInstance.EffectLayer; 
 			GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
 			baseBullet = bullet.AddComponent<BaseBullet> (); 
-			baseBullet.BattleAgent = this.battleAgent;
-			baseBullet.transform.position = battleAgent.GameObject.transform.position;
+			baseBullet.BattleAgent = this.BattleAgent;
+			baseBullet.transform.position = BattleAgent.GameObject.transform.position;
 			baseBullet.Speed = 1136.0f / 1000.0f;
 			
-			AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
+			AttackMessage message = new AttackMessage (BattleAgent, BattleAgent.Targets, 1);
 			
 			baseBullet.FlyToTarget (message);
 
@@ -92,22 +93,16 @@ public class ODSoldier : HeroSoldier
 	/// <summary>
 	/// 初始化默认声音
 	/// </summary>
-	override protected  void InitSound ()
+	override public void AddSoundDemo ()
 	{
-		soundDict.Add (StateId.Attack, "attack_od");
-		soundDict.Add (StateId.Ult, "ult_od");
-		soundDict.Add (StateId.Dead, "dead_od");
+		BattleAgent.BaseSprite.AddSound (StateId.Attack, "attack_od");
+		BattleAgent.BaseSprite.AddSound (StateId.Ult, "ult_od");
+		BattleAgent.BaseSprite.AddSound (StateId.Dead, "dead_od");
+
+		BattleAgent.AddTimerDemo (new float[]{2, 6});
 	}
 
-	override protected void InitTimer ()
-	{
-		attackTimer = TimerManager.SharedInstance.CreateTimer (2.0f, new TimerEventHandler (AttackHandler));
-		ultTimer = TimerManager.SharedInstance.CreateTimer (6.0f, new TimerEventHandler (UltHandler));
 
-		attackTimer.Start ();
-		ultTimer.Start ();
-	}
-	
 
 
 }
