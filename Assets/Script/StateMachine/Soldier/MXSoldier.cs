@@ -18,4 +18,18 @@ public class MXSoldier : HeroSoldier
 		BattleAgent.AddTimerDemo (new float[]{1, 6});
 	}
 
+ 
+	override protected void OnShootOn ()
+	{
+		
+	}
+	
+ 
+	
+	override protected void OnUltShootOn ()
+	{
+		
+	}
+
+
 }

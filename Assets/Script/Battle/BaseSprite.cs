@@ -140,7 +140,17 @@ public class BaseSprite : BaseAnim
 	/// <param name="y">The y coordinate.</param>
 	public void SetMapPosition (float x, float y)
 	{
-		
+		Vector2 screenPos = MapUtil.GetInstance.MapToScreen (new Vector2 (x, y));
+
+		Vector3 screenPos3 = new Vector3 (screenPos.x, screenPos.y, GlobalConfig.cameraFar);
+
+		//battleAgent.GameObject.transform.position = screenPos;
+
+		//screenPoint.z = 10.0f; //distance of the plane from the camera
+		transform.position = Camera.main.ScreenToWorldPoint (screenPos3);
+
+		battleAgent.SetMapPosition (x, y);
+
 	}
 
 	/// <summary>
@@ -149,7 +159,7 @@ public class BaseSprite : BaseAnim
 	/// <param name="battleAgent">攻击方</param>
 	public void HitEffect (BattleAgent attacker)
 	{
-		Debug.Log ("HitEffect");
+		//Debug.Log ("HitEffect");
 
 		float direct = Mathf.Sign (gameObject.transform.localPosition.x - attacker.GameObject.transform.localPosition.x);
 		

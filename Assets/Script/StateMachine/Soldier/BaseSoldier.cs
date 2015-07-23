@@ -53,21 +53,45 @@ public class BaseSoldier : MonoBehaviour
 	/// BattleAgent监听
 	/// </summary>
 	/// <param name="keyId">Key identifier.</param>
-	public virtual void TriggerKeyEvent (KeyEventId keyId)
+	public void TriggerKeyEvent (KeyEventId keyId)
 	{
 		if (keyId == KeyEventId.AttackOn) {
+			this.OnAttackOn ();
+		}
 
-			Debug.Log ("BaseSoldier AttackOn");
+		if (keyId == KeyEventId.ShootOn) {
+			this.OnShootOn ();
+		}
 
-			for (int i = 0; i < battleAgent.Targets.Count; i++) {
-				BattleAgent t = battleAgent.Targets [i];
-				AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
-				t.dispatchEvent (SoldierEvent.HIT, message);
-			}
+
+		if (keyId == KeyEventId.UltShootOn) {
+			this.OnUltShootOn ();
 		}
 	}
 
 	
+	/// <summary>
+	/// Raises the shoot on event.
+	/// </summary>
+	protected virtual void OnShootOn ()
+	{
+	
+	}
+
+	/// <summary>
+	/// Raises the attack on event.
+	/// </summary>
+	protected virtual void OnAttackOn ()
+	{
+		this.OnAttackEnd ();
+	}
+
+
+	protected virtual void OnUltShootOn ()
+	{
+
+	}
+
 
 
 
@@ -87,6 +111,11 @@ public class BaseSoldier : MonoBehaviour
 	public void OnWalk ()
 	{
 		ToggleState (StateId.Walk);
+	}
+
+	public bool IsIdle ()
+	{
+		return IsState (StateId.Idle);
 	}
 
 	/// <summary>
@@ -121,6 +150,13 @@ public class BaseSoldier : MonoBehaviour
 	/// </summary>
 	public void OnAttackEnd ()
 	{
+
+		for (int i = 0; i < battleAgent.Targets.Count; i++) {
+			BattleAgent t = battleAgent.Targets [i];
+			AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
+			t.dispatchEvent (SoldierEvent.HIT, message);
+		}
+
 		ToggleState (StateId.Idle);
 	}
 

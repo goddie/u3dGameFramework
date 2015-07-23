@@ -13,75 +13,43 @@ public class HMSoldier : HeroSoldier
 		new Character(300,"光球",100,3,"Prefabs/ball")
 	};
 	
-	public override void TriggerKeyEvent (KeyEventId keyId)
+	/// <summary>
+	/// Raises the shoot on event.
+	/// </summary>
+	override protected void OnShootOn ()
 	{
 		
-		if (keyId == KeyEventId.AttackOn) {
-			
-			//Debug.Log("OD AttackOn");
-			//			for (int i = 0; i < battleAgent.Targets.Count; i++) {
-			//
-			//				BattleAgent t = battleAgent.Targets [i];
-			//				
-			//				t.dispatchEvent (SoldierEvent.HIT, message);
-			//			}
-		}
+		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [0].Prefab);
+		GameObject parent = StageManager.SharedInstance.EffectLayer; 
+		GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
+		baseBullet = bullet.AddComponent<BaseBullet> (); 
+		baseBullet.BattleAgent = this.BattleAgent;
+		//baseBullet.transform.position  = battleAgent.GameObject.transform.position;
+		baseBullet.Speed = 1136.0f / 1000.0f;
 		
-		if (keyId == KeyEventId.ShootOn) {
-			
-			
-			
-			
-			
-			GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [0].Prefab);
-			GameObject parent = StageManager.SharedInstance.EffectLayer; 
-			GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
-			baseBullet = bullet.AddComponent<BaseBullet> (); 
-			baseBullet.BattleAgent = this.BattleAgent;
-			//baseBullet.transform.position  = battleAgent.GameObject.transform.position;
-			baseBullet.Speed = 1136.0f / 1000.0f;
-
-			Vector3 pos = MapUtil.RelativeMovePosition (BattleAgent.BaseSprite.HitPoint, BattleAgent.GameObject.transform);
-			baseBullet.transform.position = new Vector3 (pos.x, pos.y, BattleAgent.GameObject.transform.position.z);
-			
-			AttackMessage message = new AttackMessage (BattleAgent, BattleAgent.Targets, 1);
-			
-			baseBullet.BornToTarget (message);
-			
-			
-			//			for (int i = 0; i < battleAgent.Targets.Count; i++) {
-			//
-			//				BattleAgent t = battleAgent.Targets [i];
-			//				
-			//				t.dispatchEvent (SoldierEvent.HIT, message);
-			//			}
-			
-		}
+		Vector3 pos = MapUtil.RelativeMovePosition (BattleAgent.BaseSprite.HitPoint, BattleAgent.GameObject.transform);
+		baseBullet.transform.position = new Vector3 (pos.x, pos.y, BattleAgent.GameObject.transform.position.z);
 		
+		AttackMessage message = new AttackMessage (BattleAgent, BattleAgent.Targets, 1);
 		
-		if (keyId == KeyEventId.UltShootOn) {
-			
-			GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [1].Prefab);
-			GameObject parent = StageManager.SharedInstance.EffectLayer; 
-			GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
-			baseBullet = bullet.AddComponent<BaseBullet> (); 
-			baseBullet.BattleAgent = this.BattleAgent;
-			baseBullet.transform.position = BattleAgent.GameObject.transform.position;
-			baseBullet.Speed = 1136.0f / 1000.0f;
-			
-			AttackMessage message = new AttackMessage (BattleAgent, BattleAgent.Targets, 1);
-			
-			baseBullet.FlyToTarget (message);
-
+		baseBullet.BornToTarget (message);
+	}
+	
  
-			
-			//			for (int i = 0; i < battleAgent.Targets.Count; i++) {
-			//				
-			//				BattleAgent t = battleAgent.Targets [i];
-			//				
-			//				t.dispatchEvent (SoldierEvent.HIT, message);
-			//			}
-		}
+	
+	override protected void OnUltShootOn ()
+	{
+		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [1].Prefab);
+		GameObject parent = StageManager.SharedInstance.EffectLayer; 
+		GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
+		baseBullet = bullet.AddComponent<BaseBullet> (); 
+		baseBullet.BattleAgent = this.BattleAgent;
+		baseBullet.transform.position = BattleAgent.GameObject.transform.position;
+		baseBullet.Speed = 1136.0f / 1000.0f;
+		
+		AttackMessage message = new AttackMessage (BattleAgent, BattleAgent.Targets, 1);
+		
+		baseBullet.FlyToTarget (message);
 	}
 
 	/// <summary>

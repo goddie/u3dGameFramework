@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class AStarRoute
 {
@@ -41,8 +42,8 @@ public class AStarRoute
 		goal_x = gx;
 		goal_y = gy;
 		map = mx;
-		map_w = mx.Length;
-		map_h = mx.GetLength (0);
+		map_w = mx.GetLength (0);
+		map_h = mx.GetLength (1);
 		astar_counter = 5000;
 		initCloseList ();
 		initOpenList (goal_x, goal_y);
@@ -157,6 +158,8 @@ public class AStarRoute
 	// 判断一个点是否可以通过
 	private Boolean isCanPass (int x, int y)
 	{
+
+		// Debug.Log (x + "," + y);
 		// 超出边界
 		if (x < 0 || x >= map_w || y < 0 || y >= map_h) {
 			return false;
@@ -230,20 +233,20 @@ public class AStarRoute
 	}
 	
 	// 获得寻路结果
-	public route_pt[] getResult ()
+	public RoutePoint[] getResult ()
 	{
-		route_pt[] result;
-		List<route_pt> route;
+		RoutePoint[] result;
+		List<RoutePoint> route;
 		searchPath ();
 		if (! isFound) {
 			return null;
 		}
-		route = new List<route_pt> ();
+		route = new List<RoutePoint> ();
 		// openList是从目标点向起始点倒推的。
 		int iX = goal_x;
 		int iY = goal_y;
 		while ((iX != start_x || iY != start_y)) {
-			route.Add (new route_pt (iX, iY));
+			route.Add (new RoutePoint (iX, iY));
 			switch (openList [iX, iY, FATHER_DIR]) {
 			case DIR_DOWN:          
 				iY++;            
@@ -276,25 +279,25 @@ public class AStarRoute
 			}
 		}
 		int size = route.Count;
-		result = new route_pt[size];
+		result = new RoutePoint[size];
 		for (int i = 0; i < size; i++) {
-			result [i] = new route_pt ((route_pt)route [i]);
+			result [i] = new RoutePoint ((RoutePoint)route [i]);
 		}
 		return result;
 	}
 }
 
-public class route_pt
+public class RoutePoint
 {
 
 
-	public route_pt (route_pt r)
+	public RoutePoint (RoutePoint r)
 	{
 		this.x = r.x;
 		this.y = r.y;
 	}
 
-	public route_pt (int a, int b)
+	public RoutePoint (int a, int b)
 	{
 		this.x = a;
 		this.y = b;

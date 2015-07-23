@@ -3,15 +3,16 @@ using System.Collections.Generic;
 public class SkillData
 {
 
-	public static List<SkillData> testSkill = new List<SkillData> ()
+	public static Dictionary <int,SkillData> testData = new Dictionary<int, SkillData> ()
 	{
-		new SkillData(1,"近战攻击",2,10),
-		new SkillData(2,"远程攻击",16,10),
-		new SkillData(3,"绿萼大招",50,10),
-		new SkillData(4,"奥丁大招",50,10),
-		new SkillData(5,"寒梦大招",50,10),
-		new SkillData(6,"幕雪大招",50,10)
+		{1,new SkillData(1,"近战攻击",2,10)},
+		{2,new SkillData(2,"远程攻击",50,10)},
+		{3,new SkillData(3,"绿萼大招",50,10)},
+		{4,new SkillData(4,"奥丁大招",50,10)},
+		{5,new SkillData(5,"寒梦大招",50,10)},
+		{6,new SkillData(6,"幕雪大招",50,10)},
 	};
+
 
 	public SkillData ()
 	{

@@ -25,4 +25,7 @@ public class GlobalConfig
 	{
 		Application.targetFrameRate = 30;
 	}
+
+
+	public const float cameraFar = 10.0f;
 }

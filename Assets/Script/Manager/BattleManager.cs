@@ -115,7 +115,8 @@ public class BattleManager : MonoBehaviour
 			BaseSoldier hfSoldier = hf.AddComponent<HFSoldier> (); 
 			BattleAgent agent = new BattleAgent (hfSoldier, testDB [0]);
 			
-			agent.BaseSprite.SetLocalPosition (pos [i].x, pos [i].y);
+			//agent.BaseSprite.SetLocalPosition (pos [i].x, pos [i].y);
+			agent.BaseSprite.SetMapPosition (3, 3);
 			enemyList.Add (agent);
 		}
  
@@ -199,8 +200,10 @@ public class BattleManager : MonoBehaviour
 		
 		BaseSoldier odSoldier = od.AddComponent<ODSoldier> ();
 		BattleAgent agent = new BattleAgent (odSoldier, testDB [1]);
-		
-		agent.BaseSprite.SetLocalPosition (260, -245);
+
+
+		agent.BaseSprite.SetMapPosition (10, 15);
+		//agent.BaseSprite.SetLocalPosition (260, -245);
 		agent.BaseSprite.AddDownEffect ();		
 		
 		soldierList.Add (agent);
