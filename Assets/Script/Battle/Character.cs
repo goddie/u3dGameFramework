@@ -14,7 +14,7 @@ public class Character
 
 	}
 
-	public Character (int id, string name, int health, int attack, string prefab)
+	public Character (int id, string name, int health, int attack, string prefab, int guard)
 	{
 		this.Id = id;
 		this.Name = name;
@@ -23,7 +23,8 @@ public class Character
 		this.Prefab = prefab;
 		this.AttackPoint = new Vector3 (0, 60, 0);
 		this.HitPoint = new Vector3 (0, 60, 0);
-		this.FaceTo = 0;
+		this.FaceTo = -1;
+		this.GuardRange = guard;
 	}
 
 
@@ -117,4 +118,5 @@ public class Character
 		get;
 		set;
 	}
+	
 }

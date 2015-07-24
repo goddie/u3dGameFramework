@@ -12,8 +12,8 @@ public class BaseSprite : BaseAnim
 {
 
 	private List<Character> testDB = new List<Character> (){
-		new Character(200,"落位黄光",100,3,"Prefabs/down"),
-		new Character(201,"受击火花",100,3,"Prefabs/flash")
+		new Character(200,"落位黄光",100,3,"Prefabs/down",0),
+		new Character(201,"受击火花",100,3,"Prefabs/flash",0)
 	};
 
 
@@ -120,29 +120,57 @@ public class BaseSprite : BaseAnim
 	/// </summary>
 	public void FaceToTarget ()
 	{
-		if (this.battleAgent.Targets == null) {
+
+		if (battleAgent.Targets == null) {
 			return;
 		}
+//		if (this.battleAgent.Targets == null) {
+//			return;
+//		}
+//
+//		int sign = (int)Mathf.Sign (this.battleAgent.Targets [0].GameObject.transform.position.x - this.gameObject.transform.position.x);
+//
+//		Vector3 rotation = gameObject.transform.rotation.eulerAngles;
+//		rotation.x = rotation.z = 0;
+//
+//		if ((sign > 0 && this.FaceTo == 0) || (sign > 0 && this.FaceTo == 0) || (sign > 0 && this.FaceTo == 0) || (sign > 0 && this.FaceTo == 0)) {
+//
+//			rotation.y *= -1;
+//			gameObject.transform.eulerAngles = - rotation;
+//			FaceTo = 1;
+//		}
+//
+//		if (sign < 0 && this.FaceTo == 1) {
+//			
+//			rotation.y *= -1;
+//			gameObject.transform.eulerAngles = - rotation;
+//			FaceTo = 1;
+//		}
 
-		int sign = (int)Mathf.Sign (this.battleAgent.Targets [0].GameObject.transform.position.x - this.gameObject.transform.position.x);
+		if (this.FaceTo == 1) {
 
-		Vector3 rotation = gameObject.transform.rotation.eulerAngles;
-		rotation.x = rotation.z = 0;
-
-		if ((sign > 0 && this.FaceTo == 0) || (sign > 0 && this.FaceTo == 0) || (sign > 0 && this.FaceTo == 0) || (sign > 0 && this.FaceTo == 0)) {
-
-			rotation.y *= -1;
-			gameObject.transform.eulerAngles = - rotation;
-			FaceTo = 1;
+			if (this.battleAgent.MapPos.x > this.battleAgent.Targets [0].MapPos.x) {
+				gameObject.transform.localScale = new Vector3 (-1, 1, 1);
+				this.FaceTo = -1;
+			} else {
+//				gameObject.transform.localScale = new Vector3 (-1, 1, 1);
+			}
 		}
 
-		if (sign < 0 && this.FaceTo == 1) {
+		if (this.FaceTo == -1) {
+
+			if (this.battleAgent.MapPos.x < this.battleAgent.Targets [0].MapPos.x) {
+				//gameObject.transform.localScale = new Vector3 (1, 1, 1);
+			} else {
+				gameObject.transform.localScale = new Vector3 (-1, 1, 1);
+				this.FaceTo = 1;
+			}
 			
-			rotation.y *= -1;
-			gameObject.transform.eulerAngles = - rotation;
-			FaceTo = 1;
 		}
 
+
+		
+		
 	}
 	
 	
@@ -188,7 +216,6 @@ public class BaseSprite : BaseAnim
 
 		//screenPoint.z = 10.0f; //distance of the plane from the camera
 		transform.position = Camera.main.ScreenToWorldPoint (screenPos3);
-
 		battleAgent.SetMapPosition (x, y);
 
 	}
@@ -205,16 +232,19 @@ public class BaseSprite : BaseAnim
 		
 		StartCoroutine (BackToIdle ());
 
-		GameObject go = battleAgent.GameObject;
-		Vector3 pos = go.transform.position;
-		Vector3 local = go.transform.localPosition;
-		go.transform.localPosition = new Vector3 (local.x - 3, local.y, local.z);
+//		GameObject go = battleAgent.GameObject;
+//		Vector3 pos = go.transform.position;
+//		Vector3 local = go.transform.localPosition;
+		//go.transform.localPosition = new Vector3 (local.x - 3, local.y, local.z);
+
+
+
 		//go.transform.position = new Vector3(go.transform.position.x - 3 ,go.transform.position.y,go.transform.position.z);
-		Hashtable args = new Hashtable ();
-		args.Add ("easeType", iTween.EaseType.easeOutQuart);
-		args.Add ("x", pos.x);
-		args.Add ("time", 0.1f);
-		iTween.MoveTo (go, args);
+//		Hashtable args = new Hashtable ();
+//		args.Add ("easeType", iTween.EaseType.easeOutQuart);
+//		args.Add ("x", pos.x);
+//		args.Add ("time", 0.1f);
+//		iTween.MoveTo (go, args);
 
 		AddFlashEffect ();
 
@@ -232,9 +262,10 @@ public class BaseSprite : BaseAnim
 		Color r = new Color (1, 120.0f / 255.0f, 120.0f / 255.0f, 1f);
 		img.color = r;
 
-		yield return new WaitForSeconds (0.1f);
+		yield return new WaitForSeconds (0.15f);
 		
 		img.color = Color.white;
+		//go.transform.position = pos;
 	}
 
 
@@ -247,8 +278,15 @@ public class BaseSprite : BaseAnim
 		GameObject parent = StageManager.SharedInstance.EffectLayer; 
 		GameObject down = StageManager.SharedInstance.AddToStage (parent, downPrefab);
 
-		BaseEffect baseEffect = down.AddComponent<BaseEffect> (); 
+		Image img = down.GetComponent<Image> ();
+		img.color = new Color (1.0f, 1.0f, 1.0f, 0.5f);
+
+		BaseEffect baseEffect = down.AddComponent<BaseEffect> ();
+
+		//Vector3 pos = MapUtil.GetInstance.MapToWorld (mapPos.x, mapPos.y);
+
 		baseEffect.transform.position = gameObject.transform.position;
+		baseEffect.transform.localPosition = new Vector3 (baseEffect.transform.localPosition.x, baseEffect.transform.localPosition.y + 300, baseEffect.transform.localPosition.z);
 
 		AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
 		

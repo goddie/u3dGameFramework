@@ -7,6 +7,7 @@ using Vectrosity;
 /// <summary>
 /// 地图工具
 /// </summary>
+using System.Collections.Generic;
 
 public class MapUtil
 {
@@ -103,36 +104,7 @@ public class MapUtil
 
 
 
-	/// <summary>
-	/// 屏幕坐标转地图坐标
-	/// 地图坐标左上角0,0
-	/// </summary>
-	/// <returns>The to map.</returns>
-	/// <param name="screen">Screen.</param>
-	public Vector2 ScreenToMap (Vector2 screen)
-	{
 
-		float dx = Mathf.Ceil (screen.x / colStep);
-		float dy = Mathf.Ceil (((float)Screen.height - screen.y) / rowStep);
-
-		return new Vector2 (dy - 1, dx - 1);
-	}
-
-	/// <summary>
-	/// 地图坐标转屏幕坐标
-	/// 放置在方格正中间
-	/// </summary>
-	/// <returns>The to screen.</returns>
-	/// <param name="map">Map.</param>
-	public Vector2 MapToScreen (Vector2 map)
-	{
-		float dx = map.y * colStep + colStep * 0.5f;
-		//float dy = Screen.height - map.x * rowStep + rowStep * 0.5f;
-
-		float dy = (MAX_ROW - map.x - 1) * rowStep + 0.5f * rowStep;
-
-		return new Vector2 (dx, dy);
-	}
 
 
 
@@ -172,6 +144,7 @@ public class MapUtil
 		VectorPoints p = new VectorPoints ("name", screen, null, 5.0f);
 		p.SetColor (Color.red);
 		p.Draw ();
+
 	}
 	
 	
@@ -208,6 +181,39 @@ public class MapUtil
 			}
 		}
 
+	}
+
+
+
+	/// <summary>
+	/// 屏幕坐标转地图坐标
+	/// 地图坐标左上角0,0
+	/// </summary>
+	/// <returns>The to map.</returns>
+	/// <param name="screen">Screen.</param>
+	public Vector2 ScreenToMap (Vector2 screen)
+	{
+		
+		float dx = Mathf.Ceil (screen.x / colStep);
+		float dy = Mathf.Ceil (((float)Screen.height - screen.y) / rowStep);
+		
+		return new Vector2 (dx - 1, dy - 1);
+	}
+	
+	/// <summary>
+	/// 地图坐标转屏幕坐标
+	/// 放置在方格正中间
+	/// </summary>
+	/// <returns>The to screen.</returns>
+	/// <param name="map">Map.</param>
+	public Vector2 MapToScreen (Vector2 map)
+	{
+		float dx = map.x * colStep + colStep * 0.5f;
+		//float dy = Screen.height - map.x * rowStep + rowStep * 0.5f;
+		
+		float dy = (MAX_ROW - map.y - 1) * rowStep + 0.5f * rowStep;
+		
+		return new Vector2 (dx, dy);
 	}
 
 
@@ -250,6 +256,138 @@ public class MapUtil
 
 		return map;
 	}
+
+
+
+
+	/// <summary>
+	/// 根据目标点算出适合攻击的位置按权重从大到小排。
+	/// 距离越大，权重越高。
+	/// </summary>
+	/// <returns>The attack position.</returns>
+	/// <param name="map">Map.</param>
+	/// <param name="range">Range.</param>
+	public Vector2 GetAttackPos (BattleAgent startAgent, BattleAgent targetAgent, int range)
+	{
+		
+		Vector2 start = startAgent.MapPos;
+		Vector2 target = targetAgent.MapPos;
+		
+		List<Vector2> list = new List<Vector2> ();
+		
+		for (int i = 0; i < MAX_ROW; i++) {
+			for (int j = 0; j < MAX_COL; j++) {
+				
+				Vector2 a = new Vector2 (i, j);
+				float dis = Vector2.Distance (a, target);
+				//同一列也不要
+				if (dis <= range && i != target.y && j < 9 && j > 1) {
+					list.Add (a);
+				}
+				
+			}
+		}
+		
+		List<Vector2> list2 = GetUsedPos ();
+		for (int j = 0; j < list2.Count; j++) {
+			
+			if (list.Contains (list2 [j])) {
+				list.Remove (list2 [j]);
+			}
+		}
+		
+		List<float> disList = new List<float> ();
+		for (int i = 0; i < list.Count; i++) {
+			float d = Vector2.Distance (start, list [i]);
+			disList.Add (d);
+		}
+		float min = Mathf.Min (disList.ToArray ());
+		return list [disList.IndexOf (min)];
+		
+	}
+
+
+	/// <summary>
+	/// 根据目标点算出适合攻击的位置按权重从大到小排。
+	/// 距离越大，权重越高。
+	/// </summary>
+	/// <returns>The attack position.</returns>
+	/// <param name="map">Map.</param>
+	/// <param name="range">Range.</param>
+	public Vector2 GetRangeAttackPos (BattleAgent startAgent, BattleAgent targetAgent, int range)
+	{
+
+		Vector2 start = startAgent.MapPos;
+		Vector2 target = targetAgent.MapPos;
+
+		List<Vector2> list = new List<Vector2> ();
+
+		for (int i = 0; i < MAX_ROW; i++) {
+			for (int j = 0; j < MAX_COL; j++) {
+
+				Vector2 a = new Vector2 (i, j);
+				float dis = Vector2.Distance (a, target);
+				//同一列也不要
+				if (dis <= range && dis > startAgent.Character.GuardRange && i != target.y && j < 9 && j > 1) {
+					list.Add (a);
+				}
+
+			}
+		}
+
+		List<Vector2> list2 = GetUsedPos ();
+		for (int j = 0; j < list2.Count; j++) {
+			
+			if (list.Contains (list2 [j])) {
+				list.Remove (list2 [j]);
+			}
+		}
+
+		//
+
+		float tmp = Vector2.Distance (startAgent.MapPos, targetAgent.MapPos);
+		if (tmp < startAgent.Character.GuardRange && 
+			(startAgent.MapPos.x < 1 || startAgent.MapPos.x > MapUtil.MAX_COL - 1)) {
+
+			int idx = list.Count;
+
+			int next = UnityEngine.Random.Range (0, idx - 1);
+
+			return list [next];
+
+		}
+
+
+
+		List<float> disList = new List<float> ();
+		for (int i = 0; i < list.Count; i++) {
+			float d = Vector2.Distance (start, list [i]);
+			disList.Add (d);
+		}
+		float min = Mathf.Min (disList.ToArray ());
+		return list [disList.IndexOf (min)];
+
+	}
+
+
+	/// <summary>
+	/// 地图上已经占据的位置
+	/// </summary>
+	/// <returns>The used position.</returns>
+	public List<Vector2> GetUsedPos ()
+	{
+		List<BattleAgent> agent = BattleManager.SharedInstance.GetAgentList ();
+
+		List<Vector2> list = new List<Vector2> ();
+
+		for (int i = 0; i < agent.Count; i++) {
+
+			list.Add (agent [i].MapPos);
+		}
+
+		return list;
+	}
+
 
 }
 

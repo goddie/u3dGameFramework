@@ -14,8 +14,7 @@ public class HFSoldier : EnemySoldier
 	{
 		this.BattleAgent.BaseSprite.AddSound (StateId.Attack, "attack_hf");
 		this.BattleAgent.BaseSprite.AddSound (StateId.Dead, "dead_hf");
-		this.BattleAgent.AddTimerDemo (new float[]{1.0f, 6.0f});
-
+		this.BattleAgent.AddTimerDemo (new float[]{0.8f, 6.0f});
 		this.BattleAgent.AddSkillDemo (CooldownType.Attack, SkillData.testData [1]);
 
 	}

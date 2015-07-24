@@ -16,6 +16,12 @@ public class BattleAgent : EventDispatcherBase
 	/// </summary>
 	private Vector2 mapPos;
 
+	public Vector2 MapPos {
+		get {
+			return mapPos;
+		}
+	}
+
 	private AttackMessage attackMessage;
 
 	/// <summary>
@@ -30,6 +36,16 @@ public class BattleAgent : EventDispatcherBase
 	private Dictionary<CooldownType,CooldownTimer> timerDict = new Dictionary<CooldownType, CooldownTimer> ();
 
 
+	private bool isReady;
+
+	public bool IsReady {
+		get {
+			return isReady;
+		}
+		set {
+			isReady = value;
+		}
+	}
 
 	public BattleAgent (BaseSoldier baseSoldier, Character character)
 	{
@@ -57,13 +73,18 @@ public class BattleAgent : EventDispatcherBase
 		this.attackMessage = (AttackMessage)e.data;
 
 		SkillData skill = SkillData.testData [this.attackMessage.SkillId];
-		
+
+
+
 		if (skill.Range < Vector2.Distance (this.attackMessage.Sender.mapPos, 
 		                                    this.attackMessage.Targets [0].mapPos)) {
-			PathToTarget ();
+
+
+			PathToTarget (skill.Range);
 
 			return;
-		} 
+		}
+
 
 		//大招 Id大于20000
 		if (attackMessage.SkillId > 20000) {
@@ -86,26 +107,117 @@ public class BattleAgent : EventDispatcherBase
 	}
 
 
-	public void PathToTarget ()
+	private GameObject gameObject;
+	
+	public GameObject GameObject {
+		get {
+			return gameObject;
+		}
+	}
+	
+	
+	/// <summary>
+	/// 兵种
+	/// </summary>
+	private BaseSoldier baseSoldier;
+	
+	public BaseSoldier BaseSoldier {
+		get {
+			return baseSoldier;
+		}
+		set {
+			baseSoldier = value;
+			baseSoldier.BattleAgent = this;
+		}
+	}
+	
+	
+	/// <summary>
+	/// 动作相关
+	/// </summary>
+	private BaseSprite baseSprite;
+	
+	public BaseSprite BaseSprite {
+		get {
+			return baseSprite;
+		}
+		set {
+			baseSprite = value;
+			baseSprite.BattleAgent = this;
+		}
+	}
+	
+	/// <summary>
+	/// 战斗目标
+	/// </summary>
+	private List<BattleAgent> targets;
+	
+	public List<BattleAgent> Targets {
+		get {
+			return targets;
+		}
+	}	
+	
+	
+	
+	/// <summary>
+	/// 角色属性
+	/// </summary>
+	private Character character;
+	
+	public Character Character {
+		get {
+			return character;
+		}
+		set {
+			character = value;
+			character.BattleAgent = this;
+			this.baseSprite.HitPoint = character.HitPoint;
+			this.baseSprite.AttackPoint = character.AttackPoint;
+		}
+	}
+
+
+
+	
+
+	/// <summary>
+	/// 寻找最适合的攻击站位
+	/// 站位受技能射程影响
+	/// </summary>
+	/// <param name="range">Range.</param>
+	public void PathToTarget (int range)
 	{
 
 
 		Vector2 targetPos = targets [0].mapPos;
+		List<Vector2> result = new List<Vector2> ();
+//		AStarRoute asr = new AStarRoute (MapUtil.GetInstance.GetMapMatrix (), 
+//		                                 (int)mapPos.x, (int)mapPos.y, 
+//		                                 (int)targetPos.x, (int)targetPos.y);
+//		try {
+//			result = asr.getResult ();
+//		} catch (Exception ex) {
+//			Debug.Log (ex.StackTrace);
+//		}
+//		result = asr.getResult ();
 
-		List<Vector2> result = null;
-		AStarRoute asr = new AStarRoute (MapUtil.GetInstance.GetMapMatrix (), 
-		                                 (int)mapPos.x, (int)mapPos.y, 
-		                                 (int)targetPos.x, (int)targetPos.y);
-		try {
-			result = asr.getResult ();
-		} catch (Exception ex) {
-			Debug.Log (ex.StackTrace);
-		}
-		result = asr.getResult ();
 
-		if (result == null) {
-			baseSoldier.OnIdle ();
-			return;
+
+
+//		if (rs == null) {
+//			baseSoldier.OnIdle ();
+//			return;
+//		}
+
+		//近战
+		if (skillDict [CooldownType.Attack].Range == 2) {
+			Vector2 rs = MapUtil.GetInstance.GetAttackPos (this, targets [0], range);
+			result.Add (rs);
+		} else {
+			
+			Vector2 rs = MapUtil.GetInstance.GetRangeAttackPos (this, targets [0], range);
+			result.Add (rs);
 		}
 
 
@@ -115,27 +227,29 @@ public class BattleAgent : EventDispatcherBase
 		List<Vector3> paths = new List<Vector3> ();
 
 		for (int i = 0; i < result.Count; i++) {
-
+			
 			Vector3 v = MapUtil.GetInstance.MapToWorld (result [i].x, result [i].y);
-
 			paths.Add (v);
+
 		}
 
-		//MapUtil.GetInstance.DrawMapPoint (paths.ToArray ());
+		//MapUtil.GetInstance.DrawMapPoint (result.ToArray ());
 
 		//return;
 
 		Hashtable args = new Hashtable ();  
 		//设置路径的点  
-		args.Add ("path", paths.ToArray ());  
+		// args.Add ("path", paths.ToArray ());  
 		//设置类型为线性，线性效果会好一些。  
 		args.Add ("easeType", iTween.EaseType.linear);  
 		//设置寻路的速度  
-		args.Add ("speed", 10f);  
+		args.Add ("speed", 3f);  
+
+		args.Add ("position", paths [0]);
 		//移动的整体时间。如果与speed共存那么优先speed  
 		//args.Add ("time", 5f);  
 		//是否先从原始位置走到路径中第一个点的位置  
-		args.Add ("movetopath", true);  
+		//args.Add ("movetopath", true);  
 		//延迟执行时间  
 		//args.Add ("delay", 0.1f);  
 		//移动的过程中面朝一个点  
@@ -161,75 +275,7 @@ public class BattleAgent : EventDispatcherBase
 	}
 
 
-	private GameObject gameObject;
 
-	public GameObject GameObject {
-		get {
-			return gameObject;
-		}
-	}
- 
-
-	/// <summary>
-	/// 兵种
-	/// </summary>
-	private BaseSoldier baseSoldier;
-
-	public BaseSoldier BaseSoldier {
-		get {
-			return baseSoldier;
-		}
-		set {
-			baseSoldier = value;
-			baseSoldier.BattleAgent = this;
-		}
-	}
-
-
-	/// <summary>
-	/// 动作相关
-	/// </summary>
-	private BaseSprite baseSprite;
-
-	public BaseSprite BaseSprite {
-		get {
-			return baseSprite;
-		}
-		set {
-			baseSprite = value;
-			baseSprite.BattleAgent = this;
-		}
-	}
-
-	/// <summary>
-	/// 战斗目标
-	/// </summary>
-	private List<BattleAgent> targets;
-
-	public List<BattleAgent> Targets {
-		get {
-			return targets;
-		}
-	}	
-
-
-
-	/// <summary>
-	/// 角色属性
-	/// </summary>
-	private Character character;
-
-	public Character Character {
-		get {
-			return character;
-		}
-		set {
-			character = value;
-			character.BattleAgent = this;
-			this.baseSprite.HitPoint = character.HitPoint;
-			this.baseSprite.AttackPoint = character.AttackPoint;
-		}
-	}
 	
 	public void RemoveFromStage ()
 	{
@@ -261,7 +307,29 @@ public class BattleAgent : EventDispatcherBase
 	{
 		CooldownTimer t = TimerManager.SharedInstance.CreateTimer (second, action);
 		timerDict.Add (type, t);
-		t.Start ();
+
+		if (this.baseSoldier.GetType () == typeof(ODSoldier)) {
+			t.Start ();
+		}
+		if (this.baseSoldier.GetType () == typeof(HMSoldier)) {
+			t.Start ();
+		}
+
+		if (this.baseSoldier.GetType () == typeof(LESoldier)) {
+			t.Start ();
+		}
+
+		if (this.gameObject.name == "hf2") {
+			t.Start ();
+		}
+		if (this.gameObject.name == "hf3") {
+			t.Start ();
+		}
+		if (this.gameObject.name == "hf1") {
+			t.Start ();
+		}
+
+		//t.Start ();
 	}
 
 
@@ -271,8 +339,10 @@ public class BattleAgent : EventDispatcherBase
 	/// </summary>
 	protected void AttackHandler ()
 	{
-
-//		if (!baseSoldier.IsIdle ()) {
+		if (!isReady) {
+			return;
+		}
+		//		if (!baseSoldier.IsIdle ()) {
 //			return;
 //		}
 
@@ -286,7 +356,10 @@ public class BattleAgent : EventDispatcherBase
 	/// </summary>
 	protected void UltHandler ()
 	{
-//		if (this.Targets == null || this.Targets.Count == 0) {
+		if (!isReady) {
+			return;
+		}
+		//		if (this.Targets == null || this.Targets.Count == 0) {
 //			return;
 //		}
 //		
@@ -300,10 +373,44 @@ public class BattleAgent : EventDispatcherBase
 	/// </summary>
 	protected void PositonHandler ()
 	{
+		if (!isReady) {
+			return;
+		}
+
+
 		mapPos = MapUtil.GetInstance.WorldToMap (gameObject.transform.position);
 		baseSprite.FaceToTarget ();
-
+		CheckGuardRange ();
 		//Debug.Log (mapPos);
+	}
+
+
+	/// <summary>
+	/// 检测警示范围内是否有敌人
+	/// </summary>
+	protected void CheckGuardRange ()
+	{
+		//近战不警戒
+		if (skillDict [CooldownType.Attack].Range == 2) {
+			return;
+		}
+
+		List<BattleAgent> enemy = BattleManager.SharedInstance.GetEnemyList ();
+
+		for (int i = 0; i < enemy.Count; i++) {
+
+			if (!enemy [i].Targets.Contains (this)) {
+				continue;
+			}
+
+			//进入警戒范围
+			if (Vector2.Distance (enemy [i].MapPos, this.mapPos) <= this.character.GuardRange) {
+
+				PathToTarget (skillDict [CooldownType.Attack].Range);
+			}
+
+		}
+
 	}
 
 	

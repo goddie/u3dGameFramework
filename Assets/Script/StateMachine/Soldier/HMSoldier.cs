@@ -10,7 +10,7 @@ public class HMSoldier : HeroSoldier
 	private BaseBullet baseBullet;
 	
 	private List<Character> testDB = new List<Character> (){
-		new Character(300,"光球",100,3,"Prefabs/ball")
+		new Character(300,"光球",100,3,"Prefabs/ball",0)
 	};
 	
 	/// <summary>
@@ -62,6 +62,7 @@ public class HMSoldier : HeroSoldier
 		BattleAgent.BaseSprite.AddSound (StateId.Dead, "dead_hm");
 
 		BattleAgent.AddTimerDemo (new float[]{1.5f, 6.0f});
+		this.BattleAgent.AddSkillDemo (CooldownType.Attack, SkillData.testData [2]);
 	}
 
 

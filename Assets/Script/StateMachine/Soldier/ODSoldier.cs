@@ -13,9 +13,9 @@ public class ODSoldier : HeroSoldier
 	private BaseBullet baseBullet;
 
 	private List<Character> testDB = new List<Character> (){
-		new Character(200,"红球",100,3,"Prefabs/drop"),
-		new Character(201,"黄柱子",100,3,"Prefabs/effect"),
-		new Character(203,"大招特效",100,3,"Prefabs/worldUlt")
+		new Character(200,"红球",100,3,"Prefabs/drop",0),
+		new Character(201,"黄柱子",100,3,"Prefabs/effect",0),
+		new Character(203,"大招特效",100,3,"Prefabs/worldUlt",0)
 	};
 
 
@@ -67,7 +67,7 @@ public class ODSoldier : HeroSoldier
 		this.BattleAgent.BaseSprite.AddSound (StateId.Ult, "ult_od");
 		this.BattleAgent.BaseSprite.AddSound (StateId.Dead, "dead_od");
 
-		this.BattleAgent.AddTimerDemo (new float[]{2, 6});
+		this.BattleAgent.AddTimerDemo (new float[]{1.5f, 6});
 		this.BattleAgent.AddSkillDemo (CooldownType.Attack, SkillData.testData [2]);
 	}
 

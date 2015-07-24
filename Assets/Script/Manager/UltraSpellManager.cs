@@ -28,8 +28,8 @@ public class UltraSpellManager : MonoBehaviour
 	private GameObject blackMask;
 	private BaseEffect baseEffect;
 	private List<Character> testDB = new List<Character> (){
-		new Character(203,"大招特效",100,3,"Prefabs/worldUlt"),
-		new Character(203,"大招遮罩",100,3,"Prefabs/mask")
+		new Character(203,"大招特效",100,3,"Prefabs/worldUlt",0),
+		new Character(203,"大招遮罩",100,3,"Prefabs/mask",0)
 	};
 
 	void Start ()
@@ -59,7 +59,7 @@ public class UltraSpellManager : MonoBehaviour
 		float aa = 0.8f;
 
 
-		Color c= new Color(img.color.r,img.color.g,img.color.b,aa);
+		Color c = new Color (img.color.r, img.color.g, img.color.b, aa);
 
 		img.color = c;
 
@@ -113,8 +113,8 @@ public class UltraSpellManager : MonoBehaviour
 		baseEffect.transform.position = message.Sender.GameObject.transform.position;
 
 		BattleAgent battleAgent = message.Sender;
-		Vector3 pos = MapUtil.RelativeMovePosition(battleAgent.BaseSprite.HitPoint,battleAgent.GameObject.transform);
-		baseEffect.transform.position = new Vector3(pos.x,pos.y,battleAgent.GameObject.transform.position.z);
+		Vector3 pos = MapUtil.RelativeMovePosition (battleAgent.BaseSprite.HitPoint, battleAgent.GameObject.transform);
+		baseEffect.transform.position = new Vector3 (pos.x, pos.y, battleAgent.GameObject.transform.position.z);
 
 
 		baseEffect.PlayOnAgent (message);
@@ -122,7 +122,7 @@ public class UltraSpellManager : MonoBehaviour
 		MaskFade ();
 		ShakeBg ();
 
-		AudioManager.SharedInstance.FMODEvent("world_ult3",2.0f);
+		AudioManager.SharedInstance.FMODEvent ("world_ult3", 2.0f);
 
 		yield return new WaitForSeconds (0.3f);
 

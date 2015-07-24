@@ -10,8 +10,8 @@ public class LESoldier : HeroSoldier
 	private BaseBullet baseBullet;
 	
 	private List<Character> testDB = new List<Character> (){
-		new Character(300,"箭矢",100,3,"Prefabs/arrow"),
-		new Character(301,"冰箭",100,3,"Prefabs/arrowUlt")
+		new Character(300,"箭矢",100,3,"Prefabs/arrow",0),
+		new Character(301,"冰箭",100,3,"Prefabs/arrowUlt",0)
 	};
 	 	
 	/// <summary>
@@ -68,6 +68,7 @@ public class LESoldier : HeroSoldier
 		BattleAgent.BaseSprite.AddSound (StateId.Dead, "dead_le");
 
 		BattleAgent.AddTimerDemo (new float[]{1.2f, 6.0f});
+		this.BattleAgent.AddSkillDemo (CooldownType.Attack, SkillData.testData [2]);
 	}
 	
 }

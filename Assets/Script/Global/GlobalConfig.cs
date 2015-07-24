@@ -28,4 +28,6 @@ public class GlobalConfig
 
 
 	public const float cameraFar = 10.0f;
+
+ 
 }

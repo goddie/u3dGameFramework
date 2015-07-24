@@ -20,13 +20,13 @@ AnimationClip:
       m_Curve:
       - time: 0
         value: 1
-        inSlope: -1.5
-        outSlope: -1.5
+        inSlope: -3
+        outSlope: -3
         tangentMode: 10
-      - time: .666666687
+      - time: .333333343
         value: 0
-        inSlope: -1.5
-        outSlope: -1.5
+        inSlope: -3
+        outSlope: -3
         tangentMode: 10
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -38,31 +38,31 @@ AnimationClip:
   - curve:
     - time: 0
       value: {fileID: 21300000, guid: 4ec9c1c9e6a353347a5d554377c0491f, type: 3}
-    - time: .0666666701
+    - time: .0333333351
       value: {fileID: 21300000, guid: ce99db125857a3448ade4ffe19808cb0, type: 3}
-    - time: .13333334
+    - time: .0666666701
       value: {fileID: 21300000, guid: 44bdf29bb37ead94ca0ad1b9ca100476, type: 3}
-    - time: .200000003
+    - time: .100000001
       value: {fileID: 21300000, guid: 8008552020951094890776e7080d5004, type: 3}
-    - time: .266666681
+    - time: .13333334
       value: {fileID: 21300000, guid: 9f3af2cdabc221943b4fbb4911683528, type: 3}
-    - time: .333333343
+    - time: .166666672
       value: {fileID: 21300000, guid: 44648bc69cab3a24291da5ee52bba0f4, type: 3}
-    - time: .400000006
+    - time: .200000003
       value: {fileID: 21300000, guid: 64cf8f0a7f7dc3a4d83917a340fb29a7, type: 3}
-    - time: .466666669
+    - time: .233333334
       value: {fileID: 21300000, guid: 328c9d25e6f812244b2309215c7953ae, type: 3}
-    - time: .533333361
+    - time: .266666681
       value: {fileID: 21300000, guid: 750da71bce85e7e40a311c77ba848fd6, type: 3}
-    - time: .600000024
+    - time: .300000012
       value: {fileID: 21300000, guid: 5a3e3c81c7656ca4aa56a5e2e998692c, type: 3}
-    - time: .666666687
+    - time: .333333343
       value: {fileID: 21300000, guid: 5a3e3c81c7656ca4aa56a5e2e998692c, type: 3}
     attribute: m_Sprite
     path: 
     classID: 114
     script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_SampleRate: 15
+  m_SampleRate: 30
   m_WrapMode: 0
   m_Bounds:
     m_Center: {x: 0, y: 0, z: 0}
@@ -96,7 +96,7 @@ AnimationClip:
   m_AnimationClipSettings:
     serializedVersion: 2
     m_StartTime: 0
-    m_StopTime: .733333349
+    m_StopTime: .366666675
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -116,13 +116,13 @@ AnimationClip:
       m_Curve:
       - time: 0
         value: 1
-        inSlope: -1.5
-        outSlope: -1.5
+        inSlope: -3
+        outSlope: -3
         tangentMode: 10
-      - time: .666666687
+      - time: .333333343
         value: 0
-        inSlope: -1.5
-        outSlope: -1.5
+        inSlope: -3
+        outSlope: -3
         tangentMode: 10
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -135,7 +135,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_GenerateMotionCurves: 0
   m_Events:
-  - time: .666666687
+  - time: .333333343
     functionName: TriggerKeyEvent
     data: 
     objectReferenceParameter: {fileID: 0}
