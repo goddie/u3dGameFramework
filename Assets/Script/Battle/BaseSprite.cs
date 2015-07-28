@@ -11,10 +11,10 @@ using System.Collections.Generic;
 public class BaseSprite : BaseAnim
 {
 
-	private List<Character> testDB = new List<Character> (){
-		new Character(200,"落位黄光",100,3,"Prefabs/down",0),
-		new Character(201,"受击火花",100,3,"Prefabs/flash",0)
-	};
+//	private List<Character> testDB = new List<Character> (){
+//		new Character(200,"落位黄光",100,3,"Prefabs/down",0),
+//		new Character(201,"受击火花",100,3,"Prefabs/flash",0)
+//	};
 
 
 	/// <summary>
@@ -53,14 +53,9 @@ public class BaseSprite : BaseAnim
 		soundDict.Add (stateId, soundName);
 	}
 
-
-
-
 	private AnimatorStateInfo currentBaseStage;
 	private StateId stateId;
 	private BattleAgent battleAgent;
-
-
 	private bool isSpellCooldown;
 	private bool isAttackCooldown;
 
@@ -93,8 +88,6 @@ public class BaseSprite : BaseAnim
 		set;
 	}
 
-
-
 	public BattleAgent BattleAgent {
 		get {
 			return battleAgent;
@@ -124,53 +117,101 @@ public class BaseSprite : BaseAnim
 		if (battleAgent.Targets == null) {
 			return;
 		}
-//		if (this.battleAgent.Targets == null) {
-//			return;
-//		}
-//
-//		int sign = (int)Mathf.Sign (this.battleAgent.Targets [0].GameObject.transform.position.x - this.gameObject.transform.position.x);
-//
-//		Vector3 rotation = gameObject.transform.rotation.eulerAngles;
-//		rotation.x = rotation.z = 0;
-//
-//		if ((sign > 0 && this.FaceTo == 0) || (sign > 0 && this.FaceTo == 0) || (sign > 0 && this.FaceTo == 0) || (sign > 0 && this.FaceTo == 0)) {
-//
-//			rotation.y *= -1;
-//			gameObject.transform.eulerAngles = - rotation;
-//			FaceTo = 1;
-//		}
-//
-//		if (sign < 0 && this.FaceTo == 1) {
-//			
-//			rotation.y *= -1;
-//			gameObject.transform.eulerAngles = - rotation;
-//			FaceTo = 1;
-//		}
+	
+		Vector2 pos1 = MapUtil.GetInstance.MapToScreen (battleAgent.MapPos);
+		Vector2 pos2 = MapUtil.GetInstance.MapToScreen (battleAgent.Targets [0].MapPos);
 
-		if (this.FaceTo == 1) {
+		float dx = pos1.x - pos2.x;
+		float dy = pos1.y - pos2.y;
 
-			if (this.battleAgent.MapPos.x > this.battleAgent.Targets [0].MapPos.x) {
-				gameObject.transform.localScale = new Vector3 (-1, 1, 1);
-				this.FaceTo = -1;
-			} else {
-//				gameObject.transform.localScale = new Vector3 (-1, 1, 1);
-			}
-		}
+		float ang = Mathf.Atan2 (dy, dx);
+		float ang2 = ang * (180 / Mathf.PI);
 
-		if (this.FaceTo == -1) {
 
-			if (this.battleAgent.MapPos.x < this.battleAgent.Targets [0].MapPos.x) {
-				//gameObject.transform.localScale = new Vector3 (1, 1, 1);
-			} else {
-				gameObject.transform.localScale = new Vector3 (-1, 1, 1);
-				this.FaceTo = 1;
-			}
+
+		if (ang2 > 0 && ang2 < 90) {
 			
+			DirectTo (1);
+		}
+		
+		
+		if (ang2 < 0 && ang2 > -90) {
+			DirectTo (1);
+		}
+		
+		if (ang2 > 90 && ang2 < 180) {
+			DirectTo (2);
+		}
+		
+		
+		if (ang2 < -90 && ang2 > -180) {
+			DirectTo (2);
 		}
 
+//		if (ang2 == 180 || ang2 == -180) {
+//			if (pos2.x > pos1.x) {
+//				DirectTo(1);
+//			}
+//		}
+	
 
+
+
+//		if (ang2<0 && ang2 > -90 || ang2>0 && ang2<90) {
+//
+//			DirectTo (1);
+//		}
+//
+//		
+//		if (ang2>-180 && ang2 < -90 || ang2>90 && ang2<180) {
+//			
+//			DirectTo (2);
+//		}
+
+	 
+
+
+//		if (this.gameObject.GetComponent<ODSoldier> () != null) {
+//			Debug.Log (ang2 + ", " + DateTime.Now.Millisecond);
+//			Debug.DrawLine (battleAgent.GameObject.transform.position, battleAgent.Targets [0].GameObject.transform.position, Color.red);
+//		}
+
+
+		 
+	}
+
+	/// <summary>
+	/// 转向方向
+	/// </summary>
+	/// <param name="dir">1=左 2=右</param>
+	public void DirectTo (int dir)
+	{
+		//向左
+		if (dir == 1) {
+
+			if (battleAgent.BaseSprite.FaceTo == dir) {
+				return;
+			}
+
+			battleAgent.BaseSprite.FaceTo = dir;
+			Vector3 theScale = transform.localScale;
+			theScale.x = 1;
+			transform.localScale = theScale;
+		}
+
+		if (dir == 2) {
+			if (battleAgent.BaseSprite.FaceTo == dir) {
+				return;
+			}
+
+			battleAgent.BaseSprite.FaceTo = dir;
+			Vector3 theScale = transform.localScale;
+			theScale.x *= -1;
+			transform.localScale = theScale;
+		}
 		
-		
+
+
 	}
 	
 	
@@ -180,10 +221,11 @@ public class BaseSprite : BaseAnim
 	/// <param name="state">State.</param>
 	public void ToggleState (StateId stateId)
 	{
- 
+
 		//animator.Play("hf_action_attack",0,1.0f);
 		//SetBool (stateId, true);
 		StartCoroutine (PlayOneShot (stateId));
+
 	}
 
 
@@ -274,7 +316,7 @@ public class BaseSprite : BaseAnim
 	/// </summary>
 	public void AddDownEffect ()
 	{
-		GameObject downPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [0].Prefab);
+		GameObject downPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [5].Prefab);
 		GameObject parent = StageManager.SharedInstance.EffectLayer; 
 		GameObject down = StageManager.SharedInstance.AddToStage (parent, downPrefab);
 
@@ -294,20 +336,21 @@ public class BaseSprite : BaseAnim
 	}
 
 	/// <summary>
-	/// 火花特效
+	/// 受击火花特效
 	/// </summary>
 	public void AddFlashEffect ()
 	{
-		GameObject prefab = ResourceManager.GetInstance.LoadPrefab (testDB [1].Prefab);
+		GameObject prefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [6].Prefab);
 		GameObject parent = StageManager.SharedInstance.EffectLayer; 
 		GameObject go = StageManager.SharedInstance.AddToStage (parent, prefab);
 		
 		BaseEffect baseEffect = go.AddComponent<BaseEffect> (); 
 		//baseEffect.transform.position  = gameObject.transform.position;
 
-		Vector3 pos = MapUtil.RelativeMovePosition (battleAgent.BaseSprite.HitPoint, battleAgent.GameObject.transform);
-		baseEffect.transform.position = new Vector3 (pos.x, pos.y, battleAgent.GameObject.transform.position.z);
+		//Vector3 pos = MapUtil.RelativeMovePosition (battleAgent.BaseSprite.HitPoint, battleAgent.GameObject.transform);
+		//baseEffect.transform.position = new Vector3 (pos.x, pos.y, battleAgent.GameObject.transform.position.z);
 
+		baseEffect.transform.position = MapUtil.GetHitPointWorld (battleAgent);
 
 		AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
 		

@@ -13,6 +13,9 @@ using UnityEngine.UI;
 
 public class UltraSpellManager : MonoBehaviour
 {
+
+	private AttackMessage message;
+
 	private static UltraSpellManager instance = null;
 	
 	public static UltraSpellManager SharedInstance {
@@ -27,10 +30,10 @@ public class UltraSpellManager : MonoBehaviour
 
 	private GameObject blackMask;
 	private BaseEffect baseEffect;
-	private List<Character> testDB = new List<Character> (){
-		new Character(203,"大招特效",100,3,"Prefabs/worldUlt",0),
-		new Character(203,"大招遮罩",100,3,"Prefabs/mask",0)
-	};
+//	private List<Character> testDB = new List<Character> (){
+//		new Character(203,"大招特效",100,3,"Prefabs/worldUlt",0),
+//		new Character(203,"大招遮罩",100,3,"Prefabs/mask",0)
+//	};
 
 	void Start ()
 	{
@@ -48,7 +51,7 @@ public class UltraSpellManager : MonoBehaviour
 	{
 
 		if (blackMask == null) {
-			GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [1].Prefab);
+			GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [8].Prefab);
 			GameObject parent = StageManager.SharedInstance.MaskLayer; 
 			blackMask = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
 
@@ -56,7 +59,7 @@ public class UltraSpellManager : MonoBehaviour
 
 		blackMask.SetActive (false);
 		Image img = blackMask.GetComponent<Image> ();
-		float aa = 0.8f;
+		float aa = 1.0f;
 
 
 		Color c = new Color (img.color.r, img.color.g, img.color.b, aa);
@@ -71,8 +74,18 @@ public class UltraSpellManager : MonoBehaviour
 	/// <param name="c">C.</param>
 	void BattleUltLoadHandler (CEvent c)
 	{
+
+		ShakeBg ();
+
+		AudioManager.SharedInstance.FMODEvent ("world_ult3", 1.0f);
+
+
 		AttackMessage message = (AttackMessage)c.data;	
 		StartCoroutine ("PlayUltEffect", message);
+
+		BattleAgent battleAgent = message.Sender;
+		battleAgent.dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
+	
 	}
 
 	/// <summary>
@@ -94,41 +107,58 @@ public class UltraSpellManager : MonoBehaviour
 	/// </summary>
 	void MaskFade ()
 	{
+	
 		blackMask.SetActive (true);
 		Hashtable args = new Hashtable ();
-		args.Add ("time", 1f);
+		args.Add ("time", 1.5f);
 		args.Add ("alpha", 0);
-
+		args.Add ("oncomplete", "MaskFadeComplete");
+		args.Add ("oncompletetarget", this.gameObject);
+		args.Add ("ignoretimescale", true);
 		//Image img = blackMask.GetComponent<Image>();
+		iTween.FadeTo (blackMask, args);
+	
+	}
 
-		iTween.FadeTo (blackMask, args);	
+	public void MaskFadeComplete ()
+	{
+		Debug.Log ("MaskFadeComplete");
+		blackMask.SetActive (false);
+		Image img = blackMask.GetComponent<Image> ();
+		float aa = 1.0f;
+		Color c = new Color (img.color.r, img.color.g, img.color.b, aa);
+		img.color = c;
+
+
 	}
 
 	IEnumerator PlayUltEffect (AttackMessage message)
 	{
-		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [0].Prefab);
-		GameObject parent = StageManager.SharedInstance.EffectLayer; 
+		Time.timeScale = 0.6f;
+
+		this.message = message;
+
+		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [7].Prefab);
+		GameObject parent = StageManager.SharedInstance.MaskLayer; 
 		GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
 		baseEffect = bullet.AddComponent<BaseEffect> ();
-		baseEffect.transform.position = message.Sender.GameObject.transform.position;
+		//baseEffect.transform.position = message.Sender.GameObject.transform.position;
 
+
+		//Vector3 pos = MapUtil.RelativeMovePosition (battleAgent.BaseSprite.HitPoint, battleAgent.GameObject.transform);
+		//baseEffect.transform.position = new Vector3 (pos.x, pos.y, battleAgent.GameObject.transform.position.z);
 		BattleAgent battleAgent = message.Sender;
-		Vector3 pos = MapUtil.RelativeMovePosition (battleAgent.BaseSprite.HitPoint, battleAgent.GameObject.transform);
-		baseEffect.transform.position = new Vector3 (pos.x, pos.y, battleAgent.GameObject.transform.position.z);
-
-
+		baseEffect.transform.position = MapUtil.GetHitPointWorld (battleAgent);
 		baseEffect.PlayOnAgent (message);
 
 		MaskFade ();
-		ShakeBg ();
 
-		AudioManager.SharedInstance.FMODEvent ("world_ult3", 2.0f);
 
-		yield return new WaitForSeconds (0.3f);
+		yield return new WaitForSeconds (0.6f);
 
-		addMask ();
+		//addMask ();
+		Time.timeScale = 1.0f;
 
-		message.Sender.dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
 	}
 
 

@@ -11,51 +11,66 @@ public class ODSoldier : HeroSoldier
 
 	private float speed = 1.0f;
 	private BaseBullet baseBullet;
-
-	private List<Character> testDB = new List<Character> (){
-		new Character(200,"红球",100,3,"Prefabs/drop",0),
-		new Character(201,"黄柱子",100,3,"Prefabs/effect",0),
-		new Character(203,"大招特效",100,3,"Prefabs/worldUlt",0)
-	};
-
-
- 
+	 
 	override protected void OnShootOn ()
 	{
-		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [0].Prefab);
+		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [0].Prefab);
 		GameObject parent = StageManager.SharedInstance.EffectLayer; 
 		GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
+
+
 		baseBullet = bullet.AddComponent<BaseBullet> (); 
 		baseBullet.BattleAgent = this.BattleAgent;
-		//baseBullet.transform.position  = battleAgent.GameObject.transform.position;
 		baseBullet.Speed = 1136.0f / 1000.0f;
 		
+		//从攻击点创建子弹
+//		Vector3 pos = MapUtil.RelativeMovePosition (this.BattleAgent.BaseSprite.HitPoint, BattleAgent.GameObject.transform);
+//		baseBullet.transform.position = new Vector3 (pos.x, pos.y, this.BattleAgent.GameObject.transform.position.z);
+
+
+		baseBullet.transform.position = MapUtil.GetHitPointWorld (this.BattleAgent);
 		
-		Vector3 pos = MapUtil.RelativeMovePosition (BattleAgent.BaseSprite.HitPoint, BattleAgent.GameObject.transform);
-		baseBullet.transform.position = new Vector3 (pos.x, pos.y, BattleAgent.GameObject.transform.position.z);
-		
-		AttackMessage message = new AttackMessage (BattleAgent, BattleAgent.Targets, 1);
-		
+		AttackMessage message = new AttackMessage (this.BattleAgent, BattleAgent.Targets, 1);
 		baseBullet.FlyToTarget (message);
 	}
-	
- 
-	
-	
+
 	override protected void OnUltShootOn ()
 	{
-		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [1].Prefab);
-		GameObject parent = StageManager.SharedInstance.EffectLayer; 
-		GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
-		baseBullet = bullet.AddComponent<BaseBullet> (); 
-		baseBullet.BattleAgent = this.BattleAgent;
-		baseBullet.transform.position = BattleAgent.GameObject.transform.position;
-		baseBullet.Speed = 1136.0f / 1000.0f;
-		
-		AttackMessage message = new AttackMessage (BattleAgent, BattleAgent.Targets, 1);
-		
-		baseBullet.FlyToTarget (message);
+
+
+		List<BattleAgent> targets = BattleManager.SharedInstance.GetEnemyList ();
+		for (int i = 0; i < targets.Count; i++) {
+
+			List<BattleAgent> tlist=new List<BattleAgent>();
+			tlist.Add(targets[i]);
+
+			GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [1].Prefab);
+			GameObject parent = StageManager.SharedInstance.EffectLayer; 
+			GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
+			baseBullet = bullet.AddComponent<BaseBullet> (); 
+			baseBullet.BattleAgent = this.BattleAgent;
+			baseBullet.transform.position = MapUtil.GetHitPointWorld(targets[i]);
+
+			AttackMessage message = new AttackMessage (BattleAgent, tlist, 1);
+			baseBullet.FlyToTargetRoot (message,0.5f);
+		}
 	}
+
+
+//	override protected void OnUltShootOn ()
+//	{
+//		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB[1].Prefab);
+//		GameObject parent = StageManager.SharedInstance.EffectLayer; 
+//		GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
+//		baseBullet = bullet.AddComponent<BaseBullet> (); 
+//		baseBullet.BattleAgent = this.BattleAgent;
+//		baseBullet.transform.position = BattleAgent.GameObject.transform.position;
+//		baseBullet.Speed = 1136.0f / 1000.0f;
+//		
+//		AttackMessage message = new AttackMessage (BattleAgent, BattleAgent.Targets, 1);
+//		
+//		baseBullet.FlyToTarget (message);
+//	}
 	
 
 	/// <summary>
@@ -67,7 +82,7 @@ public class ODSoldier : HeroSoldier
 		this.BattleAgent.BaseSprite.AddSound (StateId.Ult, "ult_od");
 		this.BattleAgent.BaseSprite.AddSound (StateId.Dead, "dead_od");
 
-		this.BattleAgent.AddTimerDemo (new float[]{1.5f, 6});
+		this.BattleAgent.AddTimerDemo (new float[]{0.8f, 6});
 		this.BattleAgent.AddSkillDemo (CooldownType.Attack, SkillData.testData [2]);
 	}
 

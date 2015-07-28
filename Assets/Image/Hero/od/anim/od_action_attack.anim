@@ -19,19 +19,19 @@ AnimationClip:
   - curve:
     - time: 0
       value: {fileID: 21300000, guid: 6aefef91cdc7a4506b2a1f9b8636d924, type: 3}
-    - time: .13333334
+    - time: .0500000007
       value: {fileID: 21300000, guid: 4e83d9d0963ae4fe5bb5830bce8f1be7, type: 3}
-    - time: .266666681
+    - time: .100000001
       value: {fileID: 21300000, guid: 3914bec0496334963b8e9bb4e5e1ed37, type: 3}
-    - time: .400000006
+    - time: .150000006
       value: {fileID: 21300000, guid: fe8140de5cdeb4327bd50ff0c3f35d93, type: 3}
-    - time: .533333361
+    - time: .200000003
       value: {fileID: 21300000, guid: 2661c276c73304974b92559801c6a3f1, type: 3}
     attribute: m_Sprite
     path: 
     classID: 114
     script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_SampleRate: 15
+  m_SampleRate: 20
   m_WrapMode: 0
   m_Bounds:
     m_Center: {x: 0, y: 0, z: 0}
@@ -53,7 +53,7 @@ AnimationClip:
   m_AnimationClipSettings:
     serializedVersion: 2
     m_StartTime: 0
-    m_StopTime: .600000024
+    m_StopTime: .25
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -73,7 +73,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_GenerateMotionCurves: 0
   m_Events:
-  - time: .333333343
+  - time: .150000006
     functionName: TriggerKeyEvent
     data: 
     objectReferenceParameter: {fileID: 0}

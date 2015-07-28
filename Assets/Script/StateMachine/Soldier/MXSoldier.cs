@@ -16,7 +16,7 @@ public class MXSoldier : HeroSoldier
 		BattleAgent.BaseSprite.AddSound (StateId.Dead, "dead_mx");
 
 		BattleAgent.AddTimerDemo (new float[]{1, 6});
-		this.BattleAgent.AddSkillDemo (CooldownType.Attack, SkillData.testData [1]);
+		this.BattleAgent.AddSkillDemo (CooldownType.Attack, SkillData.testData [3]);
 	}
 
  

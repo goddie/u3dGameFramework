@@ -2,16 +2,38 @@ using System.Collections.Generic;
 
 public class SkillData
 {
+	/// <summary>
+	/// 近战距离
+	/// </summary>
+	public const int MELEE = 2;
+
+	/// <summary>
+	/// BOSS近战距离
+	/// </summary>
+	public const int BOSS_MELEE = 5;
+
+	/// <summary>
+	/// 远程距离
+	/// </summary>
+	public const int RANGE = 10;
+
+	/// <summary>
+	/// 大招距离
+	/// </summary>
+	public const int ULT = 50;
 
 	public static Dictionary <int,SkillData> testData = new Dictionary<int, SkillData> ()
 	{
-		{1,new SkillData(1,"近战攻击",2,10)},
-		{2,new SkillData(2,"远程攻击",8,10)},
-		{3,new SkillData(3,"绿萼大招",50,10)},
-		{4,new SkillData(4,"奥丁大招",50,10)},
-		{5,new SkillData(5,"寒梦大招",50,10)},
-		{6,new SkillData(6,"幕雪大招",50,10)},
-		{7,new SkillData(7,"近战攻击",4,10)}
+		{1,new SkillData(1,"近战攻击",MELEE,10)},
+		{2,new SkillData(2,"远程攻击",RANGE,10)},
+		{3,new SkillData(3,"中程攻击",BOSS_MELEE,10)},
+		{20002,new SkillData(20002,"绿萼大招",ULT,10)},
+		{20001,new SkillData(20001,"奥丁大招",ULT,10)},
+		{20004,new SkillData(20004,"寒梦大招",ULT,10)},
+		{20003,new SkillData(20003,"幕雪大招",ULT,10)},
+		{20005,new SkillData(20005,"蓉蓉大招",ULT,10)},
+		{20006,new SkillData(20006,"阿莫大招",ULT,10)}
+
 	};
 
 

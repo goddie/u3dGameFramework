@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: ab11075b74a3e884a90849552c84cb07
-timeCreated: 1436866437
+guid: af4fb97d9abba144eba6dd9f27cb956b
+timeCreated: 1437824105
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName: {}
@@ -49,7 +49,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites: []
-  spritePackingTag: world_effect
+  spritePackingTag: world_atlas
   userData: 
   assetBundleName: 
   assetBundleVariant: 

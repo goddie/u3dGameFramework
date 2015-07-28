@@ -123,12 +123,15 @@ public class StateMachine
 			return;
 		}
 
+		//Debug.Log("cur:"+CurrentState.StateId+",new :"+newStateId);
+
 		//退出当前状态  
 		CurrentState.OnExit ();
 		this.CurrentState = newState;
 
 		newState.OnEnter (param);
 
+		//Debug.Log("cur:"+CurrentState.StateId);
 	}
 
  

@@ -16,8 +16,6 @@ public class MapUtil
 	public static readonly MapUtil GetInstance = new MapUtil ();
 	public const float  MAX_ROW = 12.0f;
 	public const float  MAX_COL = 16.0f;
-
-
 	private float rowStep;
 
 	public float RowStep {
@@ -64,6 +62,30 @@ public class MapUtil
 		return targetScreen;
 	}
 
+
+	/// <summary>
+	/// 物体的受击点世界坐标
+	/// </summary>
+	/// <returns>The hit point world.</returns>
+	/// <param name="agent">Agent.</param>
+	public static Vector3 GetHitPointWorld (BattleAgent agent)
+	{
+		//return agent.GameObject.transform.position;
+		//物体位置
+		Vector3 local = agent.GameObject.transform.localPosition;
+		//受击点相对坐标
+		Vector3 hitLocal = local + agent.BaseSprite.HitPoint;
+	
+		//受击点世界坐标
+		Vector3 hitScreen = StageManager.SharedInstance.HeroLayer.gameObject.transform.TransformVector (hitLocal);
+//
+		Vector3 hitScreen2 = new Vector3 (hitScreen.x, hitScreen.y, Camera.main.farClipPlane);
+
+		//screenPoint.z = 10.0f; //distance of the plane from the camera
+		//Vector3 pos = Camera.main.ScreenToWorldPoint (hitScreen2);
+
+		return hitScreen2;
+	}
 
 
 
@@ -131,7 +153,6 @@ public class MapUtil
 		p.Draw ();
 	}
 
-
 	public void DrawMapPoint (Vector2[] map)
 	{
 		Vector2[] screen = new Vector2[map.Length];
@@ -163,12 +184,10 @@ public class MapUtil
 		CreateRect (x, y, w, h, Color.red);
 	}
 
-
 	public int[,] GetMapMatrix ()
 	{
 		return mapMatrix;
 	}
-
 
 	public void InitMapMatrix ()
 	{
@@ -258,6 +277,68 @@ public class MapUtil
 	}
 
 
+	/// <summary>
+	/// 优先同一行站位攻击
+	/// </summary>
+	/// <returns>The attack position same row.</returns>
+	/// <param name="startAgent">Start agent.</param>
+	/// <param name="targetAgent">Target agent.</param>
+	/// <param name="range">Range.</param>
+	public Vector2 GetAttackPosSameRow (BattleAgent startAgent, BattleAgent targetAgent, int range)
+	{
+		
+		Vector2 start = startAgent.MapPos;
+		Vector2 target = targetAgent.MapPos;
+		
+		List<Vector2> list = new List<Vector2> ();
+		
+		//可攻击点
+		for (int i = 0; i < MAX_ROW; i++) {
+			for (int j = 0; j < MAX_COL; j++) {
+				
+				Vector2 a = new Vector2 (i, j);
+				float dis = Vector2.Distance (a, target);
+				//同一列也不要 不要占屏幕第一行，最后两行
+				if (dis <= range && i != target.x && j < 9 && j > 1) {
+					list.Add (a);
+				}
+				
+			}
+		}
+		
+		//有人占据的点
+		List<Vector2> list2 = GetUsedPos ();
+		
+		//移除有人占据的点
+		for (int j = 0; j < list2.Count; j++) {
+			
+			if (list.Contains (list2 [j])) {
+				list.Remove (list2 [j]);
+			}
+		}
+
+		List<Vector2> sameRow = new List<Vector2> ();
+		for (int i = 0; i < list.Count; i++) {
+
+			if (list [i].y == target.y) {
+				sameRow.Add (list [i]);
+			}
+		}
+
+		if (sameRow.Count == 0) {
+			for (int i = 0; i < list.Count; i++) {
+				
+				if (list [i].y + 1 == target.y || list [i].y - 1 == target.y) {
+					sameRow.Add (list [i]);
+				}
+			}
+		}
+
+		int idx = sameRow.Count;
+		int next = UnityEngine.Random.Range (0, idx - 1);
+		return sameRow [next];
+		
+	}
 
 
 	/// <summary>
@@ -274,21 +355,29 @@ public class MapUtil
 		Vector2 target = targetAgent.MapPos;
 		
 		List<Vector2> list = new List<Vector2> ();
-		
+
+		//可攻击点
 		for (int i = 0; i < MAX_ROW; i++) {
 			for (int j = 0; j < MAX_COL; j++) {
 				
 				Vector2 a = new Vector2 (i, j);
 				float dis = Vector2.Distance (a, target);
-				//同一列也不要
-				if (dis <= range && i != target.y && j < 9 && j > 1) {
+				//同一列也不要 不要占屏幕第一行，最后两行
+				if (dis <= range && i != target.x && j < 9 && j > 1) {
 					list.Add (a);
 				}
 				
 			}
 		}
-		
+
+		if (list.Count==0) {
+			Debug.Log("list");
+		}
+
+		//有人占据的点
 		List<Vector2> list2 = GetUsedPos ();
+
+		//移除有人占据的点
 		for (int j = 0; j < list2.Count; j++) {
 			
 			if (list.Contains (list2 [j])) {
@@ -302,6 +391,8 @@ public class MapUtil
 			disList.Add (d);
 		}
 		float min = Mathf.Min (disList.ToArray ());
+
+		//距离攻击方最近的可攻击点
 		return list [disList.IndexOf (min)];
 		
 	}
@@ -328,7 +419,7 @@ public class MapUtil
 				Vector2 a = new Vector2 (i, j);
 				float dis = Vector2.Distance (a, target);
 				//同一列也不要
-				if (dis <= range && dis > startAgent.Character.GuardRange && i != target.y && j < 9 && j > 1) {
+				if (dis <= range && dis > startAgent.Character.GuardRange && i != target.x && j < 9 && j > 1) {
 					list.Add (a);
 				}
 
@@ -346,26 +437,38 @@ public class MapUtil
 		//
 
 		float tmp = Vector2.Distance (startAgent.MapPos, targetAgent.MapPos);
-		if (tmp < startAgent.Character.GuardRange && 
-			(startAgent.MapPos.x < 1 || startAgent.MapPos.x > MapUtil.MAX_COL - 1)) {
-
-			int idx = list.Count;
-
-			int next = UnityEngine.Random.Range (0, idx - 1);
-
-			return list [next];
-
-		}
 
 
+		int idx = list.Count;
+		
+		int next = UnityEngine.Random.Range (0, idx - 1);
+		
+		return list [next];
 
-		List<float> disList = new List<float> ();
-		for (int i = 0; i < list.Count; i++) {
-			float d = Vector2.Distance (start, list [i]);
-			disList.Add (d);
-		}
-		float min = Mathf.Min (disList.ToArray ());
-		return list [disList.IndexOf (min)];
+
+		//如果近身，或者靠近屏幕边缘就随机到下一个位置
+//		if (tmp < startAgent.Character.GuardRange && 
+//			(startAgent.MapPos.x < 1 || startAgent.MapPos.x > MapUtil.MAX_COL - 1)) {
+//
+//			int idx = list.Count;
+//
+//			int next = UnityEngine.Random.Range (0, idx - 1);
+//
+//			return list [next];
+//
+//		} else {
+//			List<float> disList = new List<float> ();
+//			for (int i = 0; i < list.Count; i++) {
+//				float d = Vector2.Distance (start, list [i]);
+//				disList.Add (d);
+//			}
+//			float min = Mathf.Min (disList.ToArray ());
+//			return list [disList.IndexOf (min)];
+//		}
+
+
+
+
 
 	}
 

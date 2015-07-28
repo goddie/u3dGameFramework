@@ -49,7 +49,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites: []
-  spritePackingTag: world_effect_down
+  spritePackingTag: world_atlas
   userData: 
   assetBundleName: 
   assetBundleVariant: 

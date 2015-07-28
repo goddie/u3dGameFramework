@@ -112,6 +112,9 @@ public class BaseSoldier : MonoBehaviour
 	public void OnWalk ()
 	{
 		ToggleState (StateId.Walk);
+		if (IsWalk()) {
+			battleAgent.BaseSprite.ToggleState (StateId.Walk);
+		}
 	}
 
 	public bool IsIdle ()
@@ -125,6 +128,7 @@ public class BaseSoldier : MonoBehaviour
 	public void OnWalkEnd ()
 	{
 		ToggleState (StateId.Idle);
+		this.battleAgent.FinishMove();
 	}
 
 	/// <summary>
@@ -142,8 +146,12 @@ public class BaseSoldier : MonoBehaviour
 	public void OnAttack ()
 	{
 		ToggleState (StateId.Attack);
-		battleAgent.BaseSprite.ToggleState (StateId.Attack);
-		battleAgent.BaseSprite.PlaySound (StateId.Attack);
+
+		if (IsAttack()||IsWalk()) {
+			battleAgent.BaseSprite.ToggleState (StateId.Attack);
+			battleAgent.BaseSprite.PlaySound (StateId.Attack);	
+		}
+
 	}
 
 	/// <summary>
@@ -151,14 +159,15 @@ public class BaseSoldier : MonoBehaviour
 	/// </summary>
 	public void OnAttackEnd ()
 	{
-
 		for (int i = 0; i < battleAgent.Targets.Count; i++) {
 			BattleAgent t = battleAgent.Targets [i];
 			AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
 			t.dispatchEvent (SoldierEvent.HIT, message);
 		}
 
-		ToggleState (StateId.Idle);
+		OnIdle();
+
+		this.battleAgent.FinishMove();
 	}
 
 	/// <summary>
@@ -176,8 +185,15 @@ public class BaseSoldier : MonoBehaviour
 	public void OnUlt ()
 	{
 		ToggleState (StateId.Ult);
-		battleAgent.BaseSprite.ToggleState (StateId.Ult);
-		battleAgent.BaseSprite.PlaySound (StateId.Ult);
+
+		if (IsUlt()) {
+			//移到最顶上
+			gameObject.transform.parent = StageManager.SharedInstance.MaskLayer.gameObject.transform;
+
+			battleAgent.BaseSprite.ToggleState (StateId.Ult);
+			battleAgent.BaseSprite.PlaySound (StateId.Ult);
+		}
+
 	}
 	
 	/// <summary>
@@ -186,6 +202,13 @@ public class BaseSoldier : MonoBehaviour
 	public void OnUltEnd ()
 	{
 		ToggleState (StateId.Idle);
+
+		if (this.GetType()==typeof(HeroSoldier)) {
+			gameObject.transform.parent = StageManager.SharedInstance.HeroLayer.gameObject.transform;
+		}else
+		{
+			gameObject.transform.parent = StageManager.SharedInstance.NpcLayer.gameObject.transform;
+		}
 	}
 	
 	/// <summary>

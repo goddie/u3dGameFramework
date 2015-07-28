@@ -23,8 +23,9 @@ public class Character
 		this.Prefab = prefab;
 		this.AttackPoint = new Vector3 (0, 60, 0);
 		this.HitPoint = new Vector3 (0, 60, 0);
-		this.FaceTo = -1;
+		this.FaceTo = 1;
 		this.GuardRange = guard;
+		this.Speed = 7.0f;
 	}
 
 
@@ -115,6 +116,16 @@ public class Character
 	/// </summary>
 	/// <value>The face to.</value>
 	public int FaceTo {
+		get;
+		set;
+	}
+
+	/// <summary>
+	/// 速度
+	/// </summary>
+	/// <value>The speed.</value>
+	public float Speed
+	{
 		get;
 		set;
 	}

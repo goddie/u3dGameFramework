@@ -19,9 +19,12 @@ public class Main : MonoBehaviour
 	private GameObject btnHMAttack;
 	private GameObject btnHMUlt;
 
+	private GameObject btnRRAttack;
+	private GameObject btnRRUlt;
+
 	void Start ()
 	{
-		MapUtil.GetInstance.DrawGrid ();
+		//MapUtil.GetInstance.DrawGrid ();
 
 		Application.targetFrameRate = 30;
 
@@ -33,13 +36,18 @@ public class Main : MonoBehaviour
 
 		btnMXAttack = GameObject.Find ("btnMXAttack");
 		btnMXUlt = GameObject.Find ("btnMXUlt");
+
 		btnLEAttack = GameObject.Find ("btnLEAttack");
 		btnLEUlt = GameObject.Find ("btnLEUlt");
+
 		btnHMAttack = GameObject.Find ("btnHMAttack");
 		btnHMUlt = GameObject.Find ("btnHMUlt");
+
 		btnODAttack = GameObject.Find ("btnODAttack");
 		btnODUlt = GameObject.Find ("btnODUlt");
 
+		btnRRAttack = GameObject.Find ("btnRRAttack");
+		btnRRUlt = GameObject.Find ("btnRRUlt");
 
 //		UUIEventListener.Get (btnHFAttack).onClick = btn1ClickHandler;
 //
@@ -54,6 +62,7 @@ public class Main : MonoBehaviour
 		UUIEventListener.Get (btnMXUlt).onClick = btnUtlHandler;
 		UUIEventListener.Get (btnLEUlt).onClick = btnUtlHandler;
 		UUIEventListener.Get (btnHMUlt).onClick = btnUtlHandler;
+		UUIEventListener.Get (btnRRUlt).onClick = btnUtlHandler;
 
 		UUIEventListener.Get (btnStart).onClick = btnStartClickHandler;
 		//MessageCenter.GetInstance.addEventListener (BaseEvent.CLICK, btn1ClickHandler);
@@ -127,6 +136,10 @@ public class Main : MonoBehaviour
 
 		if (txt.text.IndexOf ("寒梦") >= 0) {
 			EventCenter.GetInstance.dispatchEvent (BattleEvent.ULT, 41);
+		}
+
+		if (txt.text.IndexOf ("蓉蓉") >= 0) {
+			EventCenter.GetInstance.dispatchEvent (BattleEvent.ULT, 51);
 		}
 	}
 

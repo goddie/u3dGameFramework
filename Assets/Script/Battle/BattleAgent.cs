@@ -12,6 +12,22 @@ using System.Collections;
 public class BattleAgent : EventDispatcherBase
 {
 	/// <summary>
+	/// 普通攻击CD
+	/// </summary>
+	private bool isAttackCD = true;
+
+	/// <summary>
+	/// 大招CD
+	/// </summary>
+	private bool isUltCD = false;
+
+
+	/// <summary>
+	/// 是否可以寻路
+	/// </summary>
+	private bool isCanPath = true;
+
+	/// <summary>
 	/// 地图位置
 	/// </summary>
 	private Vector2 mapPos;
@@ -34,8 +50,6 @@ public class BattleAgent : EventDispatcherBase
 	/// 冷却列表
 	/// </summary>
 	private Dictionary<CooldownType,CooldownTimer> timerDict = new Dictionary<CooldownType, CooldownTimer> ();
-
-
 	private bool isReady;
 
 	public bool IsReady {
@@ -65,35 +79,11 @@ public class BattleAgent : EventDispatcherBase
 	{
 		addEventListener (SoldierEvent.BATTLE_MESSAGE, HandleMessage);
 		addEventListener (SoldierEvent.HIT, HitHandler);
+
 	}
 
 
-	public void HandleMessage (CEvent e)
-	{
-		this.attackMessage = (AttackMessage)e.data;
 
-		SkillData skill = SkillData.testData [this.attackMessage.SkillId];
-
-
-
-		if (skill.Range < Vector2.Distance (this.attackMessage.Sender.mapPos, 
-		                                    this.attackMessage.Targets [0].mapPos)) {
-
-
-			PathToTarget (skill.Range);
-
-			return;
-		}
-
-
-		//大招 Id大于20000
-		if (attackMessage.SkillId > 20000) {
-			baseSoldier.OnUlt ();
-		} else {
-			baseSoldier.OnAttack ();
-		}
-		//Debug.Log ("battleMessageHandler");
-	}
 
 	/// <summary>
 	/// 被击中
@@ -105,7 +95,6 @@ public class BattleAgent : EventDispatcherBase
 		AttackMessage attackMessage = (AttackMessage)e.data;
 		baseSprite.HitEffect (attackMessage.Sender);
 	}
-
 
 	private GameObject gameObject;
 	
@@ -177,7 +166,36 @@ public class BattleAgent : EventDispatcherBase
 		}
 	}
 
+	/// <summary>
+	/// 处理战斗信息
+	/// </summary>
+	/// <param name="e">E.</param>
+	public void HandleMessage (CEvent e)
+	{
+		this.attackMessage = (AttackMessage)e.data;
+		
+		SkillData skill = SkillData.testData [this.attackMessage.SkillId];
+		
+		
+		//射程之外
+		if (skill.Range < Vector2.Distance (this.attackMessage.Sender.mapPos, 
+		                                    this.attackMessage.Targets [0].mapPos)) {
+			PathToTarget (skill.Range);
+			return;
+		}
+		
 
+
+
+		//大招 Id大于20000
+		if (attackMessage.SkillId > 20000) {
+			baseSoldier.OnUlt ();
+		} else {
+			//普通攻击
+			baseSoldier.OnAttack ();
+		}
+		//Debug.Log ("battleMessageHandler");
+	}
 
 	
 
@@ -185,43 +203,36 @@ public class BattleAgent : EventDispatcherBase
 	/// 寻找最适合的攻击站位
 	/// 站位受技能射程影响
 	/// </summary>
-	/// <param name="range">Range.</param>
+	/// <param name="range">技能射程</param>
 	public void PathToTarget (int range)
 	{
 
 
 		Vector2 targetPos = targets [0].mapPos;
 		List<Vector2> result = new List<Vector2> ();
-//		AStarRoute asr = new AStarRoute (MapUtil.GetInstance.GetMapMatrix (), 
-//		                                 (int)mapPos.x, (int)mapPos.y, 
-//		                                 (int)targetPos.x, (int)targetPos.y);
-//		try {
-//			result = asr.getResult ();
-//		} catch (Exception ex) {
-//			Debug.Log (ex.StackTrace);
-//		}
-//		result = asr.getResult ();
 
-
-
-
-//		if (rs == null) {
-//			baseSoldier.OnIdle ();
-//			return;
-//		}
-
-		//近战
-		if (skillDict [CooldownType.Attack].Range == 2) {
+		//近战策略
+		if (skillDict [CooldownType.Attack].Range == SkillData.MELEE) {
 			Vector2 rs = MapUtil.GetInstance.GetAttackPos (this, targets [0], range);
 			result.Add (rs);
-		} else {
+		} 
+
+		//中程策略
+		if (skillDict [CooldownType.Attack].Range == SkillData.BOSS_MELEE) {
+			Vector2 rs = MapUtil.GetInstance.GetAttackPosSameRow (this, targets [0], range);
+			result.Add (rs);
+		} 
+
+
+		//远程策略
+		if (skillDict [CooldownType.Attack].Range == SkillData.RANGE) {
 			
 			Vector2 rs = MapUtil.GetInstance.GetRangeAttackPos (this, targets [0], range);
 			result.Add (rs);
 		}
 
 
-		baseSoldier.OnWalk ();
+
 
 
 		List<Vector3> paths = new List<Vector3> ();
@@ -243,25 +254,29 @@ public class BattleAgent : EventDispatcherBase
 		//设置类型为线性，线性效果会好一些。  
 		args.Add ("easeType", iTween.EaseType.linear);  
 		//设置寻路的速度  
-		args.Add ("speed", 3f);  
-
+		args.Add ("speed", this.character.Speed);  
 		args.Add ("position", paths [0]);
-		//移动的整体时间。如果与speed共存那么优先speed  
-		//args.Add ("time", 5f);  
-		//是否先从原始位置走到路径中第一个点的位置  
-		//args.Add ("movetopath", true);  
-		//延迟执行时间  
-		//args.Add ("delay", 0.1f);  
-		//移动的过程中面朝一个点  
-		//args.Add ("looktarget", Vector3.zero);  
-		//三个循环类型 none loop pingPong (一般 循环 来回)   
-		//args.Add ("loopType", "none");  
-		//是否让模型始终面朝当面目标的方向  
-		//如果你发现你的模型在寻路的时候时钟都是一个方向那么一定要打开这个  
-		//args.Add ("orienttopath", true);  
-		
+		args.Add ("oncomplete", "OnWalkEnd");
+		args.Add ("oncompletetarget", this.gameObject);
 		//让模型开始寻路     
-		iTween.MoveTo (this.gameObject, args);  
+		iTween.MoveTo (this.gameObject, args);
+		baseSoldier.OnWalk ();
+		isCanPath = false;
+	}
+
+	public void FinishAttack ()
+	{
+		isCanPath = true;
+	}
+
+	/// <summary>
+	/// 完成移动
+	/// </summary>
+	public void FinishMove ()
+	{
+		baseSoldier.OnIdle ();
+		isCanPath = true;
+		//Debug.Log("FinishMove");
 	}
 
 	/// <summary>
@@ -273,9 +288,6 @@ public class BattleAgent : EventDispatcherBase
 	{
 		mapPos = new Vector2 (x, y);
 	}
-
-
-
 	
 	public void RemoveFromStage ()
 	{
@@ -299,8 +311,9 @@ public class BattleAgent : EventDispatcherBase
 	/// </summary>
 	private void AddTimer ()
 	{
-		AddTimer (CooldownType.Attack, 2.0f, new TimerEventHandler (AttackHandler));
-		AddTimer (CooldownType.Ult, 6.0f, new TimerEventHandler (UltHandler));
+		AddTimer (CooldownType.Attack, 2.0f, new TimerEventHandler (AttackCDTimer));
+		AddTimer (CooldownType.Ult, 6.0f, new TimerEventHandler (UltCDTimer));
+		AddTimer (CooldownType.Update, 0.1f, new TimerEventHandler (UpdateHandler));
 	}
 
 	private void AddTimer (CooldownType type, float second, TimerEventHandler action)
@@ -308,28 +321,33 @@ public class BattleAgent : EventDispatcherBase
 		CooldownTimer t = TimerManager.SharedInstance.CreateTimer (second, action);
 		timerDict.Add (type, t);
 
-		if (this.baseSoldier.GetType () == typeof(ODSoldier)) {
-			t.Start ();
-		}
-		if (this.baseSoldier.GetType () == typeof(HMSoldier)) {
-			t.Start ();
-		}
 
-		if (this.baseSoldier.GetType () == typeof(LESoldier)) {
-			t.Start ();
-		}
+		String name = this.gameObject.name;
+		Type tt = this.baseSoldier.GetType ();
 
-		if (this.gameObject.name == "hf2") {
-			t.Start ();
-		}
-		if (this.gameObject.name == "hf3") {
-			t.Start ();
-		}
-		if (this.gameObject.name == "hf1") {
-			t.Start ();
-		}
+//		if (tt == typeof(ODSoldier) || 
+//		    tt == typeof(HMSoldier) ||
+//		    tt == typeof(LESoldier) || 
+//		    tt == typeof(MXSoldier)) {
+//			t.Start();
+//		}
+//
+//		if (name=="hf1"||name=="hf2"||name=="hf3"||name=="hf1") {
+//			
+//		}
+//
+//		 
+//		if (this.gameObject.name == "hf2") {
+//			t.Start ();
+//		}
+//		if (this.gameObject.name == "hf3") {
+//			t.Start ();
+//		}
+//		if (this.gameObject.name == "hf1") {
+//			t.Start ();
+//		}
 
-		//t.Start ();
+		t.Start ();
 	}
 
 
@@ -337,28 +355,24 @@ public class BattleAgent : EventDispatcherBase
 	/// 攻击CD时调用
 	/// 放在TimerManager 的Update中
 	/// </summary>
-	protected void AttackHandler ()
+	protected void AttackCDTimer ()
 	{
 		if (!isReady) {
 			return;
 		}
-		//		if (!baseSoldier.IsIdle ()) {
-//			return;
-//		}
-
-		AttackMessage message = new AttackMessage (this, this.targets, skillDict [CooldownType.Attack].Id);
-		this.dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
+		isAttackCD = true;
 		//Debug.Log ("attackHandler");
 	}
 
 	/// <summary>
 	/// 大招CD时调用
 	/// </summary>
-	protected void UltHandler ()
+	protected void UltCDTimer ()
 	{
 		if (!isReady) {
 			return;
 		}
+		isUltCD = true;
 		//		if (this.Targets == null || this.Targets.Count == 0) {
 //			return;
 //		}
@@ -371,17 +385,47 @@ public class BattleAgent : EventDispatcherBase
 	/// <summary>
 	/// 0.1秒执行一次计算路径和更新坐标
 	/// </summary>
-	protected void PositonHandler ()
+	protected void UpdateHandler ()
 	{
+		baseSprite.FaceToTarget ();
+
 		if (!isReady) {
+			//Debug.Log("Not ready");
 			return;
 		}
 
+		if (isAttackCD) {
+			AttackMessage message = new AttackMessage (this, this.targets, skillDict [CooldownType.Attack].Id);
+			this.dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
+			isAttackCD = false;
+		}
 
-		mapPos = MapUtil.GetInstance.WorldToMap (gameObject.transform.position);
-		baseSprite.FaceToTarget ();
+		if (isUltCD) {
+
+			//boss自动放技能
+			if(this.baseSoldier.GetType()==typeof(AMSoldier))
+			{
+				AttackMessage message = new AttackMessage (this, this.targets, skillDict [CooldownType.Ult].Id);
+				this.dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
+				isUltCD = false;
+			}
+
+		}
+
+
+		UpdateMapPosition ();
 		CheckGuardRange ();
+
 		//Debug.Log (mapPos);
+	}
+
+
+	/// <summary>
+	/// 更新地图坐标
+	/// </summary>
+	private void UpdateMapPosition ()
+	{
+		mapPos = MapUtil.GetInstance.WorldToMap (gameObject.transform.position);
 	}
 
 
@@ -391,20 +435,26 @@ public class BattleAgent : EventDispatcherBase
 	protected void CheckGuardRange ()
 	{
 		//近战不警戒
-		if (skillDict [CooldownType.Attack].Range == 2) {
+		if (skillDict [CooldownType.Attack].Range == SkillData.MELEE) {
 			return;
 		}
 
-		List<BattleAgent> enemy = BattleManager.SharedInstance.GetEnemyList ();
 
-		for (int i = 0; i < enemy.Count; i++) {
+		//已经移动过一次
+		if (!isCanPath) {
+			return;
+		}
 
-			if (!enemy [i].Targets.Contains (this)) {
+		List<BattleAgent> npcList = BattleManager.SharedInstance.GetEnemyList ();
+
+		for (int i = 0; i < npcList.Count; i++) {
+
+			if (!npcList [i].Targets.Contains (this)) {
 				continue;
 			}
 
 			//进入警戒范围
-			if (Vector2.Distance (enemy [i].MapPos, this.mapPos) <= this.character.GuardRange) {
+			if (Vector2.Distance (npcList [i].MapPos, this.mapPos) <= this.character.GuardRange) {
 
 				PathToTarget (skillDict [CooldownType.Attack].Range);
 			}
@@ -412,16 +462,20 @@ public class BattleAgent : EventDispatcherBase
 		}
 
 	}
-
 	
 	public void AddTimerDemo (float[] timeList)
 	{
-		AddTimer (CooldownType.Attack, timeList [0], new TimerEventHandler (AttackHandler));
-		AddTimer (CooldownType.Ult, timeList [1], new TimerEventHandler (UltHandler));
-		AddTimer (CooldownType.Position, 0.1f, new TimerEventHandler (PositonHandler));
+		AddTimer (CooldownType.Attack, timeList [0], new TimerEventHandler (AttackCDTimer));
+		AddTimer (CooldownType.Ult, timeList [1], new TimerEventHandler (UltCDTimer));
+		AddTimer (CooldownType.Update, 0.1f, new TimerEventHandler (UpdateHandler));
 	}
 
-
+	/// <summary>
+	/// 普通攻击技能
+	/// 攻击距离
+	/// </summary>
+	/// <param name="type">Type.</param>
+	/// <param name="data">Data.</param>
 	public void AddSkillDemo (CooldownType type, SkillData data)
 	{
 		skillDict.Add (type, data);

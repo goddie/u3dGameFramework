@@ -33,7 +33,7 @@ public enum KeyEventId
 	/// <summary>
 	/// 大招准备
 	/// </summary>
-	UltPrepare = 103
+	UltPrepare = 103,
 }
 
 /// <summary>
@@ -69,5 +69,5 @@ public enum CooldownType
 	/// <summary>
 	/// 计算位置和路径
 	/// </summary>
-	Position
+	Update
 }

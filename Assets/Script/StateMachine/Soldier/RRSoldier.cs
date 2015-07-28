@@ -12,47 +12,34 @@ public class RRSoldier : HeroSoldier
 	private float speed = 1.0f;
 	private BaseBullet baseBullet;
 	
-	private List<Character> testDB = new List<Character> (){
-		new Character(200,"治疗效果",100,3,"Prefabs/heal",0)
-	};
-	
-	
+//	private List<Character> testDB = new List<Character> (){
+//		new Character(200,"治疗效果",100,3,"Prefabs/heal",0)
+//	};
 	
 	override protected void OnShootOn ()
 	{
-		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [0].Prefab);
-		GameObject parent = StageManager.SharedInstance.EffectLayer; 
-		GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
-		baseBullet = bullet.AddComponent<BaseBullet> (); 
-		baseBullet.BattleAgent = this.BattleAgent;
-		//baseBullet.transform.position  = battleAgent.GameObject.transform.position;
-		baseBullet.Speed = 1136.0f / 1000.0f;
-		
-		
-		Vector3 pos = MapUtil.RelativeMovePosition (BattleAgent.BaseSprite.HitPoint, BattleAgent.GameObject.transform);
-		baseBullet.transform.position = new Vector3 (pos.x, pos.y, BattleAgent.GameObject.transform.position.z);
-		
-		AttackMessage message = new AttackMessage (BattleAgent, BattleAgent.Targets, 1);
-		
-		baseBullet.FlyToTarget (message);
+
 	}
-	
-	
-	
 	
 	override protected void OnUltShootOn ()
 	{
-		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [1].Prefab);
-		GameObject parent = StageManager.SharedInstance.EffectLayer; 
-		GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
-		baseBullet = bullet.AddComponent<BaseBullet> (); 
-		baseBullet.BattleAgent = this.BattleAgent;
-		baseBullet.transform.position = BattleAgent.GameObject.transform.position;
-		baseBullet.Speed = 1136.0f / 1000.0f;
-		
-		AttackMessage message = new AttackMessage (BattleAgent, BattleAgent.Targets, 1);
-		
-		baseBullet.FlyToTarget (message);
+		List<BattleAgent> targets = BattleManager.SharedInstance.GetHeroList();
+		for (int i = 0; i < targets.Count; i++) {
+			
+			List<BattleAgent> tlist=new List<BattleAgent>();
+			tlist.Add(targets[i]);
+			
+			GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [9].Prefab);
+			GameObject parent = StageManager.SharedInstance.EffectLayer; 
+			GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
+
+			baseBullet = bullet.AddComponent<BaseBullet> (); 
+			baseBullet.BattleAgent = this.BattleAgent;
+			baseBullet.transform.position = MapUtil.GetHitPointWorld(targets[i]);
+			
+			AttackMessage message = new AttackMessage (BattleAgent, tlist, 1);
+			baseBullet.FlyToTarget (message,0.3f);
+		}
 	}
 	
 	

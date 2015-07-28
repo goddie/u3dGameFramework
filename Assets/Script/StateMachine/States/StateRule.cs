@@ -126,6 +126,7 @@ public class StateRule
 	/// <param name="newStateId">New state identifier.</param>
 	private Boolean IsCanToggleToNewState (StateId currentStateId, StateId newStateId)
 	{
+		 
 		List<StateId> rules = StateRuleConfig.GetInstance.Dict [currentStateId].ToggleMajorState;
 
 		if (rules == null || rules.Count == 0) {

@@ -9,26 +9,26 @@ public class LESoldier : HeroSoldier
 	
 	private BaseBullet baseBullet;
 	
-	private List<Character> testDB = new List<Character> (){
-		new Character(300,"箭矢",100,3,"Prefabs/arrow",0),
-		new Character(301,"冰箭",100,3,"Prefabs/arrowUlt",0)
-	};
+ 
 	 	
 	/// <summary>
 	/// Raises the shoot on event.
 	/// </summary>
 	override protected void OnShootOn ()
 	{
-		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [0].Prefab);
+		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB[3].Prefab);
 		GameObject parent = StageManager.SharedInstance.EffectLayer; 
 		GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
 		baseBullet = bullet.AddComponent<BaseBullet> (); 
 		baseBullet.BattleAgent = this.BattleAgent;
 		//baseBullet.transform.position  = battleAgent.GameObject.transform.position;
 		
-		Vector3 pos = MapUtil.RelativeMovePosition (BattleAgent.BaseSprite.HitPoint, BattleAgent.GameObject.transform);
-		baseBullet.transform.position = new Vector3 (pos.x, pos.y, BattleAgent.GameObject.transform.position.z);
-		
+//		Vector3 pos = MapUtil.RelativeMovePosition (BattleAgent.BaseSprite.HitPoint, BattleAgent.GameObject.transform);
+//		baseBullet.transform.position = new Vector3 (pos.x, pos.y, BattleAgent.GameObject.transform.position.z);
+
+
+		baseBullet.transform.position = MapUtil.GetHitPointWorld(this.BattleAgent);
+
 		
 		baseBullet.Speed = 1136.0f / 1000.0f;
 		
@@ -42,15 +42,16 @@ public class LESoldier : HeroSoldier
 	
 	override protected void OnUltShootOn ()
 	{
-		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [1].Prefab);
+		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB[4].Prefab);
 		GameObject parent = StageManager.SharedInstance.EffectLayer; 
 		GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
 		baseBullet = bullet.AddComponent<BaseBullet> (); 
 		baseBullet.BattleAgent = this.BattleAgent;
 		//baseBullet.transform.position  = battleAgent.GameObject.transform.position;
 		baseBullet.Speed = 1136.0f / 1000.0f;
-		Vector3 pos = MapUtil.RelativeMovePosition (BattleAgent.BaseSprite.HitPoint, BattleAgent.GameObject.transform);
-		baseBullet.transform.position = new Vector3 (pos.x, pos.y, BattleAgent.GameObject.transform.position.z);
+		Vector3 pos = MapUtil.GetHitPointWorld(BattleAgent.Targets[0]);
+
+		baseBullet.transform.position = pos;
 		
 		AttackMessage message = new AttackMessage (BattleAgent, BattleAgent.Targets, 1);
 		
@@ -67,7 +68,7 @@ public class LESoldier : HeroSoldier
 		BattleAgent.BaseSprite.AddSound (StateId.Ult, "ult_le");
 		BattleAgent.BaseSprite.AddSound (StateId.Dead, "dead_le");
 
-		BattleAgent.AddTimerDemo (new float[]{1.2f, 6.0f});
+		BattleAgent.AddTimerDemo (new float[]{1.0f, 6.0f});
 		this.BattleAgent.AddSkillDemo (CooldownType.Attack, SkillData.testData [2]);
 	}
 	

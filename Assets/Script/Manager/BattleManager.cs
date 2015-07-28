@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Threading;
 
-
 public class BattleManager : MonoBehaviour
 {
 	private static BattleManager instance = null;
@@ -38,15 +37,15 @@ public class BattleManager : MonoBehaviour
 //		}
 //	}
 
-	private List<Character> testDB = new List<Character> (){
-		new Character(1,"黑风",100,3,"Prefabs/hf",2),
-		new Character(2,"奥丁",120,5,"Prefabs/od",3),
-		new Character(3,"绿萼",110,4,"Prefabs/le",3),
-		new Character(4,"慕雪",110,4,"Prefabs/mx",2),
-		new Character(5,"寒梦",110,4,"Prefabs/hm",3),
-		new Character(6,"蓉蓉",110,4,"Prefabs/rr",3),
-		new Character(7,"阿莫",110,4,"Prefabs/am",2)
-	};
+//	private List<Character> testDB = new List<Character> (){
+//		new Character(1,"黑风",100,3,"Prefabs/hf",1),
+//		new Character(2,"奥丁",120,5,"Prefabs/od",SkillData.MELEE),
+//		new Character(3,"绿萼",110,4,"Prefabs/le",SkillData.MELEE),
+//		new Character(4,"慕雪",110,4,"Prefabs/mx",1),
+//		new Character(5,"寒梦",110,4,"Prefabs/hm",SkillData.MELEE),
+//		new Character(6,"蓉蓉",110,4,"Prefabs/rr",SkillData.MELEE),
+//		new Character(7,"阿莫",110,4,"Prefabs/am",SkillData.MELEE)
+//	};
 
 
 	/// <summary>
@@ -110,14 +109,14 @@ public class BattleManager : MonoBehaviour
 		};
 
 		for (int i = 0; i < pos.Length; i++) {
-			GameObject hfPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [0].Prefab);
+			GameObject hfPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB[11].Prefab);
 			GameObject hf = StageManager.SharedInstance.AddToStage (parent, hfPrefab);
 
 			hf.name = "hf" + i;
 
 			BaseSoldier hfSoldier = hf.AddComponent<HFSoldier> (); 
-			BattleAgent agent = new BattleAgent (hfSoldier, testDB [0]);
-			agent.BaseSprite.FaceTo = 1;
+			BattleAgent agent = new BattleAgent (hfSoldier, TestData.charDB[11]);
+			agent.BaseSprite.FaceTo = 2;
 			
 			//agent.BaseSprite.SetLocalPosition (pos [i].x, pos [i].y);
 			agent.BaseSprite.SetMapPosition (pos [i].x, pos [i].y);
@@ -125,12 +124,16 @@ public class BattleManager : MonoBehaviour
 		}
 
 		//boss
-		GameObject prefab = ResourceManager.GetInstance.LoadPrefab (testDB [6].Prefab);
+		GameObject prefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB[17].Prefab);
 		GameObject am = StageManager.SharedInstance.AddToStage (parent, prefab);
 		
 		BaseSoldier amSoldier = am.AddComponent<AMSoldier> (); 
-		BattleAgent amAgent = new BattleAgent (amSoldier, testDB [6]);
-		amAgent.BaseSprite.FaceTo = 1;
+
+		Character c = TestData.charDB[17];
+		c.Speed = 3.0f;
+		BattleAgent amAgent = new BattleAgent (amSoldier, c);
+
+ 
 		
 		//agent.BaseSprite.SetLocalPosition (pos [i].x, pos [i].y);
 		amAgent.BaseSprite.SetMapPosition (7, 7);
@@ -144,11 +147,11 @@ public class BattleManager : MonoBehaviour
 		yield return new WaitForSeconds (0.2f);
 		//奥丁
 		GameObject parent = StageManager.SharedInstance.HeroLayer;
-		GameObject odPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [1].Prefab);	
+		GameObject odPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB[12].Prefab);	
 		GameObject od = StageManager.SharedInstance.AddToStage (parent, odPrefab);
 		
 		BaseSoldier odSoldier = od.AddComponent<ODSoldier> ();
-		BattleAgent odAgent = new BattleAgent (odSoldier, testDB [1]);
+		BattleAgent odAgent = new BattleAgent (odSoldier, TestData.charDB[12]);
 		
 		odAgent.BaseSprite.SetMapPosition (13, 3);
 		odAgent.BaseSprite.AddDownEffect ();		
@@ -160,11 +163,11 @@ public class BattleManager : MonoBehaviour
 
 		//绿萼
  
-		GameObject lePrefab = ResourceManager.GetInstance.LoadPrefab (testDB [2].Prefab);
+		GameObject lePrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB[13].Prefab);
 		GameObject le = StageManager.SharedInstance.AddToStage (parent, lePrefab);
 		
 		BaseSoldier leSoldier = le.AddComponent<LESoldier> ();
-		BattleAgent leAgent = new BattleAgent (leSoldier, testDB [2]);
+		BattleAgent leAgent = new BattleAgent (leSoldier, TestData.charDB[13]);
 		leAgent.BaseSprite.SetMapPosition (1, 8);
 
 		leAgent.BaseSprite.AddDownEffect ();
@@ -175,11 +178,11 @@ public class BattleManager : MonoBehaviour
 		
 		//慕雪
  
-		GameObject mxPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [3].Prefab);
+		GameObject mxPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB[14].Prefab);
 		GameObject mx = StageManager.SharedInstance.AddToStage (parent, mxPrefab);
 		
 		BaseSoldier mxSoldier = mx.AddComponent<MXSoldier> ();
-		BattleAgent mxAgent = new BattleAgent (mxSoldier, testDB [3]);
+		BattleAgent mxAgent = new BattleAgent (mxSoldier, TestData.charDB[14]);
 		
 
 		mxAgent.BaseSprite.SetMapPosition (1, 3);
@@ -190,11 +193,11 @@ public class BattleManager : MonoBehaviour
 		yield return new WaitForSeconds (0.2f);
 		//寒梦
  
-		GameObject hmPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [4].Prefab);
+		GameObject hmPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB[15].Prefab);
 		GameObject hm = StageManager.SharedInstance.AddToStage (parent, hmPrefab);
 		
 		BaseSoldier hmSoldier = hm.AddComponent<HMSoldier> ();
-		BattleAgent hmAgent = new BattleAgent (hmSoldier, testDB [4]);
+		BattleAgent hmAgent = new BattleAgent (hmSoldier, TestData.charDB[15]);
 		
 		hmAgent.BaseSprite.SetMapPosition (13, 7);
 		hmAgent.BaseSprite.AddDownEffect ();
@@ -203,13 +206,13 @@ public class BattleManager : MonoBehaviour
 		yield return new WaitForSeconds (0.3f);
 		//蓉蓉
 		
-		GameObject rrPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [5].Prefab);
+		GameObject rrPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB[16].Prefab);
 		GameObject rr = StageManager.SharedInstance.AddToStage (parent, rrPrefab);
 		
 		BaseSoldier rrSoldier = rr.AddComponent<RRSoldier> ();
-		BattleAgent rrAgent = new BattleAgent (rrSoldier, testDB [5]);
+		BattleAgent rrAgent = new BattleAgent (rrSoldier, TestData.charDB[16]);
 		
-		rrAgent.BaseSprite.SetMapPosition (15, 9);
+		rrAgent.BaseSprite.SetMapPosition (13,8);
 		rrAgent.BaseSprite.AddDownEffect ();
 		soldierList.Add (rrAgent);
 		
@@ -223,15 +226,30 @@ public class BattleManager : MonoBehaviour
 //		soldierList [4].AddTarget (enemyList [0]);
 
 
-		enemyList [0].AddTarget (mxAgent);
+		enemyList [0].AddTarget (rrAgent);
 		enemyList [1].AddTarget (leAgent);
 		enemyList [2].AddTarget (odAgent);
 		enemyList [3].AddTarget (hmAgent);
-		enemyList [4].AddTarget (rrAgent);
+		enemyList [4].AddTarget (mxAgent);
 
 		odAgent.AddTarget (enemyList [2]);
 		leAgent.AddTarget (enemyList [1]);
 		hmAgent.AddTarget (enemyList [3]);
+		mxAgent.AddTarget (enemyList [4]);
+		rrAgent.AddTarget (enemyList [0]);
+
+ 
+// 		enemyList[4].IsReady = true;
+// 		mxAgent.IsReady = true;
+ 
+
+// 		leAgent.IsReady = true;
+// 		enemyList[1].IsReady = true;
+
+		
+//		 		rrAgent.IsReady = true;
+//		 		enemyList[0].IsReady = true;
+
 
 		for (int i = 0; i < soldierList.Count; i++) {
 			soldierList [i].IsReady = true;
@@ -241,16 +259,15 @@ public class BattleManager : MonoBehaviour
 			enemyList [i].IsReady = true;
 		}
 	}
-
  
 	void AddHero2 ()
 	{
 		GameObject parent = StageManager.SharedInstance.HeroLayer;
-		GameObject odPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [1].Prefab);	
+		GameObject odPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB[12].Prefab);	
 		GameObject od = StageManager.SharedInstance.AddToStage (parent, odPrefab);
 		
 		BaseSoldier odSoldier = od.AddComponent<ODSoldier> ();
-		BattleAgent agent = new BattleAgent (odSoldier, testDB [1]);
+		BattleAgent agent = new BattleAgent (odSoldier, TestData.charDB[12]);
 
 
 		agent.BaseSprite.SetMapPosition (10, 15);
@@ -299,6 +316,14 @@ public class BattleManager : MonoBehaviour
 			AttackMessage message = new AttackMessage (soldierList [3], enemyList, 20004);
 			EventCenter.GetInstance.dispatchEvent (SoldierEvent.ULT_LOAD, message);
 		}
+
+		if (index == 51) {
+			//soldierList [0].BaseSoldier.StateMachine.ToggleMajorState (StateId.Ult, null);
+			//soldierList [0].dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
+			AttackMessage message = new AttackMessage (soldierList [4], enemyList, 20005);
+			EventCenter.GetInstance.dispatchEvent (SoldierEvent.ULT_LOAD, message);
+
+		}
 	}
 
 	void BattleStartHandler (CEvent e)
@@ -318,6 +343,11 @@ public class BattleManager : MonoBehaviour
 		return enemyList;
 	}
 
+	public List<BattleAgent> GetHeroList()
+	{
+		return soldierList;
+	}
+
 	/// <summary>
 	/// 获取所有物体位置s
 	/// </summary>
@@ -330,7 +360,6 @@ public class BattleManager : MonoBehaviour
 
 		return list;
 	}
-
 
 	public void FindMyEnemy (BattleAgent agent)
 	{
