@@ -14,7 +14,7 @@ public class LESoldier : HeroSoldier
 	/// <summary>
 	/// Raises the shoot on event.
 	/// </summary>
-	override protected void OnShootOn ()
+	override protected void OnShootOnEvent ()
 	{
 		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB[3].Prefab);
 		GameObject parent = StageManager.SharedInstance.EffectLayer; 
@@ -40,7 +40,7 @@ public class LESoldier : HeroSoldier
  
 	
 	
-	override protected void OnUltShootOn ()
+	override protected void OnUltShootOnEvent ()
 	{
 		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB[4].Prefab);
 		GameObject parent = StageManager.SharedInstance.EffectLayer; 
@@ -52,9 +52,12 @@ public class LESoldier : HeroSoldier
 		Vector3 pos = MapUtil.GetHitPointWorld(BattleAgent.Targets[0]);
 
 		baseBullet.transform.position = pos;
+
+		baseBullet.FaceTo = this.BattleAgent.BaseSprite.FaceTo;
 		
 		AttackMessage message = new AttackMessage (BattleAgent, BattleAgent.Targets, 1);
 		
+		//baseBullet.FlyToTargetOutScreen (message);
 		baseBullet.FlyToTarget (message);
 	}
 

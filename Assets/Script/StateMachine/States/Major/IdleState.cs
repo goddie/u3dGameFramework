@@ -12,7 +12,6 @@ public class IdleState : MajorBaseState
 
 	public override void OnEnter (object param)
 	{
-
 	}
 
 	public override void OnExit ()

@@ -68,4 +68,15 @@ public class AttackMessage
 		set;
 	}
 
+
+	/// <summary>
+	/// 被连击次数
+	/// </summary>
+	/// <value><c>true</c> if this instance is combo attack; otherwise, <c>false</c>.</value>
+	public int ComboCount
+	{
+		get;
+		set;
+	}
+
 }

@@ -78,6 +78,11 @@ public enum StateId
 	Dead,
 
 	/// <summary>
+	/// 浮空
+	/// </summary>
+	Float,
+
+	/// <summary>
 	/// 起始Id
 	/// </summary>
 	SubStateStartId = 500,
@@ -96,12 +101,9 @@ public enum StateId
 	/// <summary>
 	/// 沉默
 	/// </summary>
-	Silence,
+	Silence
 
-	/// <summary>
-	/// 浮空
-	/// </summary>
-	Float
+
 }
  
 public enum StateType

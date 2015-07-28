@@ -87,6 +87,39 @@ public class MapUtil
 		return hitScreen2;
 	}
 
+	/// <summary>
+	/// 物体相对位移后的某点
+	/// </summary>
+	/// <returns>相对位移坐标</returns>
+	/// <param name="agent">Agent.</param>
+	/// <param name="delta">Delta.</param>
+	public static Vector3 GetDeltaPointWorld(BattleAgent agent,Vector3 delta)
+	{
+		//受击点相对坐标
+		Vector3 hitLocal = delta + agent.BaseSprite.HitPoint;
+		
+		//受击点世界坐标
+		Vector3 hitScreen = StageManager.SharedInstance.HeroLayer.gameObject.transform.TransformVector (hitLocal);
+		//
+		Vector3 hitScreen2 = new Vector3 (hitScreen.x, hitScreen.y, Camera.main.farClipPlane);
+
+		return hitScreen2;
+	}
+
+
+	/// <summary>
+	/// 获取屏幕外的一点
+	/// 以屏幕对角线为半径画圆与该射线碰撞
+	/// </summary>
+	/// <returns>The out point.</returns>
+	/// <param name="start">攻击点</param>
+	/// <param name="end">受击点</param>
+	public Vector3 GetOutPoint(Vector3 start,Vector3 end)
+	{
+		return Vector3.zero;
+	}
+
+
 
 
 

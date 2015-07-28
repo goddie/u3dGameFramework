@@ -16,7 +16,7 @@ public class HMSoldier : HeroSoldier
 	/// <summary>
 	/// Raises the shoot on event.
 	/// </summary>
-	override protected void OnShootOn ()
+	override protected void OnShootOnEvent ()
 	{
 		
 		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [0].Prefab);
@@ -32,24 +32,33 @@ public class HMSoldier : HeroSoldier
 		
 		AttackMessage message = new AttackMessage (BattleAgent, BattleAgent.Targets, 1);
 		
-		baseBullet.BornToTarget (message);
+		baseBullet.AttachTarget (message);
 	}
 	
  
 	
-	override protected void OnUltShootOn ()
+	override protected void OnUltShootOnEvent ()
 	{
-		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [1].Prefab);
-		GameObject parent = StageManager.SharedInstance.EffectLayer; 
-		GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
-		baseBullet = bullet.AddComponent<BaseBullet> (); 
-		baseBullet.BattleAgent = this.BattleAgent;
-		baseBullet.transform.position = BattleAgent.GameObject.transform.position;
-		baseBullet.Speed = 1136.0f / 1000.0f;
-		
-		AttackMessage message = new AttackMessage (BattleAgent, BattleAgent.Targets, 1);
-		
-		baseBullet.FlyToTarget (message);
+//		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (testDB [1].Prefab);
+//		GameObject parent = StageManager.SharedInstance.EffectLayer; 
+//		GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
+//		baseBullet = bullet.AddComponent<BaseBullet> (); 
+//		baseBullet.BattleAgent = this.BattleAgent;
+//		baseBullet.transform.position = BattleAgent.GameObject.transform.position;
+//		baseBullet.Speed = 1136.0f / 1000.0f;
+//
+//		AttackMessage message = new AttackMessage (BattleAgent, BattleAgent.Targets, 1);
+//		
+//		baseBullet.FlyToTarget (message);
+		AttackMessage message = new AttackMessage (BattleAgent, BattleAgent.Targets, this.BattleAgent.SkillDict[CooldownType.Ult].Id);
+		//有浮空效果的大招
+		if(this.BattleAgent.SkillDict[CooldownType.Ult].FloatTime>0)
+		{
+			BattleAgent t= this.BattleAgent.Targets[0];
+			//t.dispatchEvent (SoldierEvent.HIT, message);
+			t.dispatchEvent(SoldierEvent.HIT_FLOAT,message);
+
+		}
 	}
 
 	/// <summary>
@@ -63,6 +72,7 @@ public class HMSoldier : HeroSoldier
 
 		BattleAgent.AddTimerDemo (new float[]{1.5f, 6.0f});
 		this.BattleAgent.AddSkillDemo (CooldownType.Attack, SkillData.testData [2]);
+		this.BattleAgent.AddSkillDemo (CooldownType.Ult, SkillData.testData [20004]);
 	}
 
 

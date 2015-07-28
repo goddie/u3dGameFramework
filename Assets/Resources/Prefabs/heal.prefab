@@ -11,7 +11,6 @@ GameObject:
   - 222: {fileID: 22258948}
   - 114: {fileID: 11418034}
   - 95: {fileID: 9538354}
-  - 114: {fileID: 11455356}
   m_Layer: 0
   m_Name: heal
   m_TagString: Untagged
@@ -57,17 +56,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &11455356
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 196476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 849a33ec81293764fb84e6d123bd01d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!222 &22258948
 CanvasRenderer:
   m_ObjectHideFlags: 1

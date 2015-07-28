@@ -24,13 +24,13 @@ public class HFSoldier : EnemySoldier
 	/// <summary>
 	/// Raises the shoot on event.
 	/// </summary>
-	override protected void OnShootOn ()
+	override protected void OnShootOnEvent ()
 	{
 		
 	}
  
 	
-	override protected void OnUltShootOn ()
+	override protected void OnUltShootOnEvent ()
 	{
 		
 	}

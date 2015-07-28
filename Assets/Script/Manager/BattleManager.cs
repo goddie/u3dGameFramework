@@ -109,14 +109,14 @@ public class BattleManager : MonoBehaviour
 		};
 
 		for (int i = 0; i < pos.Length; i++) {
-			GameObject hfPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB[11].Prefab);
+			GameObject hfPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [11].Prefab);
 			GameObject hf = StageManager.SharedInstance.AddToStage (parent, hfPrefab);
 
 			hf.name = "hf" + i;
 
 			BaseSoldier hfSoldier = hf.AddComponent<HFSoldier> (); 
-			BattleAgent agent = new BattleAgent (hfSoldier, TestData.charDB[11]);
-			agent.BaseSprite.FaceTo = 2;
+			BattleAgent agent = new BattleAgent (hfSoldier, TestData.charDB [11]);
+			agent.BaseSprite.FaceTo = FaceTo.Right;
 			
 			//agent.BaseSprite.SetLocalPosition (pos [i].x, pos [i].y);
 			agent.BaseSprite.SetMapPosition (pos [i].x, pos [i].y);
@@ -124,16 +124,16 @@ public class BattleManager : MonoBehaviour
 		}
 
 		//boss
-		GameObject prefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB[17].Prefab);
+		GameObject prefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [17].Prefab);
 		GameObject am = StageManager.SharedInstance.AddToStage (parent, prefab);
 		
 		BaseSoldier amSoldier = am.AddComponent<AMSoldier> (); 
 
-		Character c = TestData.charDB[17];
+		Character c = TestData.charDB [17];
 		c.Speed = 3.0f;
 		BattleAgent amAgent = new BattleAgent (amSoldier, c);
 
- 
+		amAgent.Character.HitPoint=new Vector3(0,100,100);
 		
 		//agent.BaseSprite.SetLocalPosition (pos [i].x, pos [i].y);
 		amAgent.BaseSprite.SetMapPosition (7, 7);
@@ -147,11 +147,11 @@ public class BattleManager : MonoBehaviour
 		yield return new WaitForSeconds (0.2f);
 		//奥丁
 		GameObject parent = StageManager.SharedInstance.HeroLayer;
-		GameObject odPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB[12].Prefab);	
+		GameObject odPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [12].Prefab);	
 		GameObject od = StageManager.SharedInstance.AddToStage (parent, odPrefab);
 		
 		BaseSoldier odSoldier = od.AddComponent<ODSoldier> ();
-		BattleAgent odAgent = new BattleAgent (odSoldier, TestData.charDB[12]);
+		BattleAgent odAgent = new BattleAgent (odSoldier, TestData.charDB [12]);
 		
 		odAgent.BaseSprite.SetMapPosition (13, 3);
 		odAgent.BaseSprite.AddDownEffect ();		
@@ -163,11 +163,11 @@ public class BattleManager : MonoBehaviour
 
 		//绿萼
  
-		GameObject lePrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB[13].Prefab);
+		GameObject lePrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [13].Prefab);
 		GameObject le = StageManager.SharedInstance.AddToStage (parent, lePrefab);
 		
 		BaseSoldier leSoldier = le.AddComponent<LESoldier> ();
-		BattleAgent leAgent = new BattleAgent (leSoldier, TestData.charDB[13]);
+		BattleAgent leAgent = new BattleAgent (leSoldier, TestData.charDB [13]);
 		leAgent.BaseSprite.SetMapPosition (1, 8);
 
 		leAgent.BaseSprite.AddDownEffect ();
@@ -178,11 +178,11 @@ public class BattleManager : MonoBehaviour
 		
 		//慕雪
  
-		GameObject mxPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB[14].Prefab);
+		GameObject mxPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [14].Prefab);
 		GameObject mx = StageManager.SharedInstance.AddToStage (parent, mxPrefab);
 		
 		BaseSoldier mxSoldier = mx.AddComponent<MXSoldier> ();
-		BattleAgent mxAgent = new BattleAgent (mxSoldier, TestData.charDB[14]);
+		BattleAgent mxAgent = new BattleAgent (mxSoldier, TestData.charDB [14]);
 		
 
 		mxAgent.BaseSprite.SetMapPosition (1, 3);
@@ -193,11 +193,11 @@ public class BattleManager : MonoBehaviour
 		yield return new WaitForSeconds (0.2f);
 		//寒梦
  
-		GameObject hmPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB[15].Prefab);
+		GameObject hmPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [15].Prefab);
 		GameObject hm = StageManager.SharedInstance.AddToStage (parent, hmPrefab);
 		
 		BaseSoldier hmSoldier = hm.AddComponent<HMSoldier> ();
-		BattleAgent hmAgent = new BattleAgent (hmSoldier, TestData.charDB[15]);
+		BattleAgent hmAgent = new BattleAgent (hmSoldier, TestData.charDB [15]);
 		
 		hmAgent.BaseSprite.SetMapPosition (13, 7);
 		hmAgent.BaseSprite.AddDownEffect ();
@@ -206,13 +206,13 @@ public class BattleManager : MonoBehaviour
 		yield return new WaitForSeconds (0.3f);
 		//蓉蓉
 		
-		GameObject rrPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB[16].Prefab);
+		GameObject rrPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [16].Prefab);
 		GameObject rr = StageManager.SharedInstance.AddToStage (parent, rrPrefab);
 		
 		BaseSoldier rrSoldier = rr.AddComponent<RRSoldier> ();
-		BattleAgent rrAgent = new BattleAgent (rrSoldier, TestData.charDB[16]);
+		BattleAgent rrAgent = new BattleAgent (rrSoldier, TestData.charDB [16]);
 		
-		rrAgent.BaseSprite.SetMapPosition (13,8);
+		rrAgent.BaseSprite.SetMapPosition (13, 8);
 		rrAgent.BaseSprite.AddDownEffect ();
 		soldierList.Add (rrAgent);
 		
@@ -229,16 +229,18 @@ public class BattleManager : MonoBehaviour
 		enemyList [0].AddTarget (rrAgent);
 		enemyList [1].AddTarget (leAgent);
 		enemyList [2].AddTarget (odAgent);
-		enemyList [3].AddTarget (hmAgent);
-		enemyList [4].AddTarget (mxAgent);
+		enemyList [3].AddTarget (mxAgent);
+		enemyList [4].AddTarget (hmAgent);
 
 		odAgent.AddTarget (enemyList [2]);
 		leAgent.AddTarget (enemyList [1]);
-		hmAgent.AddTarget (enemyList [3]);
-		mxAgent.AddTarget (enemyList [4]);
+		hmAgent.AddTarget (enemyList [4]);
+		mxAgent.AddTarget (enemyList [3]);
 		rrAgent.AddTarget (enemyList [0]);
 
- 
+		hmAgent.IsReady = true;
+		enemyList [4].IsReady = true;
+
 // 		enemyList[4].IsReady = true;
 // 		mxAgent.IsReady = true;
  
@@ -251,23 +253,23 @@ public class BattleManager : MonoBehaviour
 //		 		enemyList[0].IsReady = true;
 
 
-		for (int i = 0; i < soldierList.Count; i++) {
-			soldierList [i].IsReady = true;
-		}
-
-		for (int i = 0; i < enemyList.Count; i++) {
-			enemyList [i].IsReady = true;
-		}
+//		for (int i = 0; i < soldierList.Count; i++) {
+//			soldierList [i].IsReady = true;
+//		}
+//
+//		for (int i = 0; i < enemyList.Count; i++) {
+//			enemyList [i].IsReady = true;
+//		}
 	}
  
 	void AddHero2 ()
 	{
 		GameObject parent = StageManager.SharedInstance.HeroLayer;
-		GameObject odPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB[12].Prefab);	
+		GameObject odPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [12].Prefab);	
 		GameObject od = StageManager.SharedInstance.AddToStage (parent, odPrefab);
 		
 		BaseSoldier odSoldier = od.AddComponent<ODSoldier> ();
-		BattleAgent agent = new BattleAgent (odSoldier, TestData.charDB[12]);
+		BattleAgent agent = new BattleAgent (odSoldier, TestData.charDB [12]);
 
 
 		agent.BaseSprite.SetMapPosition (10, 15);
@@ -343,7 +345,7 @@ public class BattleManager : MonoBehaviour
 		return enemyList;
 	}
 
-	public List<BattleAgent> GetHeroList()
+	public List<BattleAgent> GetHeroList ()
 	{
 		return soldierList;
 	}
@@ -428,5 +430,23 @@ public class BattleManager : MonoBehaviour
 			
 		}
 	}
+
+
+	/// <summary>
+	/// 查找浮空目标
+	/// </summary>
+	/// <returns>The float target.</returns>
+	public List<BattleAgent> GetFloatTarget ()
+	{
+		List<BattleAgent> floatList = new List<BattleAgent> ();
+		for (int i = 0; i < enemyList.Count; i++) {
+			if (enemyList [i].BaseSoldier.StateMachine.CurrentState.StateId == StateId.Float) {
+				floatList.Add (enemyList [i]);
+			}
+		}
+
+		return floatList;
+	}
+
 	
 }

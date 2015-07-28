@@ -12,7 +12,7 @@ public class ODSoldier : HeroSoldier
 	private float speed = 1.0f;
 	private BaseBullet baseBullet;
 	 
-	override protected void OnShootOn ()
+	override protected void OnShootOnEvent ()
 	{
 		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [0].Prefab);
 		GameObject parent = StageManager.SharedInstance.EffectLayer; 
@@ -34,7 +34,7 @@ public class ODSoldier : HeroSoldier
 		baseBullet.FlyToTarget (message);
 	}
 
-	override protected void OnUltShootOn ()
+	override protected void OnUltShootOnEvent ()
 	{
 
 

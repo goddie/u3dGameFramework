@@ -22,5 +22,7 @@ public static class BattleEvent
 	public const string ULT = "battle_ult";
 
 
+
+
 }
  

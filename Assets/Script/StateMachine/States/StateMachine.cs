@@ -128,10 +128,11 @@ public class StateMachine
 		//退出当前状态  
 		CurrentState.OnExit ();
 		this.CurrentState = newState;
-
 		newState.OnEnter (param);
-
-		//Debug.Log("cur:"+CurrentState.StateId);
+	
+//		if (currentState.StateId==StateId.Ult) {
+//			Debug.Log("cur:"+CurrentState.StateId);
+//		}
 	}
 
  

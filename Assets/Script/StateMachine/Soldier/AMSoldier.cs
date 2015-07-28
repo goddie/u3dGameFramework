@@ -6,27 +6,44 @@ using System;
 /// </summary>
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Collections;
 
 public class AMSoldier : BossSoldier
 {
 	private float speed = 1.0f;
 	private BaseBullet baseBullet;
 	
- 
-	
-	
-	override protected void OnShootOn ()
+	override protected void OnShootOnEvent ()
 	{
  
 	}
 	
-	
-	
-	
-	override protected void OnUltShootOn ()
+	override protected void OnUltShootOnEvent ()
 	{
-		OnUltEnd();
+
+	}
+
+	override protected void OnFloatEvent ()
+	{
+
+		StartCoroutine(FloatWait());
+	}
+
+
+	/// <summary>
+	/// 浮空等待
+	/// </summary>
+	/// <returns>The wait.</returns>
+	IEnumerator FloatWait ()
+	{
+		Animator animator = this.gameObject.GetComponent<Animator> ();
+		animator.enabled = false;
+
+		yield return new WaitForSeconds (SkillData.FLOAT_TIME);
+
+		animator.enabled = true;
+
+		this.OnIdle();
 	}
 	
 	

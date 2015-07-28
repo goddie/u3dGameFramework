@@ -105,24 +105,31 @@ public class UltraSpellManager : MonoBehaviour
 	/// <summary>
 	/// 遮罩淡入淡出
 	/// </summary>
-	void MaskFade ()
+	IEnumerator MaskFade ()
 	{
-	
-		blackMask.SetActive (true);
+
+		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [8].Prefab);
+		GameObject parent = StageManager.SharedInstance.MaskLayer; 
+		GameObject newMask =StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
+ 
+
 		Hashtable args = new Hashtable ();
 		args.Add ("time", 1.5f);
 		args.Add ("alpha", 0);
 		args.Add ("oncomplete", "MaskFadeComplete");
-		args.Add ("oncompletetarget", this.gameObject);
+		//args.Add ("oncompletetarget", this.gameObject);
 		args.Add ("ignoretimescale", true);
 		//Image img = blackMask.GetComponent<Image>();
-		iTween.FadeTo (blackMask, args);
+		iTween.FadeTo (newMask, args);
 	
+		yield return new WaitForSeconds(1.5f);
+
+		Destroy(newMask);
 	}
 
 	public void MaskFadeComplete ()
 	{
-		Debug.Log ("MaskFadeComplete");
+		//Debug.Log ("MaskFadeComplete");
 		blackMask.SetActive (false);
 		Image img = blackMask.GetComponent<Image> ();
 		float aa = 1.0f;
@@ -151,7 +158,7 @@ public class UltraSpellManager : MonoBehaviour
 		baseEffect.transform.position = MapUtil.GetHitPointWorld (battleAgent);
 		baseEffect.PlayOnAgent (message);
 
-		MaskFade ();
+		StartCoroutine(MaskFade ());
 
 
 		yield return new WaitForSeconds (0.6f);

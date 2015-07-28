@@ -30,24 +30,22 @@ public class Main : MonoBehaviour
 
 		GlobalConfig.GetInstance.InitGlobalSetting ();
 
+		GameObject.Find ("frame1").SetActive(false);
+		GameObject.Find ("frame2").SetActive(false);
+		GameObject.Find ("frame3").SetActive(false);
+		GameObject.Find ("frame4").SetActive(false);
+		GameObject.Find ("frame5").SetActive(false);
+
+
 		btnHFAttack = GameObject.Find ("btnHFAttack");
 
 		btnStart = GameObject.Find ("btnStart");
 
-		btnMXAttack = GameObject.Find ("btnMXAttack");
-		btnMXUlt = GameObject.Find ("btnMXUlt");
-
-		btnLEAttack = GameObject.Find ("btnLEAttack");
-		btnLEUlt = GameObject.Find ("btnLEUlt");
-
-		btnHMAttack = GameObject.Find ("btnHMAttack");
-		btnHMUlt = GameObject.Find ("btnHMUlt");
-
-		btnODAttack = GameObject.Find ("btnODAttack");
-		btnODUlt = GameObject.Find ("btnODUlt");
-
-		btnRRAttack = GameObject.Find ("btnRRAttack");
-		btnRRUlt = GameObject.Find ("btnRRUlt");
+		btnMXUlt = GameObject.Find ("btnMX");
+		btnLEUlt = GameObject.Find ("btnLE");
+		btnHMUlt = GameObject.Find ("btnHM");
+		btnODUlt = GameObject.Find ("btnOD");
+		btnRRUlt = GameObject.Find ("btnRR");
 
 //		UUIEventListener.Get (btnHFAttack).onClick = btn1ClickHandler;
 //
@@ -118,27 +116,27 @@ public class Main : MonoBehaviour
 	void btnUtlHandler (GameObject go)
 	{
 	
-		Text txt = go.GetComponentInChildren<Text> ();
+		string name = go.name;
 		//Text txt =btn.GetComponentInChildren<Text>();
 		//Debug.Log(txt.text);
 		
-		if (txt.text.IndexOf ("奥丁") >= 0) {
+		if (name.IndexOf ("OD") >= 0) {
 			EventCenter.GetInstance.dispatchEvent (BattleEvent.ULT, 11);
 		}
 
-		if (txt.text.IndexOf ("绿萼") >= 0) {
+		if (name.IndexOf ("LE") >= 0) {
 			EventCenter.GetInstance.dispatchEvent (BattleEvent.ULT, 21);
 		}
 
-		if (txt.text.IndexOf ("慕雪") >= 0) {
+		if (name.IndexOf ("MX") >= 0) {
 			EventCenter.GetInstance.dispatchEvent (BattleEvent.ULT, 31);
 		}
 
-		if (txt.text.IndexOf ("寒梦") >= 0) {
+		if (name.IndexOf ("HM") >= 0) {
 			EventCenter.GetInstance.dispatchEvent (BattleEvent.ULT, 41);
 		}
 
-		if (txt.text.IndexOf ("蓉蓉") >= 0) {
+		if (name.IndexOf ("RR") >= 0) {
 			EventCenter.GetInstance.dispatchEvent (BattleEvent.ULT, 51);
 		}
 	}

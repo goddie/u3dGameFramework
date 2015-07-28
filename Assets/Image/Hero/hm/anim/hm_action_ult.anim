@@ -31,15 +31,15 @@ AnimationClip:
       value: {fileID: 21300000, guid: e43b72ffc6f723e4b9ad2cd25065ac07, type: 3}
     - time: .300000012
       value: {fileID: 21300000, guid: cb3a7e12144da334dbd866d88dd89c1e, type: 3}
-    - time: .350000024
+    - time: .349999994
       value: {fileID: 21300000, guid: 6fe12d2cc8b411a4bb67fdf24ac4d9cf, type: 3}
-    - time: .400000036
+    - time: .400000006
       value: {fileID: 21300000, guid: 65a61ef4e48bd944a88ae76e52f707f0, type: 3}
-    - time: .450000048
+    - time: .449999988
       value: {fileID: 21300000, guid: 80ac6433bf2a9a2419f28c93a4e4b000, type: 3}
-    - time: .50000006
+    - time: .5
       value: {fileID: 21300000, guid: f813befc69edc874aa37d3c8af099284, type: 3}
-    - time: .550000072
+    - time: .550000012
       value: {fileID: 21300000, guid: 187a4ebc7728c1643a21d4d9730d0d4c, type: 3}
     attribute: m_Sprite
     path: 
@@ -74,7 +74,7 @@ AnimationClip:
   m_AnimationClipSettings:
     serializedVersion: 2
     m_StartTime: 0
-    m_StopTime: .600000083
+    m_StopTime: .600000024
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -93,4 +93,18 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_GenerateMotionCurves: 0
-  m_Events: []
+  m_Events:
+  - time: .349999994
+    functionName: TriggerKeyEvent
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 102
+    messageOptions: 0
+  - time: .550000012
+    functionName: TriggerKeyEvent
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 104
+    messageOptions: 0

@@ -56,44 +56,79 @@ public class BaseSoldier : MonoBehaviour
 	public void TriggerKeyEvent (KeyEventId keyId)
 	{
 		if (keyId == KeyEventId.AttackOn) {
-			this.OnAttackOn ();
+			this.OnAttackOnEvent ();
 		}
 
 		if (keyId == KeyEventId.ShootOn) {
-			this.OnShootOn ();
+			this.OnShootOnEvent ();
 		}
 
 		if (keyId == KeyEventId.UltShootOn) {
-			this.OnUltShootOn ();
+			this.OnUltShootOnEvent ();
+		}
+
+		if (keyId==KeyEventId.UltEnd) {
+			this.OnUltEndEvent();
+		}
+
+		if (keyId==KeyEventId.FloatOn) {
+			this.OnFloatEvent();
+		}
+
+		if (keyId == KeyEventId.FloatEnd) {
+			this.OnFloatEndEvent();
 		}
 	}
 
 	
 	/// <summary>
-	/// Raises the shoot on event.
+	/// 发射事件
 	/// </summary>
-	protected virtual void OnShootOn ()
+	protected virtual void OnShootOnEvent ()
 	{
 	
 	}
 
 	/// <summary>
-	/// Raises the attack on event.
+	/// 击中事件
 	/// </summary>
-	protected virtual void OnAttackOn ()
+	protected virtual void OnAttackOnEvent ()
 	{
 		this.OnAttackEnd ();
 	}
 
 	/// <summary>
-	/// Raises the ult shoot on event.
+	/// 大招发射事件
 	/// </summary>
-	protected virtual void OnUltShootOn ()
+	protected virtual void OnUltShootOnEvent ()
+	{
+
+	}
+
+	/// <summary>
+	/// 大招结束
+	/// </summary>
+	protected virtual void OnUltEndEvent()
+	{
+		this.OnUltEnd();
+	}
+
+	/// <summary>
+	/// 浮空
+	/// </summary>
+	protected virtual void OnFloatEvent()
 	{
 
 	}
 
 
+	/// <summary>
+	/// 浮空结束
+	/// </summary>
+	protected virtual void OnFloatEndEvent()
+	{
+		this.OnIdle();
+	}
 
 
 
@@ -103,6 +138,9 @@ public class BaseSoldier : MonoBehaviour
 	public void OnIdle ()
 	{
 		ToggleState (StateId.Idle);
+		if (IsIdle()) {
+			battleAgent.BaseSprite.ToggleState (StateId.Idle);
+		}
 	}
 
 
@@ -203,12 +241,14 @@ public class BaseSoldier : MonoBehaviour
 	{
 		ToggleState (StateId.Idle);
 
-		if (this.GetType()==typeof(HeroSoldier)) {
+		if ( this.GetType().IsSubclassOf(typeof(HeroSoldier))) {
 			gameObject.transform.parent = StageManager.SharedInstance.HeroLayer.gameObject.transform;
 		}else
 		{
 			gameObject.transform.parent = StageManager.SharedInstance.NpcLayer.gameObject.transform;
 		}
+
+		//Debug.Log("OnUltEnd");
 	}
 	
 	/// <summary>
@@ -218,6 +258,37 @@ public class BaseSoldier : MonoBehaviour
 	public bool IsUlt ()
 	{
 		return IsState (StateId.Ult);
+	}
+
+
+	/// <summary>
+	/// 正在浮空
+	/// </summary>
+	public void OnFloat()
+	{
+		ToggleState(StateId.Float);
+//		Debug.Log(stateMachine.CurrentState.StateId);
+		if (IsFLoat()) {
+			battleAgent.BaseSprite.ToggleState (StateId.Float);
+		}
+
+	}
+
+	/// <summary>
+	/// 浮空结束
+	/// </summary>
+	public void OnFloatEnd()
+	{
+		ToggleState(StateId.Idle);
+	}
+
+	/// <summary>
+	/// 是否浮空
+	/// </summary>
+	/// <returns><c>true</c> if this instance is F loat; otherwise, <c>false</c>.</returns>
+	public bool IsFLoat()
+	{
+		return IsState (StateId.Float);
 	}
 
 

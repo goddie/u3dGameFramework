@@ -23,7 +23,7 @@ public static class TestData
 		new Character(8,"大招遮罩",100,3,"Prefabs/mask",0),
 
 		new Character(9,"RR治疗效果",100,3,"Prefabs/heal",0),
-		new Character(10,"RR治疗效果",100,3,"Prefabs/heal",0),
+		new Character(10,"MX大招",100,3,"Prefabs/mxEffect",0),
 
 		new Character(11,"黑风",100,3,"Prefabs/hf",1),
 		new Character(12,"奥丁",120,5,"Prefabs/od",SkillData.MELEE),
@@ -31,7 +31,9 @@ public static class TestData
 		new Character(14,"慕雪",110,4,"Prefabs/mx",1),
 		new Character(15,"寒梦",110,4,"Prefabs/hm",SkillData.MELEE),
 		new Character(16,"蓉蓉",110,4,"Prefabs/rr",SkillData.MELEE),
-		new Character(17,"阿莫",110,4,"Prefabs/am",SkillData.MELEE)
+		new Character(17,"阿莫",110,4,"Prefabs/am",SkillData.MELEE),
+		new Character(18,"combo特效",110,4,"Prefabs/combo",0),
+		new Character(19,"combo特效",110,4,"Prefabs/comboNum",0)
 	}
 	;
 

@@ -41,7 +41,8 @@ public class StateRuleConfig
 			StateId.Attack,
 			StateId.Ult,
 			StateId.Dead,
-			StateId.Walk
+			StateId.Walk,
+			StateId.Float
 		}, new List<StateId> (){ }));
 
 		dict.Add (StateId.Ult, new ConfigData (StateId.Ult, new List<StateId> () {
@@ -53,10 +54,26 @@ public class StateRuleConfig
 			StateId.Idle,
 			StateId.Ult,
 			StateId.Dead,
-			StateId.Walk
+			StateId.Walk,
+			StateId.Float
 		}, new List<StateId> (){ }));
 
 		dict.Add (StateId.Walk, new ConfigData (StateId.Walk, new List<StateId> () {
+			StateId.Idle,
+			StateId.Ult,
+			StateId.Attack,
+			StateId.Dead,
+			StateId.Float
+		}, new List<StateId> (){ }));
+
+		dict.Add (StateId.Hit, new ConfigData (StateId.Hit, new List<StateId> () {
+			StateId.Idle,
+			StateId.Attack,
+			StateId.Ult,
+			StateId.Float
+		}, new List<StateId> (){ }));
+
+		dict.Add (StateId.Float, new ConfigData (StateId.Float, new List<StateId> () {
 			StateId.Idle,
 			StateId.Dead
 		}, new List<StateId> (){ }));

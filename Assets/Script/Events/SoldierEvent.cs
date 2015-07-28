@@ -22,6 +22,11 @@ public static class SoldierEvent
 	/// </summary>
 	public static string HIT = "soldier_hit";
 
+	/// <summary>
+	/// 被连击中
+	/// </summary>
+	public static string COMBO_HIT = "soldier_combo_hit";
+
 
 	/// <summary>
 	/// itween 回调
@@ -32,6 +37,11 @@ public static class SoldierEvent
 	/// <summary>
 	/// 大招引导特效
 	/// </summary>
-	public static string ULT_LOAD = "ulr_load";
+	public static string ULT_LOAD = "soldier_ulr_load";
+
+	/// <summary>
+	/// 击中浮空
+	/// </summary>
+	public static string HIT_FLOAT = "soldier_hit_float";
 
 }

@@ -64,7 +64,7 @@ public class BaseSprite : BaseAnim
 	/// 素材默认朝向
 	/// </summary>
 	/// <value>The face to.</value>
-	public int FaceTo {
+	public FaceTo FaceTo {
 		get;
 		set;
 	}
@@ -131,28 +131,28 @@ public class BaseSprite : BaseAnim
 
 		if (ang2 > 0 && ang2 < 90) {
 			
-			DirectTo (1);
+			DirectTo (FaceTo.Left);
 		}
 		
 		
 		if (ang2 < 0 && ang2 > -90) {
-			DirectTo (1);
+			DirectTo (FaceTo.Left);
 		}
 		
 		if (ang2 > 90 && ang2 < 180) {
-			DirectTo (2);
+			DirectTo (FaceTo.Right);
 		}
 		
 		
 		if (ang2 < -90 && ang2 > -180) {
-			DirectTo (2);
+			DirectTo (FaceTo.Right);
 		}
 
-//		if (ang2 == 180 || ang2 == -180) {
-//			if (pos2.x > pos1.x) {
-//				DirectTo(1);
-//			}
-//		}
+		if (ang2 == 180 || ang2 == -180 || ang2==0) {
+			if (pos2.x > pos1.x) {
+				DirectTo(FaceTo.Right);
+			}
+		}
 	
 
 
@@ -184,10 +184,10 @@ public class BaseSprite : BaseAnim
 	/// 转向方向
 	/// </summary>
 	/// <param name="dir">1=左 2=右</param>
-	public void DirectTo (int dir)
+	public void DirectTo (FaceTo dir)
 	{
 		//向左
-		if (dir == 1) {
+		if (dir == FaceTo.Left) {
 
 			if (battleAgent.BaseSprite.FaceTo == dir) {
 				return;
@@ -199,7 +199,7 @@ public class BaseSprite : BaseAnim
 			transform.localScale = theScale;
 		}
 
-		if (dir == 2) {
+		if (dir == FaceTo.Right) {
 			if (battleAgent.BaseSprite.FaceTo == dir) {
 				return;
 			}
@@ -266,10 +266,10 @@ public class BaseSprite : BaseAnim
 	/// 被击中效果
 	/// </summary>
 	/// <param name="battleAgent">攻击方</param>
-	public void HitEffect (BattleAgent attacker)
+	public void HitEffect (AttackMessage am)
 	{
 		//Debug.Log ("HitEffect");
-
+		BattleAgent attacker = am.Sender;
 		float direct = Mathf.Sign (gameObject.transform.localPosition.x - attacker.GameObject.transform.localPosition.x);
 		
 		StartCoroutine (BackToIdle ());
@@ -290,6 +290,30 @@ public class BaseSprite : BaseAnim
 
 		AddFlashEffect ();
 
+	}
+
+
+
+	/// <summary>
+	/// 被击中效果
+	/// </summary>
+	/// <param name="battleAgent">攻击方</param>
+	public void ComboHitEffect (AttackMessage am)
+	{
+		BattleAgent attacker = am.Sender;
+
+		for (int i = 0; i < am.ComboCount; i++) {
+
+			float x = UnityEngine.Random.Range(0,100);
+			float y = UnityEngine.Random.Range(0,100);
+
+			AddFlashEffect (new Vector3(x,y,0));
+
+		}
+
+		AddComboFlashEffect();
+		AddComboNum();
+		
 	}
  
 	/// <summary>
@@ -352,6 +376,64 @@ public class BaseSprite : BaseAnim
 
 		baseEffect.transform.position = MapUtil.GetHitPointWorld (battleAgent);
 
+		AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
+		
+		baseEffect.PlayOnAgent (message);
+
+	}
+
+	/// <summary>
+	/// Combo受击火花特效
+	/// </summary>
+	public void AddComboFlashEffect ()
+	{
+		GameObject prefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [18].Prefab);
+		GameObject parent = StageManager.SharedInstance.EffectLayer; 
+		GameObject go = StageManager.SharedInstance.AddToStage (parent, prefab);
+		
+		BaseEffect baseEffect = go.AddComponent<BaseEffect> (); 
+		
+		baseEffect.transform.position = MapUtil.GetHitPointWorld (battleAgent);
+		
+		AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
+		
+		baseEffect.PlayOnAgent (message);
+	}
+
+	/// <summary>
+	/// Combo攻击数字
+	/// </summary>
+	public void AddComboNum ()
+	{
+		GameObject prefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [19].Prefab);
+		GameObject parent = StageManager.SharedInstance.EffectLayer; 
+		GameObject go = StageManager.SharedInstance.AddToStage (parent, prefab);
+		
+		BaseEffect baseEffect = go.AddComponent<BaseEffect> (); 
+		
+		baseEffect.transform.position = MapUtil.GetHitPointWorld (battleAgent);
+		
+		AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
+		
+		baseEffect.PlayOnAgent (message);
+	}
+
+
+	/// <summary>
+	/// 受击火花特效
+	/// 在相对位移点产生火花
+	/// </summary>
+	/// <param name="delta">Delta.</param>
+	public void AddFlashEffect (Vector3 delta)
+	{
+		GameObject prefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [6].Prefab);
+		GameObject parent = StageManager.SharedInstance.EffectLayer; 
+		GameObject go = StageManager.SharedInstance.AddToStage (parent, prefab);
+		
+		BaseEffect baseEffect = go.AddComponent<BaseEffect> (); 
+		
+		baseEffect.transform.position = MapUtil.GetDeltaPointWorld (battleAgent,delta);
+		
 		AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
 		
 		baseEffect.PlayOnAgent (message);

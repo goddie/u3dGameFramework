@@ -16,12 +16,12 @@ public class RRSoldier : HeroSoldier
 //		new Character(200,"治疗效果",100,3,"Prefabs/heal",0)
 //	};
 	
-	override protected void OnShootOn ()
+	override protected void OnShootOnEvent ()
 	{
 
 	}
 	
-	override protected void OnUltShootOn ()
+	override protected void OnUltShootOnEvent ()
 	{
 		List<BattleAgent> targets = BattleManager.SharedInstance.GetHeroList();
 		for (int i = 0; i < targets.Count; i++) {

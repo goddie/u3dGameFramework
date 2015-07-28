@@ -9,6 +9,15 @@ using System.Collections;
 
 public class BaseBullet : BaseAnim
 {
+
+	/// <summary>
+	/// 武器朝向
+	/// </summary>
+	public FaceTo FaceTo {
+		get;
+		set;
+	}
+
 	/// <summary>
 	/// 子弹速度
 	/// </summary>
@@ -45,15 +54,19 @@ public class BaseBullet : BaseAnim
 		 
 
 		if (keyId == KeyEventId.AttackOn) {
-			Transform t1 = gameObject.transform;
-			Transform t2 = this.attackMessage.Targets [0].GameObject.transform;
-			float dis = Vector2.Distance (new Vector2 (t1.localPosition.x, t1.localPosition.y), 
-			                              new Vector2 (t2.localPosition.x, t2.localPosition.y));
-			attackMessage.Targets [0].dispatchEvent (SoldierEvent.HIT, attackMessage);
 
-			attackMessage.Sender.BaseSoldier.OnAttackEnd ();
+			if (this.attackMessage.ComboCount > 0) {
 
-			RemoveAnimator ();
+				attackMessage.Targets [0].dispatchEvent (SoldierEvent.COMBO_HIT, attackMessage);
+				attackMessage.Sender.BaseSoldier.OnAttackEnd ();
+				RemoveAnimator ();
+				
+			}else
+			{
+				attackMessage.Targets [0].dispatchEvent (SoldierEvent.HIT, attackMessage);
+				attackMessage.Sender.BaseSoldier.OnAttackEnd ();
+				RemoveAnimator ();
+			}
 		}
 	}
 
@@ -63,7 +76,7 @@ public class BaseBullet : BaseAnim
 	/// 在目标点出现
 	/// </summary>
 	/// <param name="attackMessage">Attack message.</param>
-	public void BornToTarget (AttackMessage attackMessage)
+	public void AttachTarget (AttackMessage attackMessage)
 	{
 		this.attackMessage = attackMessage;
 		Transform t2 = attackMessage.Targets [0].GameObject.transform;
@@ -72,6 +85,22 @@ public class BaseBullet : BaseAnim
 		Vector3 pos = MapUtil.GetHitPointWorld(attackMessage.Targets[0]);
 		gameObject.transform.position = new Vector3 (pos.x, pos.y, t2.position.z);
 		
+	}
+
+	/// <summary>
+	/// Attachs the middle.
+	/// </summary>
+	/// <param name="attackMessage">Attack message.</param>
+	public void AttachMiddle(AttackMessage attackMessage)
+	{
+		this.attackMessage = attackMessage;
+
+		float y = attackMessage.Targets[0].MapPos.y;
+		float x = Mathf.Round( MapUtil.MAX_COL / 2.0f);
+
+
+		gameObject.transform.position = MapUtil.GetInstance.MapToWorld(x,y-1);
+
 	}
 
 
@@ -185,6 +214,65 @@ public class BaseBullet : BaseAnim
 		iTween.MoveTo (gameObject, args);
 
 		//Debug.Log ("FlyToTarget:" + targetScreen);
+	}
+
+
+
+
+
+
+
+
+	/// <summary>
+	/// 飞向目标然后出屏幕
+	/// </summary>
+	public void FlyToTargetOutScreen (AttackMessage attackMessage)
+	{
+		this.attackMessage = attackMessage;
+		Vector3 hit  = MapUtil.GetHitPointWorld( attackMessage.Targets [0]);
+		Hashtable args = new Hashtable ();
+		args.Add ("easeType", iTween.EaseType.linear);
+		args.Add ("x", hit.x);
+		args.Add ("y", hit.y);
+		args.Add ("speed",80f);
+		//args.Add ("time", 0.15f);
+		
+		//args.Add ("time", 15f);
+		args.Add ("oncomplete", "OnCompleteOutScreen");
+		args.Add ("oncompletetarget", gameObject);
+		//args.Add ("oncompleteparams", this.attackMessage);
+		
+		iTween.MoveTo (gameObject, args);
+		
+		//Debug.Log ("FlyToTarget:" + targetScreen);
+	}
+
+	/// <summary>
+	/// 达到目的地之后飞出屏幕
+	/// </summary>
+	private void OnCompleteOutScreen()
+	{
+		StartCoroutine (PlayOneShot (StateId.Hit));
+
+
+		Vector3 hit = Vector3.zero;
+
+		Vector3 outPoint = MapUtil.GetInstance.GetOutPoint(attackMessage.Sender.GameObject.transform.position,
+		                                       attackMessage.Targets[0].GameObject.transform.position);
+
+		Hashtable args = new Hashtable ();
+		args.Add ("easeType", iTween.EaseType.linear);
+		args.Add ("x", hit.x);
+		args.Add ("y", hit.y);
+		args.Add ("speed",80f);
+		//args.Add ("time", 0.15f);
+		
+		//args.Add ("time", 15f);
+		args.Add ("oncomplete", "OnCompleteOutScreen");
+		args.Add ("oncompletetarget", gameObject);
+		//args.Add ("oncompleteparams", this.attackMessage);
+		
+		iTween.MoveTo (gameObject, args);
 	}
 
 	/// <summary>

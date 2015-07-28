@@ -40,11 +40,41 @@ public class BaseAnim : MonoBehaviour
 		animator = gameObject.GetComponent<Animator> ();
 	}
 
-
+	/// <summary>
+	/// 移除动画
+	/// </summary>
 	protected void RemoveAnimator ()
 	{
 		animator.enabled = false;
 		Destroy (gameObject);
+	}
+
+
+	/// <summary>
+	/// 淡出动画
+	/// </summary>
+	protected void FadeOutAnimator()
+	{
+		StartCoroutine(FadeOut());
+	}
+
+
+
+	private IEnumerator FadeOut()
+	{
+		animator.enabled = false;
+		Hashtable args = new Hashtable ();
+		args.Add ("time", 1.0f);
+		args.Add ("alpha", 0);
+		args.Add ("oncomplete", "MaskFadeComplete");
+		args.Add ("oncompletetarget", this.gameObject);
+		args.Add ("ignoretimescale", true);
+		//Image img = blackMask.GetComponent<Image>();
+		iTween.FadeTo (this.gameObject, args);
+
+		yield return new WaitForSeconds(1.0f);
+
+		Destroy(gameObject);
 	}
 
 
@@ -56,7 +86,8 @@ public class BaseAnim : MonoBehaviour
 	protected IEnumerator PlayOneShot (StateId stateId)
 	{
 		SetBool (stateId, true);
-		yield return null;
+		//yield return null;
+		yield return new WaitForSeconds(0.1f);
 		SetBool (stateId, false);
 	}
 	

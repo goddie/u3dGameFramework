@@ -38,12 +38,31 @@ public class BattleAgent : EventDispatcherBase
 		}
 	}
 
+
+	/// <summary>
+	/// 更改目标
+	/// </summary>
+	/// <param name="newTargets">New targets.</param>
+	public void ChangeTargets (List<BattleAgent> newTargets)
+	{
+		if (newTargets.Count > 0) {
+			this.targets = newTargets;
+		}
+
+	}
+
 	private AttackMessage attackMessage;
 
 	/// <summary>
 	/// 技能列表
 	/// </summary>
 	private Dictionary<CooldownType,SkillData> skillDict = new Dictionary<CooldownType, SkillData> ();
+
+	public Dictionary<CooldownType, SkillData> SkillDict {
+		get {
+			return skillDict;
+		}
+	}
 
 
 	/// <summary>
@@ -77,8 +96,10 @@ public class BattleAgent : EventDispatcherBase
 
 	private void AddEventListeners ()
 	{
-		addEventListener (SoldierEvent.BATTLE_MESSAGE, HandleMessage);
+		addEventListener (SoldierEvent.BATTLE_MESSAGE, BattleMessageHandler);
+		addEventListener (SoldierEvent.HIT_FLOAT, FloatHandler); 
 		addEventListener (SoldierEvent.HIT, HitHandler);
+		addEventListener (SoldierEvent.COMBO_HIT, ComboHitHandler);
 
 	}
 
@@ -92,8 +113,29 @@ public class BattleAgent : EventDispatcherBase
 	private void HitHandler (CEvent e)
 	{
 		//Debug.Log ("HitHandler");
-		AttackMessage attackMessage = (AttackMessage)e.data;
-		baseSprite.HitEffect (attackMessage.Sender);
+		AttackMessage am = (AttackMessage)e.data;
+		baseSprite.HitEffect (am);
+	}
+
+	/// <summary>
+	/// combo连击特效
+	/// </summary>
+	/// <param name="e">E.</param>
+	private void ComboHitHandler(CEvent e)
+	{
+		AttackMessage am = (AttackMessage)e.data;
+		baseSprite.ComboHitEffect (am);
+	}
+
+	/// <summary>
+	/// 目标被浮空
+	/// </summary>
+	/// <param name="e">E.</param>
+	private void FloatHandler (CEvent e)
+	{
+		AttackMessage am = (AttackMessage)e.data;
+		baseSprite.HitEffect (am);
+		baseSoldier.OnFloat ();
 	}
 
 	private GameObject gameObject;
@@ -170,27 +212,28 @@ public class BattleAgent : EventDispatcherBase
 	/// 处理战斗信息
 	/// </summary>
 	/// <param name="e">E.</param>
-	public void HandleMessage (CEvent e)
+	public void BattleMessageHandler (CEvent e)
 	{
 		this.attackMessage = (AttackMessage)e.data;
 		
 		SkillData skill = SkillData.testData [this.attackMessage.SkillId];
 		
 		
-		//射程之外
-		if (skill.Range < Vector2.Distance (this.attackMessage.Sender.mapPos, 
-		                                    this.attackMessage.Targets [0].mapPos)) {
-			PathToTarget (skill.Range);
-			return;
-		}
-		
 
 
-
-		//大招 Id大于20000
+		//大招 Id大于20000 没有距离限制
 		if (attackMessage.SkillId > 20000) {
+
 			baseSoldier.OnUlt ();
 		} else {
+
+			//射程之外
+			if (skill.Range < Vector2.Distance (this.attackMessage.Sender.mapPos, 
+			                                    this.attackMessage.Targets [0].mapPos)) {
+				PathToTarget (skill.Range);
+				return;
+			}
+
 			//普通攻击
 			baseSoldier.OnAttack ();
 		}
@@ -206,6 +249,9 @@ public class BattleAgent : EventDispatcherBase
 	/// <param name="range">技能射程</param>
 	public void PathToTarget (int range)
 	{
+
+		baseSoldier.OnWalk ();
+		isCanPath = false;
 
 
 		Vector2 targetPos = targets [0].mapPos;
@@ -260,8 +306,10 @@ public class BattleAgent : EventDispatcherBase
 		args.Add ("oncompletetarget", this.gameObject);
 		//让模型开始寻路     
 		iTween.MoveTo (this.gameObject, args);
-		baseSoldier.OnWalk ();
-		isCanPath = false;
+
+
+
+
 	}
 
 	public void FinishAttack ()
@@ -403,8 +451,7 @@ public class BattleAgent : EventDispatcherBase
 		if (isUltCD) {
 
 			//boss自动放技能
-			if(this.baseSoldier.GetType()==typeof(AMSoldier))
-			{
+			if (this.baseSoldier.GetType () == typeof(AMSoldier)) {
 				AttackMessage message = new AttackMessage (this, this.targets, skillDict [CooldownType.Ult].Id);
 				this.dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
 				isUltCD = false;
@@ -480,5 +527,7 @@ public class BattleAgent : EventDispatcherBase
 	{
 		skillDict.Add (type, data);
 	}
+
+
 
 }
