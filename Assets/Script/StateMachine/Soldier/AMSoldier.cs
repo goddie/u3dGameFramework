@@ -52,8 +52,8 @@ public class AMSoldier : BossSoldier
 	/// </summary>
 	override public void AddSoundDemo ()
 	{
-		this.BattleAgent.BaseSprite.AddSound (StateId.Attack, "attack_od");
-		this.BattleAgent.BaseSprite.AddSound (StateId.Ult, "ult_od");
+		this.BattleAgent.BaseSprite.AddSound (StateId.Attack, "boss_action_attack_01");
+		this.BattleAgent.BaseSprite.AddSound (StateId.Ult, "boss_action_ult_01");
 		this.BattleAgent.BaseSprite.AddSound (StateId.Dead, "dead_od");
 		
 		this.BattleAgent.AddTimerDemo (new float[]{1.8f, 5});

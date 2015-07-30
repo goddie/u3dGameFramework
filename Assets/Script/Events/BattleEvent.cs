@@ -21,7 +21,10 @@ public static class BattleEvent
 	/// </summary>
 	public const string ULT = "battle_ult";
 
-
+	/// <summary>
+	/// 划屏进入
+	/// </summary>
+	public const string SLASH = "battle_slash";
 
 
 }

@@ -33,7 +33,12 @@ public static class TestData
 		new Character(16,"蓉蓉",110,4,"Prefabs/rr",SkillData.MELEE),
 		new Character(17,"阿莫",110,4,"Prefabs/am",SkillData.MELEE),
 		new Character(18,"combo特效",110,4,"Prefabs/combo",0),
-		new Character(19,"combo特效",110,4,"Prefabs/comboNum",0)
+		new Character(19,"combo数字",110,4,"Prefabs/comboNum",0),
+		new Character(20,"滑屏刀光",110,4,"Prefabs/loadSlash",0),
+		new Character(21,"落位点",110,4,"Prefabs/alarm",0),
+		new Character(22,"朱雀阵型",110,4,"Prefabs/zhuque",0),
+		new Character(23,"白虎阵型",110,4,"Prefabs/baihu",0),
+		new Character(24,"对话框",110,4,"Prefabs/popo",0),
 	}
 	;
 

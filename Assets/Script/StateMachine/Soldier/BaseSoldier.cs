@@ -26,7 +26,7 @@ public class BaseSoldier : MonoBehaviour
 		set {
 			battleAgent = value;
 		}
-	}	 
+	}
 
 	void Awake ()
 	{
@@ -67,16 +67,16 @@ public class BaseSoldier : MonoBehaviour
 			this.OnUltShootOnEvent ();
 		}
 
-		if (keyId==KeyEventId.UltEnd) {
-			this.OnUltEndEvent();
+		if (keyId == KeyEventId.UltEnd) {
+			this.OnUltEndEvent ();
 		}
 
-		if (keyId==KeyEventId.FloatOn) {
-			this.OnFloatEvent();
+		if (keyId == KeyEventId.FloatOn) {
+			this.OnFloatEvent ();
 		}
 
 		if (keyId == KeyEventId.FloatEnd) {
-			this.OnFloatEndEvent();
+			this.OnFloatEndEvent ();
 		}
 	}
 
@@ -108,15 +108,15 @@ public class BaseSoldier : MonoBehaviour
 	/// <summary>
 	/// 大招结束
 	/// </summary>
-	protected virtual void OnUltEndEvent()
+	protected virtual void OnUltEndEvent ()
 	{
-		this.OnUltEnd();
+		this.OnUltEnd ();
 	}
 
 	/// <summary>
 	/// 浮空
 	/// </summary>
-	protected virtual void OnFloatEvent()
+	protected virtual void OnFloatEvent ()
 	{
 
 	}
@@ -125,9 +125,9 @@ public class BaseSoldier : MonoBehaviour
 	/// <summary>
 	/// 浮空结束
 	/// </summary>
-	protected virtual void OnFloatEndEvent()
+	protected virtual void OnFloatEndEvent ()
 	{
-		this.OnIdle();
+		this.OnIdle ();
 	}
 
 
@@ -138,7 +138,7 @@ public class BaseSoldier : MonoBehaviour
 	public void OnIdle ()
 	{
 		ToggleState (StateId.Idle);
-		if (IsIdle()) {
+		if (IsIdle ()) {
 			battleAgent.BaseSprite.ToggleState (StateId.Idle);
 		}
 	}
@@ -150,7 +150,7 @@ public class BaseSoldier : MonoBehaviour
 	public void OnWalk ()
 	{
 		ToggleState (StateId.Walk);
-		if (IsWalk()) {
+		if (IsWalk ()) {
 			battleAgent.BaseSprite.ToggleState (StateId.Walk);
 		}
 	}
@@ -166,7 +166,7 @@ public class BaseSoldier : MonoBehaviour
 	public void OnWalkEnd ()
 	{
 		ToggleState (StateId.Idle);
-		this.battleAgent.FinishMove();
+		this.battleAgent.FinishMove ();
 	}
 
 	/// <summary>
@@ -185,7 +185,7 @@ public class BaseSoldier : MonoBehaviour
 	{
 		ToggleState (StateId.Attack);
 
-		if (IsAttack()||IsWalk()) {
+		if (IsAttack () || IsWalk ()) {
 			battleAgent.BaseSprite.ToggleState (StateId.Attack);
 			battleAgent.BaseSprite.PlaySound (StateId.Attack);	
 		}
@@ -203,9 +203,9 @@ public class BaseSoldier : MonoBehaviour
 			t.dispatchEvent (SoldierEvent.HIT, message);
 		}
 
-		OnIdle();
+		OnIdle ();
 
-		this.battleAgent.FinishMove();
+		this.battleAgent.FinishMove ();
 	}
 
 	/// <summary>
@@ -224,7 +224,7 @@ public class BaseSoldier : MonoBehaviour
 	{
 		ToggleState (StateId.Ult);
 
-		if (IsUlt()) {
+		if (IsUlt ()) {
 			//移到最顶上
 			gameObject.transform.parent = StageManager.SharedInstance.MaskLayer.gameObject.transform;
 
@@ -241,10 +241,9 @@ public class BaseSoldier : MonoBehaviour
 	{
 		ToggleState (StateId.Idle);
 
-		if ( this.GetType().IsSubclassOf(typeof(HeroSoldier))) {
+		if (this.GetType ().IsSubclassOf (typeof(HeroSoldier))) {
 			gameObject.transform.parent = StageManager.SharedInstance.HeroLayer.gameObject.transform;
-		}else
-		{
+		} else {
 			gameObject.transform.parent = StageManager.SharedInstance.NpcLayer.gameObject.transform;
 		}
 
@@ -264,34 +263,59 @@ public class BaseSoldier : MonoBehaviour
 	/// <summary>
 	/// 正在浮空
 	/// </summary>
-	public void OnFloat()
+	public void OnFloat ()
 	{
-		ToggleState(StateId.Float);
+		ToggleState (StateId.Float);
 //		Debug.Log(stateMachine.CurrentState.StateId);
-		if (IsFLoat()) {
+		if (IsFloat ()) {
 			battleAgent.BaseSprite.ToggleState (StateId.Float);
 		}
 
 	}
 
-	/// <summary>
-	/// 浮空结束
-	/// </summary>
-	public void OnFloatEnd()
-	{
-		ToggleState(StateId.Idle);
-	}
-
-	/// <summary>
-	/// 是否浮空
-	/// </summary>
-	/// <returns><c>true</c> if this instance is F loat; otherwise, <c>false</c>.</returns>
-	public bool IsFLoat()
+	public bool IsFloat ()
 	{
 		return IsState (StateId.Float);
 	}
 
+	/// <summary>
+	/// 浮空结束
+	/// </summary>
+	public void OnFloatEnd ()
+	{
+		ToggleState (StateId.Idle);
+	}
+ 
 
+	/// <summary>
+	/// 惊讶状态
+	/// </summary>
+	public void OnSurprise ()
+	{
+		ToggleState (StateId.Surprise);
+
+		if (IsSurprise()) {
+			battleAgent.BaseSprite.ToggleState (StateId.Surprise);
+		}
+	}
+
+	/// <summary>
+	/// 惊讶状态结束
+	/// </summary>
+	public void OnSurpriseEnd ()
+	{
+		ToggleState (StateId.Idle);
+	}
+
+
+	/// <summary>
+	/// 惊讶状态
+	/// </summary>
+	public bool IsSurprise ()
+	{
+		
+		return IsState (StateId.Surprise);
+	}
 
 
 	/// <summary>
@@ -312,7 +336,6 @@ public class BaseSoldier : MonoBehaviour
 	{
 		stateMachine.ToggleState (stateId, this.attackMessage);
 	}
-
 
 	public virtual void AddSoundDemo ()
 	{

@@ -66,8 +66,8 @@ public class HMSoldier : HeroSoldier
 	/// </summary>
 	override public void AddSoundDemo ()
 	{
-		BattleAgent.BaseSprite.AddSound (StateId.Attack, "attack_hm");
-		BattleAgent.BaseSprite.AddSound (StateId.Ult, "ult_hm");
+		BattleAgent.BaseSprite.AddSound (StateId.Attack, "hm_action_attack_01");
+		BattleAgent.BaseSprite.AddSound (StateId.Ult, "hm_action_ult_01");
 		BattleAgent.BaseSprite.AddSound (StateId.Dead, "dead_hm");
 
 		BattleAgent.AddTimerDemo (new float[]{1.5f, 6.0f});

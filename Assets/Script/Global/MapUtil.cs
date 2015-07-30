@@ -404,7 +404,8 @@ public class MapUtil
 		}
 
 		if (list.Count==0) {
-			Debug.Log("list");
+			Debug.Log("list count=0");
+			return startAgent.MapPos;
 		}
 
 		//有人占据的点

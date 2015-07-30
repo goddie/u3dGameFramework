@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e06c992c0c162f94a880e74e722cb286, type: 3}
+  m_Name: rr_action_attack_01
+  m_EditorClassIdentifier: 
+  path: event:/rr_action_attack_01
+  id: '{1e705187-e767-4a95-9a92-35e58627f37b}'

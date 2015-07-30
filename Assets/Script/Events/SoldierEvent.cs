@@ -44,4 +44,9 @@ public static class SoldierEvent
 	/// </summary>
 	public static string HIT_FLOAT = "soldier_hit_float";
 
+	/// <summary>
+	/// 惊讶
+	/// </summary>
+	public static string SURPRISE = "soldier_surprise";
+
 }

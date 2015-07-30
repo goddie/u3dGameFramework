@@ -29,8 +29,8 @@ public class MXSoldier : HeroSoldier
 	/// </summary>
 	override public void AddSoundDemo ()
 	{
-		BattleAgent.BaseSprite.AddSound (StateId.Attack, "attack_mx");
-		BattleAgent.BaseSprite.AddSound (StateId.Ult, "ult_mx");
+		BattleAgent.BaseSprite.AddSound (StateId.Attack, "mx_action_attack_01");
+		BattleAgent.BaseSprite.AddSound (StateId.Ult, "mx_action_ult_01");
 		BattleAgent.BaseSprite.AddSound (StateId.Dead, "dead_mx");
 
 		BattleAgent.AddTimerDemo (new float[]{1, 6});

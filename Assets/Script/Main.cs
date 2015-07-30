@@ -9,18 +9,17 @@ public class Main : MonoBehaviour
 	private GameObject btnODAttack;
 	private GameObject btnODUlt;
 	private GameObject btnStart;
-
 	private GameObject btnMXAttack;
 	private GameObject btnMXUlt;
-
 	private GameObject btnLEAttack;
 	private GameObject btnLEUlt;
-
 	private GameObject btnHMAttack;
 	private GameObject btnHMUlt;
-
 	private GameObject btnRRAttack;
 	private GameObject btnRRUlt;
+	private GameObject loadingImage;
+
+ 
 
 	void Start ()
 	{
@@ -30,13 +29,14 @@ public class Main : MonoBehaviour
 
 		GlobalConfig.GetInstance.InitGlobalSetting ();
 
-		GameObject.Find ("frame1").SetActive(false);
-		GameObject.Find ("frame2").SetActive(false);
-		GameObject.Find ("frame3").SetActive(false);
-		GameObject.Find ("frame4").SetActive(false);
-		GameObject.Find ("frame5").SetActive(false);
 
+		GameObject.Find ("frame1").SetActive (false);
+		GameObject.Find ("frame2").SetActive (false);
+		GameObject.Find ("frame3").SetActive (false);
+		GameObject.Find ("frame4").SetActive (false);
+		GameObject.Find ("frame5").SetActive (false);
 
+		loadingImage = GameObject.Find ("Loading");
 		btnHFAttack = GameObject.Find ("btnHFAttack");
 
 		btnStart = GameObject.Find ("btnStart");
@@ -46,7 +46,7 @@ public class Main : MonoBehaviour
 		btnHMUlt = GameObject.Find ("btnHM");
 		btnODUlt = GameObject.Find ("btnOD");
 		btnRRUlt = GameObject.Find ("btnRR");
-
+		
 //		UUIEventListener.Get (btnHFAttack).onClick = btn1ClickHandler;
 //
 //		
@@ -56,21 +56,34 @@ public class Main : MonoBehaviour
 //		UUIEventListener.Get (btnHMAttack).onClick = btnAttackHandler;
 
 		
-		UUIEventListener.Get (btnODUlt).onClick = btnUtlHandler;
-		UUIEventListener.Get (btnMXUlt).onClick = btnUtlHandler;
-		UUIEventListener.Get (btnLEUlt).onClick = btnUtlHandler;
-		UUIEventListener.Get (btnHMUlt).onClick = btnUtlHandler;
-		UUIEventListener.Get (btnRRUlt).onClick = btnUtlHandler;
+		UUIEventListener.Get (btnODUlt).onClick = BtnUtlHandler;
+		UUIEventListener.Get (btnMXUlt).onClick = BtnUtlHandler;
+		UUIEventListener.Get (btnLEUlt).onClick = BtnUtlHandler;
+		UUIEventListener.Get (btnHMUlt).onClick = BtnUtlHandler;
+		UUIEventListener.Get (btnRRUlt).onClick = BtnUtlHandler;
 
-		UUIEventListener.Get (btnStart).onClick = btnStartClickHandler;
+		//UUIEventListener.Get (btnStart).onClick = BtnStartClickHandler;
+
+		UUIEventListener.Get(loadingImage).onDrag = LoadingDragHandler;
 		//MessageCenter.GetInstance.addEventListener (BaseEvent.CLICK, btn1ClickHandler);
 		MainComponentManager main = MainComponentManager.SharedInstance;
+		BattleManager battle = BattleManager.SharedInstance;
 		
 //		StartCoroutine (DelayToInvokeDo (2.0f));
+
+		//播放第一段背景音乐
+		AudioManager.SharedInstance.PlaySound("Bgmusic_01",1.0f);
 	}
 
 	void Update ()
 	{
+
+//		if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved) {
+//			SlashScreen ();
+//			Debug.Log ("SlashScreen");
+//		}
+
+
 
 	}
 
@@ -113,7 +126,7 @@ public class Main : MonoBehaviour
 	/// 大招按钮
 	/// </summary>
 	/// <param name="go">Go.</param>
-	void btnUtlHandler (GameObject go)
+	void BtnUtlHandler (GameObject go)
 	{
 	
 		string name = go.name;
@@ -141,8 +154,7 @@ public class Main : MonoBehaviour
 		}
 	}
 
-
-	void btn1ClickHandler (GameObject go)
+	void Btn1ClickHandler (GameObject go)
 	{
 		
 //		Debug.Log ("btn1ClickHandler");
@@ -150,12 +162,16 @@ public class Main : MonoBehaviour
 		EventCenter.GetInstance.dispatchEvent (BattleEvent.ATTACK, 0);
 	}
 
-
-	void btnStartClickHandler (GameObject go)
+	void BtnStartClickHandler (GameObject go)
 	{
 		//Debug.Log("btnStartClickHandler");
-		BattleManager.SharedInstance.BattleStart ();
+		//BattleManager.SharedInstance.BattleStart ();
 	}
 
+
+	void LoadingDragHandler(GameObject go)
+	{
+		EventCenter.GetInstance.dispatchEvent (BattleEvent.SLASH, 0);
+	}
 
 }

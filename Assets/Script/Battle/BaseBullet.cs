@@ -317,6 +317,5 @@ public class BaseBullet : BaseAnim
 		StartCoroutine (PlayOneShot (StateId.Hit));
 	}
 
-
 	
 }

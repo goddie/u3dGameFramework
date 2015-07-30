@@ -48,8 +48,8 @@ public class RRSoldier : HeroSoldier
 	/// </summary>
 	override public void AddSoundDemo ()
 	{
-		this.BattleAgent.BaseSprite.AddSound (StateId.Attack, "attack_od");
-		this.BattleAgent.BaseSprite.AddSound (StateId.Ult, "ult_od");
+		this.BattleAgent.BaseSprite.AddSound (StateId.Attack, "rr_action_attack_02");
+		this.BattleAgent.BaseSprite.AddSound (StateId.Ult, "rr_action_ult_01");
 		this.BattleAgent.BaseSprite.AddSound (StateId.Dead, "dead_od");
 		
 		this.BattleAgent.AddTimerDemo (new float[]{1.5f, 6});

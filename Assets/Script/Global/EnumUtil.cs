@@ -16,6 +16,11 @@ public enum KeyEventId
 	StateEnd = 10,
 
 	/// <summary>
+	/// 动画暂停
+	/// </summary>
+	StateStop = 11,
+
+	/// <summary>
 	/// 攻击生效
 	/// </summary>
 	AttackOn = 100,

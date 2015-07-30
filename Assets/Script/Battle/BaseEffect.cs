@@ -21,8 +21,14 @@ public class BaseEffect : BaseAnim
 
 		if (keyId == KeyEventId.ComboEnd) {
 
-			FadeOutAnimator();
+			FadeOutAnimator(1.5f);
 		}
+
+		if (keyId ==  KeyEventId.StateStop) {
+			StopAnimator();
+		}
+
+
 
 	}
 

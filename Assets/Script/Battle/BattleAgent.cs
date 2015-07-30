@@ -100,7 +100,7 @@ public class BattleAgent : EventDispatcherBase
 		addEventListener (SoldierEvent.HIT_FLOAT, FloatHandler); 
 		addEventListener (SoldierEvent.HIT, HitHandler);
 		addEventListener (SoldierEvent.COMBO_HIT, ComboHitHandler);
-
+		addEventListener (SoldierEvent.SURPRISE, SurpriseHandler);
 	}
 
 
@@ -125,6 +125,12 @@ public class BattleAgent : EventDispatcherBase
 	{
 		AttackMessage am = (AttackMessage)e.data;
 		baseSprite.ComboHitEffect (am);
+	}
+
+
+	private void SurpriseHandler(CEvent e)
+	{
+		baseSoldier.OnSurprise();
 	}
 
 	/// <summary>

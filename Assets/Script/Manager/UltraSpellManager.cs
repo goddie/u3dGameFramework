@@ -77,9 +77,8 @@ public class UltraSpellManager : MonoBehaviour
 
 		ShakeBg ();
 
-		AudioManager.SharedInstance.FMODEvent ("world_ult3", 1.0f);
-
-
+		AudioManager.SharedInstance.PlayOneShot ("ty05", 3.0f);
+		
 		AttackMessage message = (AttackMessage)c.data;	
 		StartCoroutine ("PlayUltEffect", message);
 

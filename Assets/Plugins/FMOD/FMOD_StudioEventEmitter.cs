@@ -34,7 +34,10 @@ public class FMOD_StudioEventEmitter : MonoBehaviour
 			return;			
 		}
 	}
-	
+
+
+
+
 	public void Stop()
 	{
 		if (evt != null)
@@ -201,5 +204,19 @@ public class FMOD_StudioEventEmitter : MonoBehaviour
 	{
 		FMOD.Studio.UnityUtil.ERRCHECK(result);
 		return result;
+	}
+
+
+	/// <summary>
+	/// 可以淡出
+	/// goddie add
+	/// </summary>
+	/// <param name="mode">Mode.</param>
+	public void Stop(STOP_MODE mode)
+	{
+		if (evt != null)
+		{
+			ERRCHECK(evt.stop(mode));
+		}	
 	}
 }

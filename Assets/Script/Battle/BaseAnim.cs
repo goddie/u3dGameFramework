@@ -40,6 +40,8 @@ public class BaseAnim : MonoBehaviour
 		animator = gameObject.GetComponent<Animator> ();
 	}
 
+  
+
 	/// <summary>
 	/// 移除动画
 	/// </summary>
@@ -51,20 +53,38 @@ public class BaseAnim : MonoBehaviour
 
 
 	/// <summary>
+	/// 停止动画
+	/// </summary>
+	protected void StopAnimator()
+	{
+		animator.enabled = false;
+	}
+
+
+	/// <summary>
 	/// 淡出动画
 	/// </summary>
 	protected void FadeOutAnimator()
 	{
-		StartCoroutine(FadeOut());
+		StartCoroutine(FadeOut(1.0f));
 	}
 
 
+	/// <summary>
+	/// 淡出动画
+	/// </summary>
+	/// <param name="time">Time.</param>
+	protected void FadeOutAnimator(float time)
+	{
+		StartCoroutine(FadeOut(time));
+	}
 
-	private IEnumerator FadeOut()
+
+	private IEnumerator FadeOut(float time)
 	{
 		animator.enabled = false;
 		Hashtable args = new Hashtable ();
-		args.Add ("time", 1.0f);
+		args.Add ("time", time);
 		args.Add ("alpha", 0);
 		args.Add ("oncomplete", "MaskFadeComplete");
 		args.Add ("oncompletetarget", this.gameObject);

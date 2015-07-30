@@ -67,8 +67,8 @@ public class LESoldier : HeroSoldier
 	/// </summary>
 	override public void AddSoundDemo ()
 	{
-		BattleAgent.BaseSprite.AddSound (StateId.Attack, "attack_le");
-		BattleAgent.BaseSprite.AddSound (StateId.Ult, "ult_le");
+		BattleAgent.BaseSprite.AddSound (StateId.Attack, "le_action_attack_01");
+		BattleAgent.BaseSprite.AddSound (StateId.Ult, "le_action_ult_01");
 		BattleAgent.BaseSprite.AddSound (StateId.Dead, "dead_le");
 
 		BattleAgent.AddTimerDemo (new float[]{1.0f, 6.0f});

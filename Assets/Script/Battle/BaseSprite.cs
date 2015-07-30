@@ -437,6 +437,8 @@ public class BaseSprite : BaseAnim
 		AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
 		
 		baseEffect.PlayOnAgent (message);
+
+		AudioManager.SharedInstance.PlayOneShot("fight",1.0f);
 	}
 
 
@@ -453,7 +455,8 @@ public class BaseSprite : BaseAnim
 		}
 		
 		String soundName = soundDict [stateId];
-		AudioManager.SharedInstance.FMODEvent (soundName, 0.5f);
+
+		AudioManager.SharedInstance.PlayOneShot(soundName,4.0f);
 	}
 
 

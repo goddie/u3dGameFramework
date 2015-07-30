@@ -12,7 +12,7 @@ public class HFSoldier : EnemySoldier
 	/// </summary>
 	override public void AddSoundDemo ()
 	{
-		this.BattleAgent.BaseSprite.AddSound (StateId.Attack, "attack_hf");
+		this.BattleAgent.BaseSprite.AddSound (StateId.Attack, "hf_action_attack_01");
 		this.BattleAgent.BaseSprite.AddSound (StateId.Dead, "dead_hf");
 		this.BattleAgent.AddTimerDemo (new float[]{0.8f, 6.0f});
 		this.BattleAgent.AddSkillDemo (CooldownType.Attack, SkillData.testData [1]);

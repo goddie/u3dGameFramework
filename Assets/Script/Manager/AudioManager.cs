@@ -1,5 +1,7 @@
 ﻿using System;
 using UnityEngine;
+using FMOD.Studio;
+using System.Collections.Generic;
  
 public class AudioManager : MonoBehaviour
 {
@@ -14,32 +16,42 @@ public class AudioManager : MonoBehaviour
 		}
 	}
 
-	private AudioSource sound;
-
-	public void Play(string str)
-	{
-
-
-		String res  = "Sound/"+str;
-
-		AudioClip ac = Resources.Load<AudioClip>(str);
-		Debug.Log(res);
-		Debug.Log(ac);
-		return;
-		sound.clip = ac ;
-		sound.Play();
-	}
+	private Dictionary<string,FMOD.Studio.EventInstance> soundList = new Dictionary<string, EventInstance> ();
 
 	/// <summary>
 	/// 播放FMOD声音
 	/// </summary>
 	/// <param name="eventName">Event name.</param>
 	/// <param name="volumes">Volumes.</param>
-	public void FMODEvent(string eventName,float volumes)
+	public void PlayOneShot (string eventName, float volumes)
 	{
-		FMOD_StudioSystem.instance.PlayOneShot("event:/"+eventName,Vector3.zero,volumes);
+
+		FMOD_StudioSystem.instance.PlayOneShot ("event:/" + eventName, Vector3.zero, volumes);
 	}
 
+	public void StopSound (string eventName)
+	{
+		FMOD.Studio.EventInstance soundEvent  = soundList[eventName];
+
+		if (soundEvent!=null) {
+
+//			FMOD_StudioEventEmitter soundEmitter = gameObject.AddComponent<FMOD_StudioEventEmitter>();
+//
+//
+//			soundEmitter.Stop (STOP_MODE.ALLOWFADEOUT);
+
+			soundEvent.stop (STOP_MODE.ALLOWFADEOUT);
+		}
+
+	}
+
+	public void PlaySound (string eventName, float volume)
+	{
+		FMOD.Studio.EventInstance sound = FMOD_StudioSystem.instance.GetEvent ("event:/" + eventName);
+		soundList.Add (eventName, sound);
+		sound.setVolume (volume);
+		sound.start ();
+	}
 
 }
  

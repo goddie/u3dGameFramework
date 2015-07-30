@@ -44,6 +44,16 @@ public class StageManager : MonoBehaviour
 
 
 	/// <summary>
+	/// 决斗画面层
+	/// </summary>
+	private static string SLASH_LAYER = "Slash";
+
+	/// <summary>
+	/// Loading图
+	/// </summary>
+	private static string Loading_LAYER = "Loading";
+
+	/// <summary>
 	/// 获取图层
 	/// </summary>
 	/// <returns>The layer.</returns>
@@ -51,6 +61,14 @@ public class StageManager : MonoBehaviour
 	private GameObject getLayer (string layerName)
 	{
 		return GameObject.Find (layerName);
+	}
+
+	private GameObject slashLayer;
+
+	public GameObject SlashLayer {
+		get {
+			return slashLayer;
+		}
 	}
 
 	private GameObject maskLayer;
@@ -106,6 +124,19 @@ public class StageManager : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// Loading层
+	/// </summary>
+	/// <value>The loading layer.</value>
+	private GameObject loadingLayer;
+	public GameObject LoadingLayer {
+		get {
+			return loadingLayer;
+		}
+	}
+
+
+
 	void Awake ()
 	{
 //		Debug.Log ("Stage Awake");
@@ -114,6 +145,8 @@ public class StageManager : MonoBehaviour
 		effectLayer = getLayer(EFFECT_LAYER);
 		bgLayer = getLayer(BG_LAYER);
 		maskLayer = getLayer(MASK_LAYER);
+		slashLayer = getLayer(SLASH_LAYER);
+		loadingLayer = getLayer(Loading_LAYER);
 	}
 
 	void Start ()
