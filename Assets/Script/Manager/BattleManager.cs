@@ -67,9 +67,7 @@ public class BattleManager : MonoBehaviour
 	/// 敌人
 	/// </summary>
 	private List<BattleAgent> enemyList = new List<BattleAgent> ();
-
-
-	private Dictionary<string,BattleAgent> agentDict = new Dictionary<string, BattleAgent>();
+	private Dictionary<string,BattleAgent> agentDict = new Dictionary<string, BattleAgent> ();
 
 
 	/// <summary>
@@ -181,7 +179,7 @@ public class BattleManager : MonoBehaviour
 			agent.BaseSprite.SetMapPosition (enemyPos [i].x, enemyPos [i].y);
 			enemyList.Add (agent);
 
-			agentDict.Add(hf.name,agent);
+			agentDict.Add (hf.name, agent);
 		}
 
 		//boss
@@ -200,7 +198,7 @@ public class BattleManager : MonoBehaviour
 		amAgent.BaseSprite.SetMapPosition (enemyPos [4].x, enemyPos [4].y);
 		enemyList.Add (amAgent);
 
-		agentDict.Add(am.name,amAgent);
+		agentDict.Add (am.name, amAgent);
 	}
 
 	IEnumerator AddOD ()
@@ -218,7 +216,11 @@ public class BattleManager : MonoBehaviour
 		odAgent.BaseSprite.AddDownEffect ();		
 		
 		soldierList.Add (odAgent);
-		agentDict.Add(od.name,odAgent);
+		agentDict.Add (od.name, odAgent);
+		
+		AudioManager.SharedInstance.PlayOneShot ("fly", 1.0f);
+
+
 
 		yield return new WaitForSeconds (0.2f);
 
@@ -233,8 +235,8 @@ public class BattleManager : MonoBehaviour
 
 		leAgent.BaseSprite.AddDownEffect ();
 		soldierList.Add (leAgent);
-		agentDict.Add(le.name,leAgent);
-
+		agentDict.Add (le.name, leAgent);
+		AudioManager.SharedInstance.PlayOneShot ("fly", 1.0f);
 		yield return new WaitForSeconds (0.2f);
 		
 		//慕雪
@@ -249,22 +251,22 @@ public class BattleManager : MonoBehaviour
 		mxAgent.BaseSprite.SetMapPosition (soldierPos [2].x, soldierPos [2].y);
 		mxAgent.BaseSprite.AddDownEffect ();
 		soldierList.Add (mxAgent);
-		agentDict.Add(mx.name,mxAgent);
-
+		agentDict.Add (mx.name, mxAgent);
+		AudioManager.SharedInstance.PlayOneShot ("fly", 1.0f);
 		yield return new WaitForSeconds (0.2f);
 		//寒梦
  
 		GameObject hmPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [15].Prefab);
 		GameObject hm = StageManager.SharedInstance.AddToStage (parent, hmPrefab);
-		hm.name="hm";
+		hm.name = "hm";
 		BaseSoldier hmSoldier = hm.AddComponent<HMSoldier> ();
 		BattleAgent hmAgent = new BattleAgent (hmSoldier, TestData.charDB [15]);
 		
 		hmAgent.BaseSprite.SetMapPosition (soldierPos [3].x, soldierPos [3].y);
 		hmAgent.BaseSprite.AddDownEffect ();
 		soldierList.Add (hmAgent);
-		agentDict.Add(hm.name,hmAgent);
-
+		agentDict.Add (hm.name, hmAgent);
+		AudioManager.SharedInstance.PlayOneShot ("fly", 1.0f);
 		yield return new WaitForSeconds (0.3f);
 		//蓉蓉
 		
@@ -277,8 +279,8 @@ public class BattleManager : MonoBehaviour
 		rrAgent.BaseSprite.SetMapPosition (soldierPos [4].x, soldierPos [4].y);
 		rrAgent.BaseSprite.AddDownEffect ();
 		soldierList.Add (rrAgent);
-		agentDict.Add(rr.name,rrAgent);
-
+		agentDict.Add (rr.name, rrAgent);
+		AudioManager.SharedInstance.PlayOneShot ("fly", 1.0f);
 //		FindTargetForHero (odAgent);
 	
 //		soldierList [0].AddTarget (enemyList [0]);
@@ -360,32 +362,32 @@ public class BattleManager : MonoBehaviour
 		if (index == 11) {
 			//soldierList [0].BaseSoldier.StateMachine.ToggleMajorState (StateId.Ult, null);
 			//soldierList [0].dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
-			AttackMessage message = new AttackMessage (agentDict["od"], enemyList, 20001);
+			AttackMessage message = new AttackMessage (agentDict ["od"], enemyList, 20001);
 			EventCenter.GetInstance.dispatchEvent (SoldierEvent.ULT_LOAD, message);
 		}
 		if (index == 21) {
 			//soldierList [0].BaseSoldier.StateMachine.ToggleMajorState (StateId.Ult, null);
 			//soldierList [0].dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
-			AttackMessage message = new AttackMessage (agentDict["le"], enemyList, 20002);
+			AttackMessage message = new AttackMessage (agentDict ["le"], enemyList, 20002);
 			EventCenter.GetInstance.dispatchEvent (SoldierEvent.ULT_LOAD, message);
 		}
 		if (index == 31) {
 			//soldierList [0].BaseSoldier.StateMachine.ToggleMajorState (StateId.Ult, null);
 			//soldierList [0].dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
-			AttackMessage message = new AttackMessage (agentDict["mx"], enemyList, 20003);
+			AttackMessage message = new AttackMessage (agentDict ["mx"], enemyList, 20003);
 			EventCenter.GetInstance.dispatchEvent (SoldierEvent.ULT_LOAD, message);
 		}
 		if (index == 41) {
 			//soldierList [0].BaseSoldier.StateMachine.ToggleMajorState (StateId.Ult, null);
 			//soldierList [0].dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
-			AttackMessage message = new AttackMessage (agentDict["hm"], enemyList, 20004);
+			AttackMessage message = new AttackMessage (agentDict ["hm"], enemyList, 20004);
 			EventCenter.GetInstance.dispatchEvent (SoldierEvent.ULT_LOAD, message);
 		}
 
 		if (index == 51) {
 			//soldierList [0].BaseSoldier.StateMachine.ToggleMajorState (StateId.Ult, null);
 			//soldierList [0].dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
-			AttackMessage message = new AttackMessage (agentDict["rr"], enemyList, 20005);
+			AttackMessage message = new AttackMessage (agentDict ["rr"], enemyList, 20005);
 			EventCenter.GetInstance.dispatchEvent (SoldierEvent.ULT_LOAD, message);
 
 		}
@@ -540,7 +542,7 @@ public class BattleManager : MonoBehaviour
 	{
 		AddEnemy ();
 
-		AudioManager.SharedInstance.PlaySound ("Bgmusic_02", 1.0f);
+		AudioManager.SharedInstance.PlaySound ("Bgmusic_02", 1.0f, true);
 
 		Hashtable args = new Hashtable ();
 		args.Add ("time", 1.0f);
@@ -608,7 +610,7 @@ public class BattleManager : MonoBehaviour
 		if (enemyList.Contains (ba)) {
 
 			this.enemyList.Remove (ba);
-			agentDict.Remove(ba.BaseSprite.gameObject.name);
+			agentDict.Remove (ba.BaseSprite.gameObject.name);
 
 			for (int i = 0; i < soldierList.Count; i++) {
 
@@ -628,7 +630,7 @@ public class BattleManager : MonoBehaviour
 		if (soldierList.Contains (ba)) {
 			
 			this.soldierList.Remove (ba);
-			agentDict.Remove(ba.BaseSprite.gameObject.name);
+			agentDict.Remove (ba.BaseSprite.gameObject.name);
 			for (int i = 0; i < enemyList.Count; i++) {
 
 				enemyList [i].RemoveTarget (ba);
@@ -699,7 +701,7 @@ public class BattleManager : MonoBehaviour
 		iTween.FadeTo (zhuque, args1);
 	
 		yield return new WaitForSeconds (2.0f);
-		Destroy(zhuque);
+		Destroy (zhuque);
 
 		//阿莫说话
 		GameObject popo2Prefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [24].Prefab);
@@ -727,7 +729,7 @@ public class BattleManager : MonoBehaviour
 
 
 		yield return new WaitForSeconds (2.0f);
-		Destroy(baihu);
+		Destroy (baihu);
 
 
 //		enemyList [3].IsReady = true;
@@ -752,9 +754,9 @@ public class BattleManager : MonoBehaviour
 	{
 
 		//隐藏大招按钮
-		GameObject.Find("btnOD").SetActive(false);
-		GameObject.Find("btnLE").SetActive(false);
-		GameObject.Find("btnRR").SetActive(false);
+		GameObject.Find ("btnOD").SetActive (false);
+		GameObject.Find ("btnLE").SetActive (false);
+		GameObject.Find ("btnRR").SetActive (false);
 
 
 		for (int i = 0; i < enemyList.Count; i++) {
@@ -787,7 +789,7 @@ public class BattleManager : MonoBehaviour
 		BattleAgent amAgent = enemyList [4];
 		amAgent.BaseSprite.AddBlackDownEffect ();
 		amAgent.BaseSprite.gameObject.SetActive (false);
-
+		AudioManager.SharedInstance.PlayOneShot ("fly", 1.0f);
 		yield return new WaitForSeconds (1.0f);
 
 		//mx  hm一起上天
@@ -795,13 +797,21 @@ public class BattleManager : MonoBehaviour
 		hmAgent.BaseSprite.AddDownEffect ();
 		hmAgent.BaseSprite.gameObject.SetActive (false);
 
+
+
 		BattleAgent mxAgent = soldierList [2];
 		mxAgent.BaseSprite.AddDownEffect ();
 		mxAgent.BaseSprite.gameObject.SetActive (false);
 
+		AudioManager.SharedInstance.PlayOneShot ("fly", 1.0f);
+
 		//yield return new WaitForSeconds (0.5f);
 
-		AudioManager.SharedInstance.PlaySound ("Bgmusic_02", 1.0f);
+		//AudioManager.SharedInstance.PlaySound ("Bgmusic_02", 1.0f);
+
+
+
+
 		//变换背景
 		GameObject slashLayer = StageManager.SharedInstance.SlashLayer;
 		GameObject whitePrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [26].Prefab);
@@ -822,18 +832,18 @@ public class BattleManager : MonoBehaviour
 		amAgent.BaseSprite.gameObject.SetActive (true);
 
 
-		mxAgent.ClearTarget();
-		mxAgent.AddTarget(amAgent);
-		hmAgent.ClearTarget();
-		hmAgent.AddTarget(amAgent);
-		amAgent.ClearTarget();
-		amAgent.AddTarget(mxAgent);
+		mxAgent.ClearTarget ();
+		mxAgent.AddTarget (amAgent);
+		hmAgent.ClearTarget ();
+		hmAgent.AddTarget (amAgent);
+		amAgent.ClearTarget ();
+		amAgent.AddTarget (hmAgent);
 
 
 		//重新设定新位置
-		mxAgent.BaseSprite.SetMapPosition(1,2);
-		hmAgent.BaseSprite.SetMapPosition(14,9);
-		amAgent.BaseSprite.SetMapPosition(6,6);
+		mxAgent.BaseSprite.SetMapPosition (1, 2);
+		hmAgent.BaseSprite.SetMapPosition (14, 9);
+		amAgent.BaseSprite.SetMapPosition (6, 6);
 
 		
 		mxAgent.BaseSprite.gameObject.SetActive (false);
@@ -853,7 +863,7 @@ public class BattleManager : MonoBehaviour
 		}
 	
 		for (int i = 0; i < list1.Count; i++) {
-			RemoveEnemy(list1 [i]);
+			RemoveEnemy (list1 [i]);
 		}
 
 
@@ -870,7 +880,7 @@ public class BattleManager : MonoBehaviour
 		}
 
 		for (int i = 0; i < list2.Count; i++) {
-			RemoveSoldier(list2 [i]);
+			RemoveSoldier (list2 [i]);
 		}
 		
 
@@ -890,21 +900,24 @@ public class BattleManager : MonoBehaviour
 
 
 		//重新落位
-		mxAgent.BaseSprite.AddDownEffect();
+		mxAgent.BaseSprite.AddDownEffect ();
 		mxAgent.BaseSprite.gameObject.SetActive (true);
+		AudioManager.SharedInstance.PlayOneShot ("fly", 1.0f);
 		yield return new WaitForSeconds (0.1f);
 
-		hmAgent.BaseSprite.AddDownEffect();
+		hmAgent.BaseSprite.AddDownEffect ();
 		hmAgent.BaseSprite.gameObject.SetActive (true);
+		AudioManager.SharedInstance.PlayOneShot ("fly", 1.0f);
 		yield return new WaitForSeconds (0.1f);
 
-		amAgent.BaseSprite.AddBlackDownEffect();
+		amAgent.BaseSprite.AddBlackDownEffect ();
 		amAgent.BaseSprite.gameObject.SetActive (true);
+		AudioManager.SharedInstance.PlayOneShot ("fly", 1.0f);
 
 
 		mxAgent.IsReady = true;
 		hmAgent.IsReady = true;
-		amAgent.IsReady  =true;
+		amAgent.IsReady = true;
 
 
 
