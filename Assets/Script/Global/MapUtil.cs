@@ -525,7 +525,22 @@ public class MapUtil
 		return list;
 	}
 
+	/// <summary>
+	/// 两点的夹角角度
+	/// 主角可能是敌人，也可能是我方。
+	/// </summary>
+	/// <param name="pos1">主角.</param>
+	/// <param name="pos2">目标点.</param>
+	public static float MapAngel(Vector2 pos1,Vector2 pos2)
+	{
+		float dx = pos1.x - pos2.x;
+		float dy = pos1.y - pos2.y;
+		
+		float ang = Mathf.Atan2 (dy, dx);
+		float ang2 = ang * (180 / Mathf.PI);
 
+		return ang2;
+	}
 }
 
 

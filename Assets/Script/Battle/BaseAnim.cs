@@ -86,9 +86,9 @@ public class BaseAnim : MonoBehaviour
 		Hashtable args = new Hashtable ();
 		args.Add ("time", time);
 		args.Add ("alpha", 0);
-		args.Add ("oncomplete", "MaskFadeComplete");
-		args.Add ("oncompletetarget", this.gameObject);
-		args.Add ("ignoretimescale", true);
+//		args.Add ("oncomplete", "MaskFadeComplete");
+//		args.Add ("oncompletetarget", this.gameObject);
+//		args.Add ("ignoretimescale", true);
 		//Image img = blackMask.GetComponent<Image>();
 		iTween.FadeTo (this.gameObject, args);
 

@@ -64,7 +64,12 @@ public enum KeyEventId
 	/// <summary>
 	/// 连击结束
 	/// </summary>
-	ComboEnd=108
+	ComboEnd=108,
+
+	/// <summary>
+	/// 连击击中效果
+	/// </summary>
+	ComboHit=109,
 }
 
 /// <summary>

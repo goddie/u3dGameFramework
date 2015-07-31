@@ -18,7 +18,7 @@ public class Main : MonoBehaviour
 	private GameObject btnRRAttack;
 	private GameObject btnRRUlt;
 	private GameObject loadingImage;
-
+	private GameObject btnTimer;
  
 
 	void Start ()
@@ -28,13 +28,13 @@ public class Main : MonoBehaviour
 		Application.targetFrameRate = 30;
 
 		GlobalConfig.GetInstance.InitGlobalSetting ();
+ 
 
-
-		GameObject.Find ("frame1").SetActive (false);
-		GameObject.Find ("frame2").SetActive (false);
-		GameObject.Find ("frame3").SetActive (false);
-		GameObject.Find ("frame4").SetActive (false);
-		GameObject.Find ("frame5").SetActive (false);
+//		GameObject.Find ("frame1").SetActive (false);
+//		GameObject.Find ("frame2").SetActive (false);
+//		GameObject.Find ("frame3").SetActive (false);
+//		GameObject.Find ("frame4").SetActive (false);
+//		GameObject.Find ("frame5").SetActive (false);
 
 		loadingImage = GameObject.Find ("Loading");
 		btnHFAttack = GameObject.Find ("btnHFAttack");
@@ -46,7 +46,8 @@ public class Main : MonoBehaviour
 		btnHMUlt = GameObject.Find ("btnHM");
 		btnODUlt = GameObject.Find ("btnOD");
 		btnRRUlt = GameObject.Find ("btnRR");
-		
+		btnTimer = GameObject.Find	("btnTimer");
+
 //		UUIEventListener.Get (btnHFAttack).onClick = btn1ClickHandler;
 //
 //		
@@ -62,9 +63,11 @@ public class Main : MonoBehaviour
 		UUIEventListener.Get (btnHMUlt).onClick = BtnUtlHandler;
 		UUIEventListener.Get (btnRRUlt).onClick = BtnUtlHandler;
 
+
 		//UUIEventListener.Get (btnStart).onClick = BtnStartClickHandler;
 
 		UUIEventListener.Get(loadingImage).onDrag = LoadingDragHandler;
+		UUIEventListener.Get(btnTimer).onClick = BtnTimerHandler;
 		//MessageCenter.GetInstance.addEventListener (BaseEvent.CLICK, btn1ClickHandler);
 		MainComponentManager main = MainComponentManager.SharedInstance;
 		BattleManager battle = BattleManager.SharedInstance;
@@ -172,6 +175,11 @@ public class Main : MonoBehaviour
 	void LoadingDragHandler(GameObject go)
 	{
 		EventCenter.GetInstance.dispatchEvent (BattleEvent.SLASH, 0);
+	}
+
+	void BtnTimerHandler(GameObject go)
+	{
+		EventCenter.GetInstance.dispatchEvent (BattleEvent.CHANGE_LEVEL, 0);
 	}
 
 }

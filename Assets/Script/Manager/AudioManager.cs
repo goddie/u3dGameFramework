@@ -48,7 +48,12 @@ public class AudioManager : MonoBehaviour
 	public void PlaySound (string eventName, float volume)
 	{
 		FMOD.Studio.EventInstance sound = FMOD_StudioSystem.instance.GetEvent ("event:/" + eventName);
-		soundList.Add (eventName, sound);
+
+		if (!soundList.ContainsKey(eventName)) {
+			soundList.Add (eventName, sound);
+		}
+
+
 		sound.setVolume (volume);
 		sound.start ();
 	}

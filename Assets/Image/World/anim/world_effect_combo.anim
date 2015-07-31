@@ -70,10 +70,31 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_GenerateMotionCurves: 0
   m_Events:
+  - time: 0
+    functionName: TriggerKeyEvent
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 109
+    messageOptions: 0
+  - time: .0500000007
+    functionName: TriggerKeyEvent
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 109
+    messageOptions: 0
+  - time: .100000001
+    functionName: TriggerKeyEvent
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 109
+    messageOptions: 0
   - time: .150000006
     functionName: TriggerKeyEvent
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
-    intParameter: 108
+    intParameter: 10
     messageOptions: 0

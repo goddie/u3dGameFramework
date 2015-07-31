@@ -11,7 +11,8 @@ public class Test : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		MapUtil.GetInstance.DrawGrid ();
+		//MapUtil.GetInstance.DrawGrid ();
+ 
 	}
 	
 	// Update is called once per frame

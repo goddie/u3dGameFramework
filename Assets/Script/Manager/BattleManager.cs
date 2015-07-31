@@ -47,7 +47,14 @@ public class BattleManager : MonoBehaviour
 //		new Character(7,"阿莫",110,4,"Prefabs/am",SkillData.MELEE)
 //	};
 
+	/// <summary>
+	/// 经过游戏时间
+	/// </summary>
+	private float timeElapsed = 0;
 
+	/// <summary>
+	/// 正在Loading
+	/// </summary>
 	private bool isLoading = false;
 
 
@@ -62,6 +69,9 @@ public class BattleManager : MonoBehaviour
 	private List<BattleAgent> enemyList = new List<BattleAgent> ();
 
 
+	private Dictionary<string,BattleAgent> agentDict = new Dictionary<string, BattleAgent>();
+
+
 	/// <summary>
 	/// 敌人站位
 	/// </summary>
@@ -69,7 +79,7 @@ public class BattleManager : MonoBehaviour
 		new Vector2 (4, 4),
 		new Vector2 (5, 9),
 		new Vector2 (9, 3),
-		new Vector2 (8, 9),
+		new Vector2 (9, 9),
 		new Vector2 (7, 7)
 	};
 
@@ -80,7 +90,7 @@ public class BattleManager : MonoBehaviour
 		new Vector2 (13, 3),
 		new Vector2 (1, 8),
 		new Vector2 (1, 3),
-		new Vector2 (13, 7),
+		new Vector2 (12, 6),
 		new Vector2 (13, 8)
 	};
 	
@@ -93,6 +103,8 @@ public class BattleManager : MonoBehaviour
 		//大招
 		EventCenter.GetInstance.addEventListener (BattleEvent.ULT, BattleUltHandler);
 		EventCenter.GetInstance.addEventListener (BattleEvent.SLASH, SlashHandler);
+		EventCenter.GetInstance.addEventListener (BattleEvent.CHANGE_LEVEL, ChangeLevelHandler);
+
 	}
 
 
@@ -118,6 +130,26 @@ public class BattleManager : MonoBehaviour
 	{
 //		EventCenter.GetInstance.removeEventListener (BattleEvent.ATTACK, BattleAttackHandler);
 		EventCenter.GetInstance.removeEventListener (BattleEvent.ULT, BattleUltHandler);
+	}
+
+	/// <summary>
+	/// 开始游戏计时
+	/// </summary>
+	void StartTimer ()
+	{
+		InvokeRepeating ("timerHandler", 1.0f, 1.0f);
+		//gameTime = TimerManager.SharedInstance.CreateTimer (1.0f, timerHandler);
+
+	}
+
+	void timerHandler ()
+	{
+		GameObject timeText = GameObject.Find ("time");
+		Text txt = timeText.GetComponent<Text> ();
+
+		timeElapsed = timeElapsed + 1;
+
+		txt.text = timeElapsed + "";
 	}
 
 	/// <summary>
@@ -148,12 +180,14 @@ public class BattleManager : MonoBehaviour
 			//agent.BaseSprite.SetLocalPosition (pos [i].x, pos [i].y);
 			agent.BaseSprite.SetMapPosition (enemyPos [i].x, enemyPos [i].y);
 			enemyList.Add (agent);
+
+			agentDict.Add(hf.name,agent);
 		}
 
 		//boss
 		GameObject prefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [17].Prefab);
 		GameObject am = StageManager.SharedInstance.AddToStage (parent, prefab);
-		
+		am.name = "am";
 		BaseSoldier amSoldier = am.AddComponent<AMSoldier> (); 
 
 		Character c = TestData.charDB [17];
@@ -161,12 +195,12 @@ public class BattleManager : MonoBehaviour
 		BattleAgent amAgent = new BattleAgent (amSoldier, c);
 
 		amAgent.Character.HitPoint = new Vector3 (0, 100, 100);
-		
+
 		//agent.BaseSprite.SetLocalPosition (pos [i].x, pos [i].y);
 		amAgent.BaseSprite.SetMapPosition (enemyPos [4].x, enemyPos [4].y);
 		enemyList.Add (amAgent);
 
-
+		agentDict.Add(am.name,amAgent);
 	}
 
 	IEnumerator AddOD ()
@@ -176,7 +210,7 @@ public class BattleManager : MonoBehaviour
 		GameObject parent = StageManager.SharedInstance.HeroLayer;
 		GameObject odPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [12].Prefab);	
 		GameObject od = StageManager.SharedInstance.AddToStage (parent, odPrefab);
-		
+		od.name = "od";
 		BaseSoldier odSoldier = od.AddComponent<ODSoldier> ();
 		BattleAgent odAgent = new BattleAgent (odSoldier, TestData.charDB [12]);
 		
@@ -184,7 +218,7 @@ public class BattleManager : MonoBehaviour
 		odAgent.BaseSprite.AddDownEffect ();		
 		
 		soldierList.Add (odAgent);
-
+		agentDict.Add(od.name,odAgent);
 
 		yield return new WaitForSeconds (0.2f);
 
@@ -192,14 +226,14 @@ public class BattleManager : MonoBehaviour
  
 		GameObject lePrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [13].Prefab);
 		GameObject le = StageManager.SharedInstance.AddToStage (parent, lePrefab);
-		
+		le.name = "le";
 		BaseSoldier leSoldier = le.AddComponent<LESoldier> ();
 		BattleAgent leAgent = new BattleAgent (leSoldier, TestData.charDB [13]);
 		leAgent.BaseSprite.SetMapPosition (soldierPos [1].x, soldierPos [1].y);
 
 		leAgent.BaseSprite.AddDownEffect ();
 		soldierList.Add (leAgent);
-
+		agentDict.Add(le.name,leAgent);
 
 		yield return new WaitForSeconds (0.2f);
 		
@@ -207,7 +241,7 @@ public class BattleManager : MonoBehaviour
  
 		GameObject mxPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [14].Prefab);
 		GameObject mx = StageManager.SharedInstance.AddToStage (parent, mxPrefab);
-		
+		mx.name = "mx";
 		BaseSoldier mxSoldier = mx.AddComponent<MXSoldier> ();
 		BattleAgent mxAgent = new BattleAgent (mxSoldier, TestData.charDB [14]);
 		
@@ -215,34 +249,35 @@ public class BattleManager : MonoBehaviour
 		mxAgent.BaseSprite.SetMapPosition (soldierPos [2].x, soldierPos [2].y);
 		mxAgent.BaseSprite.AddDownEffect ();
 		soldierList.Add (mxAgent);
-
+		agentDict.Add(mx.name,mxAgent);
 
 		yield return new WaitForSeconds (0.2f);
 		//寒梦
  
 		GameObject hmPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [15].Prefab);
 		GameObject hm = StageManager.SharedInstance.AddToStage (parent, hmPrefab);
-		
+		hm.name="hm";
 		BaseSoldier hmSoldier = hm.AddComponent<HMSoldier> ();
 		BattleAgent hmAgent = new BattleAgent (hmSoldier, TestData.charDB [15]);
 		
 		hmAgent.BaseSprite.SetMapPosition (soldierPos [3].x, soldierPos [3].y);
 		hmAgent.BaseSprite.AddDownEffect ();
 		soldierList.Add (hmAgent);
+		agentDict.Add(hm.name,hmAgent);
 
 		yield return new WaitForSeconds (0.3f);
 		//蓉蓉
 		
 		GameObject rrPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [16].Prefab);
 		GameObject rr = StageManager.SharedInstance.AddToStage (parent, rrPrefab);
-		
+		rr.name = "rr";
 		BaseSoldier rrSoldier = rr.AddComponent<RRSoldier> ();
 		BattleAgent rrAgent = new BattleAgent (rrSoldier, TestData.charDB [16]);
 		
 		rrAgent.BaseSprite.SetMapPosition (soldierPos [4].x, soldierPos [4].y);
 		rrAgent.BaseSprite.AddDownEffect ();
 		soldierList.Add (rrAgent);
-		
+		agentDict.Add(rr.name,rrAgent);
 
 //		FindTargetForHero (odAgent);
 	
@@ -320,36 +355,37 @@ public class BattleManager : MonoBehaviour
 	void BattleUltHandler (CEvent e)
 	{
 		int index = Convert.ToInt32 (e.data);
+
 		//奥丁大招 2000x 的技能ID
 		if (index == 11) {
 			//soldierList [0].BaseSoldier.StateMachine.ToggleMajorState (StateId.Ult, null);
 			//soldierList [0].dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
-			AttackMessage message = new AttackMessage (soldierList [0], enemyList, 20001);
+			AttackMessage message = new AttackMessage (agentDict["od"], enemyList, 20001);
 			EventCenter.GetInstance.dispatchEvent (SoldierEvent.ULT_LOAD, message);
 		}
 		if (index == 21) {
 			//soldierList [0].BaseSoldier.StateMachine.ToggleMajorState (StateId.Ult, null);
 			//soldierList [0].dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
-			AttackMessage message = new AttackMessage (soldierList [1], enemyList, 20002);
+			AttackMessage message = new AttackMessage (agentDict["le"], enemyList, 20002);
 			EventCenter.GetInstance.dispatchEvent (SoldierEvent.ULT_LOAD, message);
 		}
 		if (index == 31) {
 			//soldierList [0].BaseSoldier.StateMachine.ToggleMajorState (StateId.Ult, null);
 			//soldierList [0].dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
-			AttackMessage message = new AttackMessage (soldierList [2], enemyList, 20003);
+			AttackMessage message = new AttackMessage (agentDict["mx"], enemyList, 20003);
 			EventCenter.GetInstance.dispatchEvent (SoldierEvent.ULT_LOAD, message);
 		}
 		if (index == 41) {
 			//soldierList [0].BaseSoldier.StateMachine.ToggleMajorState (StateId.Ult, null);
 			//soldierList [0].dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
-			AttackMessage message = new AttackMessage (soldierList [3], enemyList, 20004);
+			AttackMessage message = new AttackMessage (agentDict["hm"], enemyList, 20004);
 			EventCenter.GetInstance.dispatchEvent (SoldierEvent.ULT_LOAD, message);
 		}
 
 		if (index == 51) {
 			//soldierList [0].BaseSoldier.StateMachine.ToggleMajorState (StateId.Ult, null);
 			//soldierList [0].dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
-			AttackMessage message = new AttackMessage (soldierList [4], enemyList, 20005);
+			AttackMessage message = new AttackMessage (agentDict["rr"], enemyList, 20005);
 			EventCenter.GetInstance.dispatchEvent (SoldierEvent.ULT_LOAD, message);
 
 		}
@@ -482,17 +518,21 @@ public class BattleManager : MonoBehaviour
 		if (isLoading) {
 			return;
 		}
-				
-
 		AudioManager.SharedInstance.PlayOneShot ("fight", 2.0f);
-
-
 		StartCoroutine (SlashScreen ());
+	}
 
-
+	void ChangeLevelHandler (CEvent e)
+	{
+		StartCoroutine (ChangeMap ());
 	}
 	
-	
+
+
+
+
+
+
 	/// <summary>
 	/// 滑动屏幕
 	/// </summary>
@@ -551,11 +591,51 @@ public class BattleManager : MonoBehaviour
 	/// </summary>
 	void Proceed ()
 	{
-		
+	
+		StartTimer ();
+
 		StartCoroutine (Step1 ());
+	
+
+	}
 
 
+	/// <summary>
+	/// 删除敌人
+	/// </summary>
+	public void RemoveEnemy (BattleAgent ba)
+	{
+		if (enemyList.Contains (ba)) {
 
+			this.enemyList.Remove (ba);
+			agentDict.Remove(ba.BaseSprite.gameObject.name);
+
+			for (int i = 0; i < soldierList.Count; i++) {
+
+				soldierList [i].RemoveTarget (ba);
+			}
+		}
+
+		Destroy (ba.BaseSprite.gameObject);
+	}
+
+	/// <summary>
+	/// 移除英雄
+	/// </summary>
+	/// <param name="ba">Ba.</param>
+	public void RemoveSoldier (BattleAgent ba)
+	{
+		if (soldierList.Contains (ba)) {
+			
+			this.soldierList.Remove (ba);
+			agentDict.Remove(ba.BaseSprite.gameObject.name);
+			for (int i = 0; i < enemyList.Count; i++) {
+
+				enemyList [i].RemoveTarget (ba);
+			}
+		}
+
+		Destroy (ba.BaseSprite.gameObject);
 	}
 
 
@@ -592,7 +672,7 @@ public class BattleManager : MonoBehaviour
 		}
 
 
-		yield return new WaitForSeconds (0.2f);
+		yield return new WaitForSeconds (0.5f);
 
 		//奥丁说话
 		GameObject popoPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [24].Prefab);
@@ -601,42 +681,57 @@ public class BattleManager : MonoBehaviour
 		txt.transform.position = MapUtil.GetInstance.MapToWorld (soldierPos [0].x, soldierPos [0].y);
 		txt.SetText ("大家就位，做好战斗准备！");
 
-		yield return new WaitForSeconds (0.8f);
+		yield return new WaitForSeconds (2.0f);
 		Destroy (popo);
 
 
 		//朱雀阵型
-		GameObject zhuquePrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [23].Prefab);
+		GameObject zhuquePrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [22].Prefab);
 		
 		GameObject zhuque = StageManager.SharedInstance.AddToStage (parent, zhuquePrefab);
 		BaseEffect zhuqueEffect = zhuque.AddComponent<BaseEffect> (); 
 		zhuqueEffect.transform.position = MapUtil.GetInstance.MapToWorld (8, 6);
 
 
-		yield return new WaitForSeconds (1.0f);
-
+		Hashtable args1 = new Hashtable ();
+		args1.Add ("time", 1.5f);
+		args1.Add ("alpha", 0f);
+		iTween.FadeTo (zhuque, args1);
+	
+		yield return new WaitForSeconds (2.0f);
+		Destroy(zhuque);
 
 		//阿莫说话
 		GameObject popo2Prefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [24].Prefab);
 		GameObject popo2 = StageManager.SharedInstance.AddToStage (parent, popo2Prefab);
 		Popo txt2 = popo2.AddComponent<Popo> (); 
 		txt2.transform.position = MapUtil.GetInstance.MapToWorld (enemyPos [4].x, enemyPos [4].y);
-		txt2.SetText ("小的们，反击阵型走起！");
+		txt2.SetText ("小的们，野狗阵型走起！");
 
-		yield return new WaitForSeconds (0.8f);
+		yield return new WaitForSeconds (2.0f);
 		
 		Destroy (popo2);
 
 		//白虎阵型
-		GameObject baihuPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [22].Prefab);
+		GameObject baihuPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [23].Prefab);
 		
 		GameObject baihu = StageManager.SharedInstance.AddToStage (parent, baihuPrefab);
 		BaseEffect baihuEffect = baihu.AddComponent<BaseEffect> (); 
 		baihuEffect.transform.position = MapUtil.GetInstance.MapToWorld (8, 6);
 
-		yield return new WaitForSeconds (1.0f);
+
+		Hashtable args2 = new Hashtable ();
+		args2.Add ("time", 1.5f);
+		args2.Add ("alpha", 0f);
+		iTween.FadeTo (baihu, args2);
 
 
+		yield return new WaitForSeconds (2.0f);
+		Destroy(baihu);
+
+
+//		enemyList [3].IsReady = true;
+//		soldierList [2].IsReady = true;
 
 		for (int i = 0; i < soldierList.Count; i++) {
 			soldierList [i].IsReady = true;
@@ -645,6 +740,173 @@ public class BattleManager : MonoBehaviour
 		for (int i = 0; i < enemyList.Count; i++) {
 			enemyList [i].IsReady = true;
 		}
+
+	}
+
+
+	/// <summary>
+	/// 切换地图
+	/// </summary>
+	/// <returns>The map.</returns>
+	IEnumerator ChangeMap ()
+	{
+
+		//隐藏大招按钮
+		GameObject.Find("btnOD").SetActive(false);
+		GameObject.Find("btnLE").SetActive(false);
+		GameObject.Find("btnRR").SetActive(false);
+
+
+		for (int i = 0; i < enemyList.Count; i++) {
+			enemyList [i].IsReady = false;
+			enemyList [i].BaseSoldier.OnIdle ();
+		}
+
+		for (int i = 0; i < soldierList.Count; i++) {
+			soldierList [i].IsReady = false;
+			soldierList [i].BaseSoldier.OnIdle ();
+		}
+		
+//		soldierList [0].IsReady = false;
+//		soldierList [1].IsReady = false;
+//		soldierList [4].IsReady = false;
+		
+		//阿莫说话
+		GameObject parent = StageManager.SharedInstance.EffectLayer;
+		GameObject popo2Prefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [24].Prefab);
+		GameObject popo2 = StageManager.SharedInstance.AddToStage (parent, popo2Prefab);
+		Popo txt2 = popo2.AddComponent<Popo> (); 
+		txt2.transform.position = MapUtil.GetInstance.MapToWorld (enemyList [4].MapPos.x, enemyList [4].MapPos.y);
+		txt2.SetText ("小的们顶住！我妈妈喊我回家吃饭！");
+		
+		yield return new WaitForSeconds (2.0f);
+		
+		Destroy (popo2);
+
+		//am上天
+		BattleAgent amAgent = enemyList [4];
+		amAgent.BaseSprite.AddBlackDownEffect ();
+		amAgent.BaseSprite.gameObject.SetActive (false);
+
+		yield return new WaitForSeconds (1.0f);
+
+		//mx  hm一起上天
+		BattleAgent hmAgent = soldierList [3];
+		hmAgent.BaseSprite.AddDownEffect ();
+		hmAgent.BaseSprite.gameObject.SetActive (false);
+
+		BattleAgent mxAgent = soldierList [2];
+		mxAgent.BaseSprite.AddDownEffect ();
+		mxAgent.BaseSprite.gameObject.SetActive (false);
+
+		//yield return new WaitForSeconds (0.5f);
+
+		AudioManager.SharedInstance.PlaySound ("Bgmusic_02", 1.0f);
+		//变换背景
+		GameObject slashLayer = StageManager.SharedInstance.SlashLayer;
+		GameObject whitePrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [26].Prefab);
+		GameObject white = StageManager.SharedInstance.AddToStage (slashLayer, whitePrefab);
+		Image img = white.GetComponent<Image> ();
+		Color c = new Color (img.color.r, img.color.g, img.color.b, 0);
+		img.color = c;
+
+		Hashtable args2 = new Hashtable ();
+		args2.Add ("time", 0.5f);
+		args2.Add ("alpha", 1.0f);
+		iTween.FadeTo (white, args2);
+
+		yield return new WaitForSeconds (0.5f);
+
+		mxAgent.BaseSprite.gameObject.SetActive (true);
+		hmAgent.BaseSprite.gameObject.SetActive (true);
+		amAgent.BaseSprite.gameObject.SetActive (true);
+
+
+		mxAgent.ClearTarget();
+		mxAgent.AddTarget(amAgent);
+		hmAgent.ClearTarget();
+		hmAgent.AddTarget(amAgent);
+		amAgent.ClearTarget();
+		amAgent.AddTarget(mxAgent);
+
+
+		//重新设定新位置
+		mxAgent.BaseSprite.SetMapPosition(1,2);
+		hmAgent.BaseSprite.SetMapPosition(14,9);
+		amAgent.BaseSprite.SetMapPosition(6,6);
+
+		
+		mxAgent.BaseSprite.gameObject.SetActive (false);
+		hmAgent.BaseSprite.gameObject.SetActive (false);
+		amAgent.BaseSprite.gameObject.SetActive (false);
+
+
+		//移除不要的角色
+
+		List<BattleAgent> list1 = new List<BattleAgent> ();
+		for (int i = 0; i < enemyList.Count; i++) {
+
+			if (enemyList [i] == amAgent) {
+				continue;
+			}
+			list1.Add (enemyList [i]);
+		}
+	
+		for (int i = 0; i < list1.Count; i++) {
+			RemoveEnemy(list1 [i]);
+		}
+
+
+		List<BattleAgent> list2 = new List<BattleAgent> ();
+		for (int i = 0; i < soldierList.Count; i++) {
+			if (soldierList [i] == hmAgent) {
+				continue;
+			}
+
+			if (soldierList [i] == mxAgent) {
+				continue;
+			}
+			list2.Add (soldierList [i]);
+		}
+
+		for (int i = 0; i < list2.Count; i++) {
+			RemoveSoldier(list2 [i]);
+		}
+		
+
+		yield return new WaitForSeconds (1f);
+
+		GameObject bg2 = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [28].Prefab);
+		StageManager.SharedInstance.ChangeBg (bg2);
+
+		Hashtable args3 = new Hashtable ();
+		args3.Add ("time", 1f);
+		args3.Add ("alpha", 0);
+		iTween.FadeTo (white, args3);
+
+		yield return new WaitForSeconds (0.5f);
+		Destroy (white);
+
+
+
+		//重新落位
+		mxAgent.BaseSprite.AddDownEffect();
+		mxAgent.BaseSprite.gameObject.SetActive (true);
+		yield return new WaitForSeconds (0.1f);
+
+		hmAgent.BaseSprite.AddDownEffect();
+		hmAgent.BaseSprite.gameObject.SetActive (true);
+		yield return new WaitForSeconds (0.1f);
+
+		amAgent.BaseSprite.AddBlackDownEffect();
+		amAgent.BaseSprite.gameObject.SetActive (true);
+
+
+		mxAgent.IsReady = true;
+		hmAgent.IsReady = true;
+		amAgent.IsReady  =true;
+
+
 
 	}
 

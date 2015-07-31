@@ -48,10 +48,12 @@ public class MXSoldier : HeroSoldier
 	/// </summary>
 	override protected void OnUltShootOnEvent ()
 	{
+		this.lastTargets = this.BattleAgent.Targets;
+
 		//优先攻击浮空目标 Combo
 		List<BattleAgent> floatList = BattleManager.SharedInstance.GetFloatTarget ();
 		if (floatList.Count > 0) {
-			this.lastTargets = this.BattleAgent.Targets;
+
 			this.BattleAgent.ChangeTargets(floatList);
 			isComboAttack=true;
 		}

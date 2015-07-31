@@ -54,7 +54,6 @@ public class UltraSpellManager : MonoBehaviour
 			GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [8].Prefab);
 			GameObject parent = StageManager.SharedInstance.MaskLayer; 
 			blackMask = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
-
 		}
 
 		blackMask.SetActive (false);
@@ -82,8 +81,7 @@ public class UltraSpellManager : MonoBehaviour
 		AttackMessage message = (AttackMessage)c.data;	
 		StartCoroutine ("PlayUltEffect", message);
 
-		BattleAgent battleAgent = message.Sender;
-		battleAgent.dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
+
 	
 	}
 
@@ -113,7 +111,7 @@ public class UltraSpellManager : MonoBehaviour
  
 
 		Hashtable args = new Hashtable ();
-		args.Add ("time", 1.5f);
+		args.Add ("time", 1.0f);
 		args.Add ("alpha", 0);
 		args.Add ("oncomplete", "MaskFadeComplete");
 		//args.Add ("oncompletetarget", this.gameObject);
@@ -121,7 +119,7 @@ public class UltraSpellManager : MonoBehaviour
 		//Image img = blackMask.GetComponent<Image>();
 		iTween.FadeTo (newMask, args);
 	
-		yield return new WaitForSeconds(1.5f);
+		yield return new WaitForSeconds(1.0f);
 
 		Destroy(newMask);
 	}
@@ -140,12 +138,12 @@ public class UltraSpellManager : MonoBehaviour
 
 	IEnumerator PlayUltEffect (AttackMessage message)
 	{
-		Time.timeScale = 0.6f;
+		StartCoroutine(MaskFade ());
 
 		this.message = message;
 
 		GameObject bulletPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [7].Prefab);
-		GameObject parent = StageManager.SharedInstance.MaskLayer; 
+		GameObject parent = StageManager.SharedInstance.WorldUltLayer; 
 		GameObject bullet = StageManager.SharedInstance.AddToStage (parent, bulletPrefab);
 		baseEffect = bullet.AddComponent<BaseEffect> ();
 		//baseEffect.transform.position = message.Sender.GameObject.transform.position;
@@ -156,15 +154,21 @@ public class UltraSpellManager : MonoBehaviour
 		BattleAgent battleAgent = message.Sender;
 		baseEffect.transform.position = MapUtil.GetHitPointWorld (battleAgent);
 		baseEffect.PlayOnAgent (message);
+		//yield return new WaitForSeconds (0.1f);
 
-		StartCoroutine(MaskFade ());
 
 
-		yield return new WaitForSeconds (0.6f);
+
+		
+
 
 		//addMask ();
-		Time.timeScale = 1.0f;
+		//Time.timeScale = 1.0f;
 
+		battleAgent.dispatchEvent (SoldierEvent.BATTLE_MESSAGE, message);
+		Time.timeScale = 0.6f;
+		yield return new WaitForSeconds (0.1f);
+		Time.timeScale = 1.0f;
 	}
 
 

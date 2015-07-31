@@ -21,7 +21,12 @@ public class BaseEffect : BaseAnim
 
 		if (keyId == KeyEventId.ComboEnd) {
 
-			FadeOutAnimator(1.5f);
+			FadeOutAnimator(2.0f);
+		}
+
+		if (keyId == KeyEventId.ComboHit) {
+
+			//AudioManager.SharedInstance.PlayOneShot("fight",3.0f);
 		}
 
 		if (keyId ==  KeyEventId.StateStop) {

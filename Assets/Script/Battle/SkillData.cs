@@ -10,12 +10,12 @@ public class SkillData
 	/// <summary>
 	/// BOSS近战距离
 	/// </summary>
-	public const int BOSS_MELEE = 5;
+	public const int BOSS_MELEE = 3;
 
 	/// <summary>
 	/// 远程距离
 	/// </summary>
-	public const int RANGE = 10;
+	public const int RANGE = 8;
 
 	/// <summary>
 	/// 大招距离

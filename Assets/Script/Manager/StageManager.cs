@@ -51,7 +51,13 @@ public class StageManager : MonoBehaviour
 	/// <summary>
 	/// Loading图
 	/// </summary>
-	private static string Loading_LAYER = "Loading";
+	private static string LOADING_LAYER = "Loading";
+
+
+	/// <summary>
+	/// 世界大招
+	/// </summary>
+	private static string WORLDULT_LAYER = "worldUltLayer";
 
 	/// <summary>
 	/// 获取图层
@@ -136,6 +142,17 @@ public class StageManager : MonoBehaviour
 	}
 
 
+	/// <summary>
+	/// 大招特效
+	/// </summary>
+	private GameObject worldUltLayer;
+
+	public GameObject WorldUltLayer {
+		get {
+			return worldUltLayer;
+		}
+	}
+
 
 	void Awake ()
 	{
@@ -146,12 +163,15 @@ public class StageManager : MonoBehaviour
 		bgLayer = getLayer(BG_LAYER);
 		maskLayer = getLayer(MASK_LAYER);
 		slashLayer = getLayer(SLASH_LAYER);
-		loadingLayer = getLayer(Loading_LAYER);
+		loadingLayer = getLayer(LOADING_LAYER);
+		worldUltLayer = getLayer(WORLDULT_LAYER);
 	}
 
 	void Start ()
 	{
 //		Debug.Log ("Stage Start");
+
+	
 	}
 
 
@@ -175,6 +195,22 @@ public class StageManager : MonoBehaviour
 	{
 
 	}
+
+	/// <summary>
+	/// 修改背景
+	/// </summary>
+	public void ChangeBg(GameObject go)
+	{
+		for(int i = 0;i<bgLayer.transform.childCount;i++)
+		{
+			GameObject sgo = bgLayer.transform.GetChild(i).gameObject;
+			Destroy(sgo);
+		}
+		GameObject bg = StageManager.SharedInstance.AddToStage (bgLayer, go);	
+		//bg.AddComponent<Background>();
+	}
+
+
 }
  
 

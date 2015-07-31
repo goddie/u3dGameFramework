@@ -120,12 +120,13 @@ public class BaseSprite : BaseAnim
 	
 		Vector2 pos1 = MapUtil.GetInstance.MapToScreen (battleAgent.MapPos);
 		Vector2 pos2 = MapUtil.GetInstance.MapToScreen (battleAgent.Targets [0].MapPos);
+ 
+		float ang2 = MapUtil.MapAngel(pos1,pos2);
 
-		float dx = pos1.x - pos2.x;
-		float dy = pos1.y - pos2.y;
-
-		float ang = Mathf.Atan2 (dy, dx);
-		float ang2 = ang * (180 / Mathf.PI);
+		if (ang2 == 180 || ang2 == -180 || ang2==0) {		
+			pos1.y = pos1.y  + -2.0f;
+			ang2 = MapUtil.MapAngel(pos1,pos2);
+		}
 
 
 
@@ -133,8 +134,7 @@ public class BaseSprite : BaseAnim
 			
 			DirectTo (FaceTo.Left);
 		}
-		
-		
+
 		if (ang2 < 0 && ang2 > -90) {
 			DirectTo (FaceTo.Left);
 		}
@@ -148,11 +148,7 @@ public class BaseSprite : BaseAnim
 			DirectTo (FaceTo.Right);
 		}
 
-		if (ang2 == 180 || ang2 == -180 || ang2==0) {
-			if (pos2.x > pos1.x) {
-				DirectTo(FaceTo.Right);
-			}
-		}
+
 	
 
 
@@ -309,8 +305,11 @@ public class BaseSprite : BaseAnim
 
 			AddFlashEffect (new Vector3(x,y,0));
 
+			//PlayComboSound();
 		}
 
+		 StartCoroutine( PlayComboSound(am.ComboCount));
+	
 		AddComboFlashEffect();
 		AddComboNum();
 		
@@ -360,6 +359,30 @@ public class BaseSprite : BaseAnim
 	}
 
 	/// <summary>
+	/// 黑色落位效果
+	/// </summary>
+	public void AddBlackDownEffect ()
+	{
+		GameObject downPrefab = ResourceManager.GetInstance.LoadPrefab (TestData.charDB [25].Prefab);
+		GameObject parent = StageManager.SharedInstance.EffectLayer; 
+		GameObject down = StageManager.SharedInstance.AddToStage (parent, downPrefab);
+		
+		Image img = down.GetComponent<Image> ();
+		img.color = new Color (1.0f, 1.0f, 1.0f, 0.5f);
+		
+		BaseEffect baseEffect = down.AddComponent<BaseEffect> ();
+		
+		//Vector3 pos = MapUtil.GetInstance.MapToWorld (mapPos.x, mapPos.y);
+		
+		baseEffect.transform.position = gameObject.transform.position;
+		baseEffect.transform.localPosition = new Vector3 (baseEffect.transform.localPosition.x, baseEffect.transform.localPosition.y + 300, baseEffect.transform.localPosition.z);
+		
+		AttackMessage message = new AttackMessage (battleAgent, battleAgent.Targets, 1);
+		
+		baseEffect.PlayOnAgent (message);
+	}
+
+	/// <summary>
 	/// 受击火花特效
 	/// </summary>
 	public void AddFlashEffect ()
@@ -383,7 +406,7 @@ public class BaseSprite : BaseAnim
 	}
 
 	/// <summary>
-	/// Combo受击火花特效
+	/// Combo受击刀光特效
 	/// </summary>
 	public void AddComboFlashEffect ()
 	{
@@ -438,7 +461,21 @@ public class BaseSprite : BaseAnim
 		
 		baseEffect.PlayOnAgent (message);
 
-		AudioManager.SharedInstance.PlayOneShot("fight",1.0f);
+
+	}
+
+	/// <summary>
+	/// 播放声音
+	/// </summary>
+	/// <returns>The combo sound.</returns>
+	IEnumerator PlayComboSound(int times)
+	{
+		for (int i = 0; i < times; i++) {
+			//AudioManager.SharedInstance.PlaySound("fight",3.0f);
+			AudioManager.SharedInstance.PlayOneShot("fight",5.0f);
+			yield return new WaitForSeconds(0.1f);
+		}
+
 	}
 
 

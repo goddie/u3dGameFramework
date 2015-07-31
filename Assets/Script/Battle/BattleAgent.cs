@@ -341,6 +341,7 @@ public class BattleAgent : EventDispatcherBase
 	public void SetMapPosition (float x, float y)
 	{
 		mapPos = new Vector2 (x, y);
+		//this.baseSprite.gameObject.transform.position = MapUtil.GetInstance.MapToWorld(x,y);
 	}
 	
 	public void RemoveFromStage ()
@@ -358,6 +359,33 @@ public class BattleAgent : EventDispatcherBase
 			this.targets = new List<BattleAgent> ();
 		}
 		this.targets.Add (target);
+	}
+
+	/// <summary>
+	/// 移除目标
+	/// </summary>
+	/// <param name="target">Target.</param>
+	public void RemoveTarget(BattleAgent target)
+	{
+		if (target==null) {
+			return;
+		}
+		if (this.targets == null) {
+			return;
+		}
+
+		if (this.targets.Contains(target)) {
+			this.targets.Remove(target);
+		}
+
+	}
+
+	/// <summary>
+	/// 清除所有目标
+	/// </summary>
+	public void ClearTarget()
+	{
+		this.targets = null;
 	}
 
 	/// <summary>
@@ -441,12 +469,17 @@ public class BattleAgent : EventDispatcherBase
 	/// </summary>
 	protected void UpdateHandler ()
 	{
-		baseSprite.FaceToTarget ();
+
+
 
 		if (!isReady) {
 			//Debug.Log("Not ready");
 			return;
 		}
+
+		UpdateMapPosition ();
+
+		baseSprite.FaceToTarget ();
 
 		if (isAttackCD) {
 			AttackMessage message = new AttackMessage (this, this.targets, skillDict [CooldownType.Attack].Id);
@@ -466,7 +499,7 @@ public class BattleAgent : EventDispatcherBase
 		}
 
 
-		UpdateMapPosition ();
+
 		CheckGuardRange ();
 
 		//Debug.Log (mapPos);

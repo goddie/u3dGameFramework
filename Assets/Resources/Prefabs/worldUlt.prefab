@@ -11,7 +11,7 @@ GameObject:
   - 222: {fileID: 22225118}
   - 114: {fileID: 11471330}
   - 95: {fileID: 9500212}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: worldUlt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Sprite: {fileID: 21300000, guid: f972ce48e1d6f6b429b64431f4afbcdd, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ba477e585b96784409e2bc39def01995, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

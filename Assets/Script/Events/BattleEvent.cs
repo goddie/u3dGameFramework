@@ -27,5 +27,10 @@ public static class BattleEvent
 	public const string SLASH = "battle_slash";
 
 
+	/// <summary>
+	/// 转场
+	/// </summary>
+	public const string CHANGE_LEVEL = "battle_change_level";
+
 }
  
