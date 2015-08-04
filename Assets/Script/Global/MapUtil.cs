@@ -14,8 +14,8 @@ public class MapUtil
 
 	
 	public static readonly MapUtil GetInstance = new MapUtil ();
-	public const float  MAX_ROW = 12.0f;
-	public const float  MAX_COL = 16.0f;
+	public const float  MAX_ROW = 11.0f;
+	public const float  MAX_COL = 14.0f;
 	private float rowStep;
 
 	public float RowStep {
@@ -93,7 +93,7 @@ public class MapUtil
 	/// <returns>相对位移坐标</returns>
 	/// <param name="agent">Agent.</param>
 	/// <param name="delta">Delta.</param>
-	public static Vector3 GetDeltaPointWorld(BattleAgent agent,Vector3 delta)
+	public static Vector3 GetDeltaPointWorld (BattleAgent agent, Vector3 delta)
 	{
 		//受击点相对坐标
 		Vector3 hitLocal = delta + agent.BaseSprite.HitPoint;
@@ -114,7 +114,7 @@ public class MapUtil
 	/// <returns>The out point.</returns>
 	/// <param name="start">攻击点</param>
 	/// <param name="end">受击点</param>
-	public Vector3 GetOutPoint(Vector3 start,Vector3 end)
+	public Vector3 GetOutPoint (Vector3 start, Vector3 end)
 	{
 		return Vector3.zero;
 	}
@@ -403,8 +403,8 @@ public class MapUtil
 			}
 		}
 
-		if (list.Count==0) {
-			Debug.Log("list count=0");
+		if (list.Count == 0) {
+			Debug.Log ("list count=0");
 			return startAgent.MapPos;
 		}
 
@@ -531,7 +531,7 @@ public class MapUtil
 	/// </summary>
 	/// <param name="pos1">主角.</param>
 	/// <param name="pos2">目标点.</param>
-	public static float MapAngel(Vector2 pos1,Vector2 pos2)
+	public static float MapAngel (Vector2 pos1, Vector2 pos2)
 	{
 		float dx = pos1.x - pos2.x;
 		float dy = pos1.y - pos2.y;

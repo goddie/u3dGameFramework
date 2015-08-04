@@ -144,6 +144,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!81 &645083298
 AudioListener:
   m_ObjectHideFlags: 0
@@ -277,6 +278,7 @@ RectTransform:
   m_Children:
   - {fileID: 786491881}
   - {fileID: 170971878}
+  - {fileID: 1113425539}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 0}
@@ -448,6 +450,93 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4768002c437458344a5d9a90c7de3c0b, type: 2}
   m_IsPrefabParent: 0
+--- !u!1001 &1113425538
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 842968589}
+    m_Modifications:
+    - target: {fileID: 22466096, guid: 67cf39b174d3cf349afa46932788e07f, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22466096, guid: 67cf39b174d3cf349afa46932788e07f, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22466096, guid: 67cf39b174d3cf349afa46932788e07f, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22466096, guid: 67cf39b174d3cf349afa46932788e07f, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22466096, guid: 67cf39b174d3cf349afa46932788e07f, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22466096, guid: 67cf39b174d3cf349afa46932788e07f, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22466096, guid: 67cf39b174d3cf349afa46932788e07f, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22466096, guid: 67cf39b174d3cf349afa46932788e07f, type: 2}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 22466096, guid: 67cf39b174d3cf349afa46932788e07f, type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 58.3099976
+      objectReference: {fileID: 0}
+    - target: {fileID: 22466096, guid: 67cf39b174d3cf349afa46932788e07f, type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -9.17401123
+      objectReference: {fileID: 0}
+    - target: {fileID: 22466096, guid: 67cf39b174d3cf349afa46932788e07f, type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 640
+      objectReference: {fileID: 0}
+    - target: {fileID: 22466096, guid: 67cf39b174d3cf349afa46932788e07f, type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 640
+      objectReference: {fileID: 0}
+    - target: {fileID: 22466096, guid: 67cf39b174d3cf349afa46932788e07f, type: 2}
+      propertyPath: m_AnchorMin.x
+      value: .5
+      objectReference: {fileID: 0}
+    - target: {fileID: 22466096, guid: 67cf39b174d3cf349afa46932788e07f, type: 2}
+      propertyPath: m_AnchorMin.y
+      value: .5
+      objectReference: {fileID: 0}
+    - target: {fileID: 22466096, guid: 67cf39b174d3cf349afa46932788e07f, type: 2}
+      propertyPath: m_AnchorMax.x
+      value: .5
+      objectReference: {fileID: 0}
+    - target: {fileID: 22466096, guid: 67cf39b174d3cf349afa46932788e07f, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: .5
+      objectReference: {fileID: 0}
+    - target: {fileID: 22466096, guid: 67cf39b174d3cf349afa46932788e07f, type: 2}
+      propertyPath: m_Pivot.x
+      value: .5
+      objectReference: {fileID: 0}
+    - target: {fileID: 22466096, guid: 67cf39b174d3cf349afa46932788e07f, type: 2}
+      propertyPath: m_Pivot.y
+      value: .5
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 67cf39b174d3cf349afa46932788e07f, type: 2}
+  m_IsPrefabParent: 0
+--- !u!224 &1113425539 stripped
+RectTransform:
+  m_PrefabParentObject: {fileID: 22466096, guid: 67cf39b174d3cf349afa46932788e07f,
+    type: 2}
+  m_PrefabInternal: {fileID: 1113425538}
 --- !u!1 &2088549419
 GameObject:
   m_ObjectHideFlags: 0
@@ -494,6 +583,7 @@ MonoBehaviour:
   m_SubmitButton: Submit
   m_CancelButton: Cancel
   m_InputActionsPerSecond: 10
+  m_RepeatDelay: .5
   m_AllowActivationOnMobileDevice: 0
 --- !u!114 &2088549422
 MonoBehaviour:

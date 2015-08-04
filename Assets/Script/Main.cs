@@ -46,7 +46,10 @@ public class Main : MonoBehaviour
 		btnHMUlt = GameObject.Find ("btnHM");
 		btnODUlt = GameObject.Find ("btnOD");
 		btnRRUlt = GameObject.Find ("btnRR");
-		btnTimer = GameObject.Find	("btnTimer");
+		btnTimer = GameObject.Find ("btnTimer");
+
+		btnLEUlt.SetActive (false);
+		btnRRUlt.SetActive (false);
 
 //		UUIEventListener.Get (btnHFAttack).onClick = btn1ClickHandler;
 //
@@ -59,15 +62,15 @@ public class Main : MonoBehaviour
 		
 		UUIEventListener.Get (btnODUlt).onClick = BtnUtlHandler;
 		UUIEventListener.Get (btnMXUlt).onClick = BtnUtlHandler;
-		UUIEventListener.Get (btnLEUlt).onClick = BtnUtlHandler;
+		//UUIEventListener.Get (btnLEUlt).onClick = BtnUtlHandler;
 		UUIEventListener.Get (btnHMUlt).onClick = BtnUtlHandler;
-		UUIEventListener.Get (btnRRUlt).onClick = BtnUtlHandler;
+		//UUIEventListener.Get (btnRRUlt).onClick = BtnUtlHandler;
 
 
 		//UUIEventListener.Get (btnStart).onClick = BtnStartClickHandler;
 
-		UUIEventListener.Get(loadingImage).onDrag = LoadingDragHandler;
-		UUIEventListener.Get(btnTimer).onClick = BtnTimerHandler;
+		UUIEventListener.Get (loadingImage).onDrag = LoadingDragHandler;
+		UUIEventListener.Get (btnTimer).onClick = BtnTimerHandler;
 		//MessageCenter.GetInstance.addEventListener (BaseEvent.CLICK, btn1ClickHandler);
 		MainComponentManager main = MainComponentManager.SharedInstance;
 		BattleManager battle = BattleManager.SharedInstance;
@@ -75,7 +78,7 @@ public class Main : MonoBehaviour
 //		StartCoroutine (DelayToInvokeDo (2.0f));
 
 		//播放第一段背景音乐
-		AudioManager.SharedInstance.PlaySound("Bgmusic_01",1.0f);
+		AudioManager.SharedInstance.PlaySound ("Bgmusic_01", 1.0f);
 	}
 
 	void Update ()
@@ -172,12 +175,12 @@ public class Main : MonoBehaviour
 	}
 
 
-	void LoadingDragHandler(GameObject go)
+	void LoadingDragHandler (GameObject go)
 	{
 		EventCenter.GetInstance.dispatchEvent (BattleEvent.SLASH, 0);
 	}
 
-	void BtnTimerHandler(GameObject go)
+	void BtnTimerHandler (GameObject go)
 	{
 		EventCenter.GetInstance.dispatchEvent (BattleEvent.CHANGE_LEVEL, 0);
 	}
